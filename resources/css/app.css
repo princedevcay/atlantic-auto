@@ -78,7 +78,7 @@
   @apply mx-auto w-full max-w-[1200px] px-4 sm:px-6;
 }
 @utility btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-md px-5 font-semibold no-underline transition-colors; min-height: 48px;
+  @apply inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-center font-semibold leading-tight no-underline transition-colors; min-height: 48px;
 }
 @utility btn-primary {
   @apply btn bg-primary text-on-primary hover:bg-primary-dark;
@@ -93,7 +93,7 @@
   @apply btn text-primary hover:bg-primary-soft;
 }
 @utility btn-sm {
-  min-height: 40px; @apply px-4 text-sm;
+  min-height: 40px; @apply px-4 py-2 text-sm;
 }
 @utility btn-danger {
   @apply btn bg-danger text-white hover:opacity-90;

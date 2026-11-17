@@ -239,15 +239,38 @@ $faqs = [
 
     <div class="card p-5" aria-labelledby="about-h">
       <h2 id="about-h" class="text-xl font-bold">About Us</h2>
-      <div class="mt-4 grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-        <?= $photo('about', 'The Atlantic Auto team', 'aspect-[4/3] w-full rounded-md', 'users') ?>
-        <div>
-          <p class="text-sm text-muted">Atlantic Auto and Shipping Services helps individuals and businesses in Ghana import vehicles from the USA, with end-to-end support from sourcing and shipping to clearance and delivery.</p>
-          <div class="mt-4 flex flex-col gap-2">
-            <a href="/quote" class="btn-primary btn-sm">Request an Import Quote</a>
-            <a href="/update" class="btn-secondary btn-sm">Request a Vehicle Update</a>
+      <?php // CSS-only illustration of a tracking page (owner's request: no photo here). Example data, labelled as such. ?>
+      <figure class="on-navy mt-4 overflow-hidden rounded-md bg-gradient-to-br from-navy to-navy-2 p-4 text-white" aria-label="Example of a customer tracking page">
+        <div class="rounded-md bg-white p-3 text-ink shadow-card">
+          <div class="flex items-center justify-between gap-2">
+            <div class="min-w-0">
+              <p class="text-[10px] font-semibold uppercase tracking-wide text-muted">Your vehicle</p>
+              <p class="truncate text-sm font-bold">2020 Saloon car</p>
+            </div>
+            <span class="chip shrink-0 bg-primary-soft font-mono text-[10px] text-primary">K7MP3QXA</span>
+          </div>
+          <ol class="mt-3 grid grid-cols-6 items-start gap-1" aria-hidden="true">
+            <?php foreach (Stages::LABELS as $key => $label): $i = Stages::index($key); ?>
+              <li class="flex flex-col items-center gap-1">
+                <span class="relative flex h-5 w-full items-center justify-center">
+                  <?php if ($i > 0): ?><span class="absolute right-1/2 top-1/2 h-0.5 w-full -translate-y-1/2 <?= $i <= 3 ? 'bg-primary' : 'bg-line' ?>"></span><?php endif; ?>
+                  <span class="relative z-10 flex h-5 w-5 items-center justify-center rounded-full border-2 <?= $i < 3 ? 'border-primary bg-primary text-white' : ($i === 3 ? 'border-primary bg-white text-primary' : 'border-line bg-white text-muted') ?>">
+                    <?= $i < 3 ? icon('check', 'icon h-3 w-3') : '<span class="h-1.5 w-1.5 rounded-full ' . ($i === 3 ? 'bg-primary' : 'bg-line') . '"></span>' ?>
+                  </span>
+                </span>
+                <span class="text-center text-[9px] leading-tight <?= $i === 3 ? 'font-semibold text-primary' : 'hidden text-muted lg:block' ?>"><?= e($label) ?></span>
+              </li>
+            <?php endforeach; ?>
+          </ol>
+          <div class="mt-3 flex items-center gap-2 rounded-sm bg-bg px-2 py-1.5 text-[11px]">
+            <?= icon('ship', 'icon h-4 w-4 text-primary') ?><span>On the ship to Tema. Updated by the Atlantic team.</span>
           </div>
         </div>
+      </figure>
+      <p class="mt-4 text-sm text-muted">Atlantic Auto and Shipping Services helps individuals and businesses in Ghana import vehicles from the USA, with end-to-end support from sourcing and shipping to clearance and delivery.</p>
+      <div class="mt-4 grid gap-2">
+        <a href="/quote" class="btn-primary btn-sm">Request an Import Quote</a>
+        <a href="/update" class="btn-secondary btn-sm">Request a Vehicle Update</a>
       </div>
     </div>
 
