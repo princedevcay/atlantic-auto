@@ -4,10 +4,10 @@ use App\Models\Stages;
 // Photo slots: client-supplied files in public/assets/img/site/ (PG-014). Missing files show a pale panel.
 $hero = site_image('hero');
 $heroMobile = site_image('hero-mobile');
-$photo = function (string $slot, string $alt, string $class, string $fallbackIcon = 'image'): string {
+$photo = function (string $slot, string $alt, string $class, string $fallbackIcon = 'image', string $fit = 'object-cover'): string {
     $src = site_image($slot);
     if ($src !== '') {
-        return '<img src="' . e($src) . '" alt="' . e($alt) . '" class="' . e($class) . ' object-cover" loading="lazy">';
+        return '<img src="' . e($src) . '" alt="' . e($alt) . '" class="' . e($class) . ' ' . e($fit) . '" loading="lazy">';
     }
     return '<div class="' . e($class) . ' flex items-center justify-center bg-primary-soft text-primary/40" aria-hidden="true">' . icon($fallbackIcon, 'icon h-10 w-10') . '</div>';
 };
@@ -151,7 +151,7 @@ $faqs = [
               <img src="<?= e(asset('img/brands/' . $brand . '.svg')) ?>" alt="<?= $symbolOnly ? '' : e($brandName) ?>" class="<?= $brand === 'ford' ? 'h-8' : ($brand === 'isuzu' ? 'h-5' : 'h-8') ?> w-auto max-w-[9rem]" loading="lazy">
               <?php if ($symbolOnly): ?><span class="font-display text-sm font-bold uppercase tracking-wide text-ink"><?= e($brandName) ?></span><?php endif; ?>
             </span>
-            <?= $photo('type-' . $slot, $sub, 'aspect-[4/3] w-full', $ic) ?>
+            <?= $photo('type-' . $slot, $sub, 'aspect-[4/3] w-full bg-white px-2', $ic, 'object-contain') ?>
             <div class="flex items-end justify-between gap-2 p-4">
               <span><span class="block font-semibold text-ink"><?= e($name) ?></span><span class="block text-xs text-muted"><?= e($sub) ?></span></span>
               <?= icon('arrow-right', 'icon text-primary transition-transform group-hover:translate-x-0.5') ?>
