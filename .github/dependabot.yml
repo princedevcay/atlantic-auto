@@ -1,11 +1,17 @@
+# Weekly dependency updates (CTL-SC-001). The 14-day cooldown means Dependabot only proposes
+# releases that have been public for two weeks, so freshly published (possibly compromised)
+# versions are not pulled in straight away. Security updates are not delayed by the cooldown.
 version: 2
 updates:
   - package-ecosystem: composer
     directory: /
     schedule: { interval: weekly }
+    cooldown: { default-days: 14 }
   - package-ecosystem: npm
     directory: /
     schedule: { interval: weekly }
+    cooldown: { default-days: 14 }
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: weekly }
+    cooldown: { default-days: 14 }
