@@ -1,0 +1,37 @@
+{
+  "p_name": "Atlantic Auto and Shipping Services",
+  "p_summary": "Website for a vehicle importer: prospects request an import quote for a car bought in the USA, and existing customers request a status update on their vehicle from point of sale through shipping.",
+  "s_constraint": "Prospects cannot start a USA import quote online, and existing customers have no clear way to ask where their vehicle is, so both land as ad hoc calls and WhatsApp messages that are slow to answer and easy to lose.",
+  "s_push": "Importing a car from the USA feels opaque: unclear steps, costs and where the car is right now.",
+  "s_pull": "A quick import quote request and a simple way to ask for a vehicle update.",
+  "s_anxiety": "Trusting an importer with an expensive vehicle and a large payment, and not hearing anything once it ships.",
+  "s_habit": "Calling or WhatsApping the team (or an agent they know) and waiting for a reply.",
+  "s_existing": "Logo (navy and teal); homepage mockup; homepage and About Us copy",
+  "s_wager": "weeks",
+  "s_indicator": [
+    "conversion",
+    "support"
+  ],
+  "p_platform": "both",
+  "u_frequency": "occasional",
+  "u_activity": [
+    "reading",
+    "communicating",
+    "monitoring"
+  ],
+  "u_skill": "novice",
+  "u_context": [
+    "moving",
+    "lowband"
+  ],
+  "x_feel": [
+    "trustworthy",
+    "friendly"
+  ],
+  "x_stakes": "mod",
+  "x_mobile": "full",
+  "x_content": "mixed",
+  "v_direction": "friendly",
+  "v_surface": "elevated",
+  "s_outcome": "More import quote requests captured; vehicle update requests arrive complete (VIN or order details) and get answered faster."
+}

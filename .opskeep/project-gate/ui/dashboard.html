@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Atlantic Auto and Shipping Services Project Gate</title>
+<style>
+:root{
+  --bg:#f6f6f3;--panel:#ffffff;--ink:#16181d;--muted:#565d6b;--line:#dfe1e6;--line-strong:#c7cad2;
+  --accent:#2447b8;--accent-ink:#ffffff;--accent-soft:#e8edfb;
+  --ok:#0f6a3b;--ok-bg:#e3f3ea;--warn:#7a4700;--warn-bg:#fcefd6;--bad:#a11d12;--bad-bg:#fbe7e4;
+  --info:#28449a;--info-bg:#e8edfb;--neutral:#3f4652;--neutral-bg:#eceef1;
+  --shadow:0 1px 2px rgba(16,24,40,.05),0 6px 20px rgba(16,24,40,.05);
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1115;--panel:#171a20;--ink:#eceef2;--muted:#a3aab8;--line:#2a2f39;--line-strong:#3a4150;
+  --accent:#8fb0ff;--accent-ink:#0b1020;--accent-soft:#1c2540;
+  --ok:#66d19a;--ok-bg:#12301f;--warn:#f2c26b;--warn-bg:#33270d;--bad:#ff9d92;--bad-bg:#3a1714;
+  --info:#a9c0ff;--info-bg:#1c2540;--neutral:#c5cad4;--neutral-bg:#232833;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.3);}}
+:root[data-theme="dark"]{
+  --bg:#0f1115;--panel:#171a20;--ink:#eceef2;--muted:#a3aab8;--line:#2a2f39;--line-strong:#3a4150;
+  --accent:#8fb0ff;--accent-ink:#0b1020;--accent-soft:#1c2540;
+  --ok:#66d19a;--ok-bg:#12301f;--warn:#f2c26b;--warn-bg:#33270d;--bad:#ff9d92;--bad-bg:#3a1714;
+  --info:#a9c0ff;--info-bg:#1c2540;--neutral:#c5cad4;--neutral-bg:#232833;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.3);}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans)}
+button,input,textarea{font:inherit;color:inherit}
+h1,h2,h3{margin:0;line-height:1.2;letter-spacing:-.01em}
+p{margin:0}
+[hidden]{display:none!important}
+.mono{font-family:var(--mono)}
+.eyebrow{font:600 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.hint,.why{color:var(--muted);font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+.btn{border:1px solid var(--line-strong);background:var(--panel);border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:600;font-size:14px}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.danger{color:var(--bad)}
+.btn.sm{padding:5px 10px;font-size:13px}
+.btn[disabled]{opacity:.5;cursor:not-allowed;filter:none}
+.link{background:none;border:0;padding:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:13px}
+.link.on{color:var(--accent);font-weight:600}
+
+.pill{display:inline-block;font:600 11px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:4px 7px;border-radius:999px;white-space:nowrap}
+.s-CONFIRMED{background:var(--ok-bg);color:var(--ok)}
+.s-INFERRED{background:var(--info-bg);color:var(--info)}
+.s-PROPOSED{background:var(--neutral-bg);color:var(--neutral)}
+.s-NEEDS_INPUT{background:var(--warn-bg);color:var(--warn)}
+.s-REJECTED{background:var(--bad-bg);color:var(--bad)}
+.s-SUPERSEDED{background:var(--neutral-bg);color:var(--muted);text-decoration:line-through}
+
+input[type=text],textarea{width:100%;padding:10px 12px;border:1px solid var(--line-strong);border-radius:8px;background:var(--panel)}
+textarea{resize:vertical;min-height:72px}
+
+.meter{height:8px;background:var(--neutral-bg);border-radius:99px;overflow:hidden}
+.meter>i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s ease}
+
+.mini{display:block;width:100%;height:auto;border-radius:6px}
+
+.result{margin-top:14px;padding:14px;border:1px solid var(--line-strong);border-radius:10px;background:var(--panel)}
+.result h3{font-size:15px;margin-bottom:4px}
+.result textarea{font:12px/1.4 var(--mono);min-height:110px;margin:10px 0}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.wrap{max-width:1180px;margin:0 auto;padding:24px 16px 64px}
+.head{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:flex-end;margin-bottom:18px}
+.head h1{font-size:30px;margin-top:8px}
+.head .sub{color:var(--muted);margin-top:4px;max-width:64ch}
+.ready{min-width:260px;flex:1;max-width:420px}
+.ready .big{font:700 28px/1 var(--mono);display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.ready .big small{font:600 11px var(--mono);color:var(--muted);letter-spacing:.1em}
+.counts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.banner{border:1px solid var(--warn);background:var(--warn-bg);color:var(--warn);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:14px}
+.layout{display:grid;gap:24px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:1000px){.layout{grid-template-columns:minmax(0,1fr) 330px;align-items:start}}
+section.blk{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:18px;box-shadow:var(--shadow)}
+section.blk>h2{font:700 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.kv{display:grid;grid-template-columns:140px 1fr;gap:8px 16px;margin:0;font-size:14px}
+.kv dt{color:var(--muted)}.kv dd{margin:0}
+@media (max-width:560px){.kv{grid-template-columns:1fr}.kv dt{margin-top:6px}}
+.trait{display:grid;grid-template-columns:110px 1fr 44px;gap:12px;align-items:center;font-size:14px;margin:8px 0}
+.trait b{font:600 13px var(--mono);text-align:right}
+.block-need{border-color:var(--warn)}
+.need{padding:14px 0;border-top:1px solid var(--line)}
+.need:first-of-type{border-top:0;padding-top:0}
+.need h3{font-size:16px;margin:6px 0}
+.opts{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));margin-top:10px}
+.opt{text-align:left;border:1.5px solid var(--line-strong);background:var(--panel);border-radius:10px;padding:10px 12px;cursor:pointer}
+.opt:hover{border-color:var(--accent);background:var(--accent-soft)}
+.opt b{display:block;font-size:14px}.opt small{color:var(--muted)}
+.area-h{font-size:15px;margin:18px 0 6px}
+.area-h:first-of-type{margin-top:0}
+ul.decs{list-style:none;margin:0;padding:0}
+.dec{padding:12px 0;border-top:1px solid var(--line)}
+.dec:first-child{border-top:0}
+.dec.muted{opacity:.55}
+.dec-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.dec-head .id{font-size:12px;color:var(--muted)}
+.dec-title{font-weight:650;flex:1;min-width:160px}
+.dec-val{margin-top:4px}
+.dec-why{margin-top:2px;color:var(--muted);font-size:13px}
+.dec .row{margin-top:8px}
+.dec.changed{border-left:3px solid var(--accent);padding-left:12px;margin-left:-15px}
+.dirs{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.dir{border:1.5px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;background:var(--panel)}
+.dir.sel{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.dir-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.dir-top h3{font-size:16px;flex:1}
+.dir .detail{font-size:13px;display:grid;gap:8px;border-top:1px solid var(--line);padding-top:10px}
+.dir .detail dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:0}
+.dir .detail dt{color:var(--muted)}.dir .detail dd{margin:0;text-align:right}
+.swatchrow{display:flex;gap:4px}.swatchrow i{width:18px;height:18px;border-radius:5px;border:1px solid var(--line)}
+table.found{width:100%;border-collapse:collapse;font-size:14px}
+table.found td{padding:7px 0;border-top:1px solid var(--line)}
+table.found td:first-child{color:var(--muted);width:42%}
+.risk{display:flex;gap:10px;font-size:14px;padding:6px 0}
+.rail{position:sticky;top:12px}
+@media (max-width:999px){.rail{position:static}}
+.gate{border:2px solid var(--warn);border-radius:14px;padding:18px;background:var(--panel);box-shadow:var(--shadow)}
+.gate.ok{border-color:var(--ok)}
+.gate .state{font:700 15px var(--mono);color:var(--warn);margin:8px 0 4px}
+.gate .fine{font-size:13px;color:var(--muted);margin-bottom:12px}
+.gate ul{margin:0 0 12px;padding-left:18px;font-size:13px;color:var(--warn)}
+.gate .btns{display:grid;gap:8px}
+.gate .btns .btn{padding:10px 14px}
+.gate textarea{margin:10px 0;min-height:64px}
+.confirm{border:1px solid var(--line-strong);background:var(--neutral-bg);border-radius:10px;padding:12px;font-size:13px;margin-top:10px;display:grid;gap:10px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>const DATA={"state": {"schema": "opskeep.project-gate/state@1", "project": {"name": "Atlantic Auto and Shipping Services", "slug": "atlantic-auto", "one_liner": "Website and tracking for a USA vehicle importer: import quotes, vehicle update requests, and team-managed tracking pages fed by the carrier.", "created": "2026-11-17"}, "intent": [{"label": "Product", "value": "Lead-capture website with customer tracking pages and a small team admin"}, {"label": "Primary users", "value": "Prospective importers, existing customers, and Atlantic staff"}, {"label": "Usage", "value": "Customers occasionally on phones; staff daily"}, {"label": "Primary jobs", "value": "Request a quote; request an update; check a vehicle's stage; staff keep stages current"}, {"label": "Platform", "value": "Responsive web, mobile-first public site, desktop-first admin"}], "character": [{"trait": "Trustworthy", "score": 95}, {"trait": "Friendly", "score": 75}, {"trait": "Clear", "score": 90}, {"trait": "Expressive", "score": 40}], "decisions": [{"id": "PG-001", "area": "strategy", "title": "Constraint", "status": "CONFIRMED", "value": "Prospects cannot start a USA import quote online, and existing customers have no clear way to ask where their vehicle is, so both land as ad hoc calls and WhatsApp messages that are slow to answer and easy to lose.", "rationale": "Restated from the brief's two primary buttons.", "confirmed_via": "gate_approval"}, {"id": "PG-002", "area": "strategy", "title": "The bet", "status": "CONFIRMED", "value": "Customers will use simple online forms if they are quicker than calling; several weeks of build; watch quote requests per week and update requests that arrive with a VIN or reference.", "rationale": "Delegated by the owner.", "depends_on": ["PG-001"], "confirmed_via": "gate_approval"}, {"id": "PG-003", "area": "project", "title": "Two primary actions", "status": "CONFIRMED", "confirmed_via": "interview", "value": "Every page leads to Request an Import Quote (primary) and Request a Vehicle Update (secondary).", "rationale": "Stated in the homepage copy."}, {"id": "PG-004", "area": "project", "title": "USA import scope", "status": "CONFIRMED", "confirmed_via": "interview", "value": "The site is about importing vehicles from the USA, from point of sale through shipping. The mockup's general pickup/destination planner is dropped.", "rationale": "The copy replaces the mockup's generic shipping framing."}, {"id": "PG-005", "area": "screens", "title": "Site map", "status": "SUPERSEDED", "value": "Home, How It Works, Request an Import Quote, Request a Vehicle Update, About Us, Contact, Privacy. One page per form so each can be linked from WhatsApp.", "rationale": "Replaced by PG-018 after the owner widened scope on 17 Nov 2026.", "depends_on": ["PG-003"]}, {"id": "PG-006", "area": "screens", "title": "Import quote form", "status": "CONFIRMED", "value": "Short form: name, phone (WhatsApp), email optional, vehicle year/make/model, where it is in the USA (auction, dealer or private, with a listing link if any), destination, and notes. No payment on the site.", "rationale": "Enough to price a quote without scaring off a first-time importer.", "depends_on": ["PG-003", "PG-004"], "confirmed_via": "gate_approval"}, {"id": "PG-007", "area": "screens", "title": "Vehicle update request", "status": "SUPERSEDED", "value": "Request form, not live tracking: name, phone, VIN or order reference, and question. The team replies by WhatsApp or phone. No customer login in v1.", "rationale": "Replaced by PG-020 after the owner widened scope on 17 Nov 2026.", "depends_on": ["PG-003"]}, {"id": "PG-008", "area": "ux", "title": "Where submissions go", "status": "CONFIRMED", "value": "Each form sends a notification to the team's email, shows a reference number on the thank-you screen, and offers a 'Continue on WhatsApp' link with the details prefilled.", "rationale": "Matches the team's current WhatsApp habit while capturing every request.", "depends_on": ["PG-006", "PG-020"], "confirmed_via": "gate_approval"}, {"id": "PG-009", "area": "ux", "title": "How It Works journey", "status": "SUPERSEDED", "value": "A plain step timeline: you buy (or we help you find) the vehicle, pickup in the USA, port and loading, ocean shipping, arrival and clearing, handover. Each step says what the customer hears from us.", "rationale": "Replaced by PG-019 after the owner widened scope on 17 Nov 2026.", "depends_on": ["PG-004"]}, {"id": "PG-010", "area": "users", "title": "Audience", "status": "CONFIRMED", "value": "First-time and repeat importers, mostly non-experts, visiting a few times around a purchase.", "rationale": "Occasional, novice users inferred from the service.", "confirmed_via": "gate_approval"}, {"id": "PG-011", "area": "responsive", "title": "Mobile-first", "status": "CONFIRMED", "value": "Designed for phones first, with full parity on desktop. Sticky bottom bar on mobile with both actions.", "rationale": "Customers arrive from WhatsApp and social links on phones.", "confirmed_via": "gate_approval"}, {"id": "PG-012", "area": "responsive", "title": "Slow-network tolerance", "status": "CONFIRMED", "value": "Lean pages: compressed responsive images, no heavy scripts, forms work with JavaScript off, clear retry on failure.", "rationale": "Mobile data and patchy connections are common for the audience.", "depends_on": ["PG-011"], "confirmed_via": "gate_approval"}, {"id": "PG-013", "area": "visual", "title": "Brand from the logo", "status": "CONFIRMED", "confirmed_via": "interview", "value": "Navy and teal from the supplied logo; light theme with navy hero and footer bands, as in the mockup.", "rationale": "Logo and mockup supplied."}, {"id": "PG-014", "area": "visual", "title": "Photography", "status": "CONFIRMED", "value": "The client supplies all landing page and hero images. Nothing is generated or taken from stock. Until a file arrives, its slot shows a plain navy or pale panel, never a placeholder photo, and no image ships without the client's file. Images are resized and compressed for mobile data at build. No car brand logos as decoration.", "rationale": "Stated by the owner on 17 Nov 2026: 'I will supply the images used in the landing page and also the hero sections'.", "depends_on": ["PG-013"], "confirmed_via": "interview"}, {"id": "PG-015", "area": "ux", "title": "Trust signals", "status": "CONFIRMED", "value": "Phone, WhatsApp, office location and email in the header, footer and Contact page (values supplied by the client, never placeholders at launch), plus real customer photos or testimonials once supplied. No invented reviews or numbers.", "rationale": "Main hesitation is trusting an importer with money and a car.", "confirmed_via": "interview"}, {"id": "PG-016", "area": "accessibility", "title": "WCAG 2.2 AA baseline", "status": "CONFIRMED", "value": "Keyboard operable, visible focus, 4.5:1 text contrast, labelled form fields with inline errors, 44px touch targets.", "rationale": "Studio baseline.", "confirmed_via": "gate_approval"}, {"id": "PG-017", "area": "visual", "title": "Forms style", "status": "CONFIRMED", "value": "Large labelled inputs, custom select chevron in teal (studio rule), one column on mobile, progress-free single page.", "rationale": "Short forms for novice users.", "depends_on": ["PG-006", "PG-020"], "confirmed_via": "gate_approval"}, {"id": "PG-018", "area": "screens", "title": "Site map (v2)", "status": "CONFIRMED", "value": "Public: Home, Services, How It Works, Request an Import Quote, Request a Vehicle Update, Track Your Vehicle, About Us, Contact, Privacy. Staff: sign-in, shipments list, shipment detail.", "rationale": "Adds services, tracking and the team area the owner asked for.", "depends_on": ["PG-003"], "confirmed_via": "gate_approval"}, {"id": "PG-019", "area": "project", "title": "Full-service scope", "status": "CONFIRMED", "confirmed_via": "interview", "value": "Atlantic handles sourcing, purchase, pickup, shipping, clearance and delivery. Services page and How It Works present these six steps, and customers can ask for any or all of them in the quote form.", "rationale": "Stated by the owner.", "depends_on": ["PG-004"]}, {"id": "PG-020", "area": "screens", "title": "Request a Vehicle Update form", "status": "CONFIRMED", "confirmed_via": "interview", "value": "Form: name, phone (WhatsApp), VIN or tracking reference, question. If the vehicle has a tracking page, the thank-you screen links to it; the team still replies by WhatsApp or phone.", "rationale": "Stated by the owner.", "depends_on": ["PG-003"]}, {"id": "PG-021", "area": "screens", "title": "Team-managed tracking page", "status": "CONFIRMED", "confirmed_via": "interview", "value": "Each vehicle has a tracking page showing its stage on a six-step timeline (Sourcing, Purchased, Picked up, Shipped, Clearing, Delivered) with dates, a short team note and optional photos. Staff set the stage; the carrier feed fills in vessel, ETA and container events while shipped.", "rationale": "Stated by the owner.", "depends_on": ["PG-019"]}, {"id": "PG-022", "area": "ux", "title": "How customers open their tracking page", "status": "CONFIRMED", "value": "Two ways: a private link the team sends on WhatsApp, or the Track Your Vehicle page with tracking reference plus last 4 digits of the phone on file. No customer accounts. VIN alone never opens a page.", "rationale": "Easy for occasional users without exposing someone else's vehicle; details go to the security gate.", "depends_on": ["PG-021"], "confirmed_via": "gate_approval"}, {"id": "PG-023", "area": "ux", "title": "Team admin area", "status": "CONFIRMED", "value": "Staff sign in to a simple admin: list of shipments with stage filters, create a shipment from a quote, change stage, add notes and photos, enter carrier booking or container number, see incoming quote and update requests. Desktop-first, works on a phone for quick stage changes.", "rationale": "Needed for the team to manage tracking pages.", "depends_on": ["PG-021"], "confirmed_via": "gate_approval"}, {"id": "PG-024", "area": "ux", "title": "Carrier integration", "status": "CONFIRMED", "value": "Pull vessel name, ETA and container milestones automatically from the carrier (or a container-tracking service covering it) using the booking, bill of lading or container number. Staff can always override, and the page shows when it last updated. Which carriers and which API are chosen at build after a lookup, not guessed.", "rationale": "Owner asked for a carrier integration; carriers are not yet named.", "depends_on": ["PG-021", "PG-023"], "confirmed_via": "gate_approval"}, {"id": "PG-025", "area": "ux", "title": "Who receives enquiries", "status": "CONFIRMED", "rationale": "Stated by the owner: one shared inbox, different category tabs.", "depends_on": ["PG-006", "PG-020"], "confirmed_via": "interview", "value": "One shared inbox with category tabs: in the admin area, enquiries sit in one inbox split into tabs (All, Import Quotes, Vehicle Updates), each with a count of new items. Both types also email the same company address, with the category at the start of the subject line, for example [Import Quote] or [Vehicle Update], so mail filters can sort them."}, {"id": "PG-026", "area": "project", "title": "Ghanaian company, Ghana market", "status": "CONFIRMED", "confirmed_via": "interview", "value": "Atlantic is a Ghanaian company importing vehicles from the USA into Ghana. Copy speaks to Ghanaian buyers, arrival and clearance are at Tema port, phone numbers use +233 format, WhatsApp is the main contact channel, and photography shows Ghanaian people and Tema rather than generic foreign ports.", "rationale": "Stated by the owner.", "depends_on": ["PG-004"]}, {"id": "PG-027", "area": "screens", "title": "Landing page sections", "status": "CONFIRMED", "value": "1 Hero (supplied copy, both buttons). 2 Track Your Vehicle quick box. 3 Services: the six steps as cards. 4 How it works: USA lot to your door in Ghana timeline. 5 Why Atlantic: Ghanaian team, one contact throughout, updates at every stage, paperwork handled (no invented figures). 6 What we import: cars, SUVs, pickups and trucks from auctions, dealers and private sellers. 7 What your cost is made of: purchase, US towing, ocean freight, Tema duty and clearance, delivery (explained, no rates). 8 Clearing at Tema: what we handle and documents you need. 9 Recent deliveries and testimonials (shown only once real ones are supplied). 10 FAQ. 11 About Us (supplied copy). 12 Closing call to action with phone, WhatsApp, office and email.", "rationale": "Owner asked for more sections; each answers a question a first-time importer asks before calling.", "depends_on": ["PG-019", "PG-021", "PG-026"], "confirmed_via": "gate_approval"}], "conflicts": [], "directions": [{"id": "A", "name": "Harbour Trust", "tagline": "The mockup, sharpened around the two actions.", "fit": "Keeps what you already liked in the mockup (navy hero, teal buttons, photo cards) and refocuses it on USA imports and the two requests. Lowest risk and fastest to build.", "tradeoffs": "Familiar shipping-company look; less distinctive than a custom concept.", "preview": {"nav": "top", "density": 2, "radius": 12, "surface": "elevated", "palette": {"bg": "#f4f8fa", "surface": "#ffffff", "accent": "#0b7480", "ink": "#0c2a45", "line": "#d6e3ea"}}, "foundation": {"Theme": "Light with navy hero and footer bands", "Navigation": "Top bar, sticky mobile action bar", "Content width": "Centered, 1200px max", "Density": "Comfortable", "Corner radius": "12px", "Typography": "Outfit headings, Inter body", "Primary interaction": "Two calls to action, short forms, stage timeline", "Mobile strategy": "Mobile-first, full parity", "Animation": "Subtle fades only", "Icons": "Lucide"}, "tokens": {"color": {"bg": "#f4f8fa", "surface": "#ffffff", "border": "#d6e3ea", "text": "#0c2a45", "muted": "#4a5f72", "primary": "#0b7480", "primary_contrast": "#ffffff", "success": "#0f6a3b", "warning": "#7a4700", "danger": "#a11d12"}, "radius": {"sm": 6, "md": 12, "lg": 18}, "font": {"sans": "Inter, system-ui, sans-serif", "mono": "ui-monospace, SFMono-Regular, Menlo, monospace"}, "space": {"unit": 4}, "density": {"row_height": 44}}}, {"id": "B", "name": "Two Doors", "tagline": "Utility first: pick your door, get it done.", "fit": "The homepage is two big panels, 'I want to import a vehicle' and 'I already have a vehicle with you'. Lightest pages, best on slow phones.", "tradeoffs": "Less atmosphere and storytelling; relies on copy and trust signals more than photography.", "preview": {"nav": "top", "density": 2, "radius": 8, "surface": "flat", "palette": {"bg": "#ffffff", "surface": "#eef5f7", "accent": "#0c2a45", "ink": "#14212e", "line": "#d3dee5"}}, "foundation": {"Theme": "Light, flat", "Navigation": "Minimal top bar", "Content width": "Narrow, 960px max", "Density": "Comfortable", "Corner radius": "8px", "Typography": "Inter throughout", "Primary interaction": "Two large choice panels", "Mobile strategy": "Mobile-first, full parity", "Animation": "None beyond focus states", "Icons": "Lucide"}, "tokens": {"color": {"bg": "#ffffff", "surface": "#eef5f7", "border": "#d3dee5", "text": "#14212e", "muted": "#4d5d6b", "primary": "#0c2a45", "primary_contrast": "#ffffff", "success": "#0f6a3b", "warning": "#7a4700", "danger": "#a11d12"}, "radius": {"sm": 4, "md": 8, "lg": 12}, "font": {"sans": "Inter, system-ui, sans-serif", "mono": "ui-monospace, SFMono-Regular, Menlo, monospace"}, "space": {"unit": 4}, "density": {"row_height": 44}}, "why_not": "Plainer than the mockup the client already saw; trust has to come from words alone."}, {"id": "C", "name": "The Crossing", "tagline": "Tell the journey from US lot to home port.", "fit": "A scrolling story of the vehicle's journey with large photography and a step timeline. Strongest emotional pull and best answers 'where is my car now'.", "tradeoffs": "Heavier pages and more imagery to produce; slower on mobile data; more build time.", "preview": {"nav": "top", "density": 1, "radius": 16, "surface": "open", "serif": true, "palette": {"bg": "#0c2a45", "surface": "#123a5c", "accent": "#5fd0d6", "ink": "#f2f7fa", "line": "#24527a"}}, "foundation": {"Theme": "Navy-led, light content sections", "Navigation": "Transparent top bar over hero", "Content width": "Full-bleed sections", "Density": "Airy", "Corner radius": "16px", "Typography": "Fraunces headings, Inter body", "Primary interaction": "Scroll story with timeline", "Mobile strategy": "Mobile-first, reduced imagery", "Animation": "Scroll-linked reveals", "Icons": "Lucide"}, "tokens": {"color": {"bg": "#0c2a45", "surface": "#123a5c", "border": "#24527a", "text": "#f2f7fa", "muted": "#b5c8d8", "primary": "#5fd0d6", "primary_contrast": "#06202e", "success": "#66d19a", "warning": "#f2c26b", "danger": "#ff9d92"}, "radius": {"sm": 8, "md": 16, "lg": 24}, "font": {"sans": "Inter, system-ui, sans-serif", "mono": "ui-monospace, SFMono-Regular, Menlo, monospace"}, "space": {"unit": 4}, "density": {"row_height": 48}}, "why_not": "Heaviest on slow phone connections and needs the most imagery and build time for a site whose job is two short forms."}], "selected_direction": "A", "risks": [{"id": "R-02", "severity": "med", "text": "Forms collect names, phones and VINs: personal data that needs spam protection and safe handling (security gate)."}, {"id": "R-03", "severity": "low", "text": "No real photos, testimonials or business details supplied yet; trust content may launch thin."}, {"id": "R-04", "severity": "high", "text": "Carrier APIs vary: some carriers have none, and tracking services may charge. Costs and coverage must be looked up before build."}, {"id": "R-05", "severity": "high", "text": "Tracking pages and the admin hold customer, vehicle and payment-stage data; access control is the main job of the security gate."}, {"id": "R-06", "severity": "med", "text": "Tracking pages go stale if staff do not update stages; the admin must make updates take seconds."}, {"id": "R-01", "severity": "low", "text": "Customers may expect live GPS; copy must say stages are updated by the team and the carrier."}, {"id": "R-07", "severity": "med", "text": "Ghana duty and clearance rules change; the clearance section must avoid figures and link to the team for current costs."}], "assumptions": [{"id": "AS-03", "text": "The team handles requests by email and WhatsApp; no CRM integration in v1."}, {"id": "AS-04", "text": "English only."}, {"id": "AS-05", "text": "No online payment in v1; purchase payments are handled offline."}, {"id": "AS-06", "text": "Phone, WhatsApp, office address and email will be supplied by the client before launch."}, {"id": "AS-07", "text": "Constraint has no measured evidence yet; it is based on the owner's description."}, {"id": "AS-08", "text": "No prices, duty rates or transit times are published until the client supplies them; cost and clearance sections explain components only."}, {"id": "AS-09", "text": "The shared inbox address will be supplied with the other contact details before launch."}, {"id": "AS-10", "text": "Client-supplied images arrive before launch, with the right to use them; the hero needs at least one wide image (about 2400px) and a portrait crop for phones."}], "gate": {"status": "reopened", "history": [{"at": "2026-11-17T06:27:12Z", "event": "approved", "detail": "via chat"}, {"at": "2026-11-17T06:27:49Z", "event": "reopened", "detail": "PG-014: I will supply the images used in the landing page and also the hero sections"}], "approved_at": "2026-11-17T06:27:12Z", "approval_method": "chat", "approval_quote": "Approve Project Gate", "reopened": ["PG-014"]}, "strategy": {"constraint": {"statement": "Prospects cannot start a USA import quote online, and existing customers have no clear way to ask where their vehicle is, so both land as ad hoc calls and WhatsApp messages that are slow to answer and easy to lose.", "evidence": "Owner's description of current enquiries (see AS-07)."}, "forces": {"push": "Importing a car from the USA feels opaque: unclear steps, costs and where the car is right now.", "pull": "A quick import quote request and a simple way to ask for a vehicle update.", "anxiety": "Trusting an importer with an expensive vehicle and a large payment, and not hearing anything once it ships.", "habit": "Calling or WhatsApping the team, or an agent they know, and waiting for a reply."}, "existing_assets": ["Logo (navy and teal)", "Homepage mockup", "Homepage and About Us copy"], "bet": {"belief": "customers will use simple online forms if they are quicker than calling", "wager": "several weeks", "expected_outcome": "more import quote requests captured and vehicle update requests that arrive complete and get answered faster", "leading_indicator": "quote requests per week, and share of update requests with a VIN or reference"}, "outcomes": ["More import quote requests are captured", "Vehicle update requests arrive complete and are answered faster"]}}, "base_hash": "fd8a643cbbaeda80"};</script>
+<script>
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const store = {
+  get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+
+function lum(hex) {
+  const h = String(hex).replace('#', '');
+  const f = h.length === 3 ? h.split('').map(c => c + c).join('') : h;
+  const v = [0, 2, 4].map(i => parseInt(f.substr(i, 2), 16) / 255).map(c => c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4));
+  return .2126 * v[0] + .7152 * v[1] + .0722 * v[2];
+}
+
+/* Wireframe preview drawn from a small spec: nav, density(1-3), radius, surface, palette, serif/mono, title */
+function miniPreview(s) {
+  s = s || {};
+  const P = Object.assign({bg:'#f6f7f9', surface:'#ffffff', accent:'#2f6feb', ink:'#1b1f24', line:'#dfe3e8'}, s.palette || {});
+  const W = 200, H = 125;
+  const r = Math.max(0, Math.min(s.radius == null ? 6 : s.radius, 14));
+  const nav = s.nav || 'top', dens = s.density || 2, surf = s.surface || 'flat';
+  const f = (x, y, w, h, fill, o) => {
+    o = o || {};
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${o.r || 0}" fill="${fill}"` +
+      (o.stroke ? ` stroke="${o.stroke}" stroke-width="1"` : '') + (o.op != null ? ` opacity="${o.op}"` : '') + '/>';
+  };
+  let g = f(0, 0, W, H, P.bg, {r: 6});
+  let x0 = 10, y0 = 10, x1 = W - 10, y1 = H - 10;
+  if (nav === 'sidebar') {
+    g += f(0, 0, 36, H, P.surface, {stroke: P.line}) + f(8, 10, 10, 10, P.accent, {r: 3});
+    for (let i = 0; i < 5; i++) g += f(8, 30 + i * 13, 20, 5, P.ink, {r: 2, op: i === 1 ? .9 : .25});
+    x0 = 46;
+  } else if (nav === 'top') {
+    g += f(0, 0, W, 18, P.surface, {stroke: P.line}) + f(8, 5, 8, 8, P.accent, {r: 3});
+    for (let i = 0; i < 3; i++) g += f(60 + i * 22, 7, 16, 4, P.ink, {r: 2, op: i === 0 ? .9 : .25});
+    y0 = 26;
+  } else if (nav === 'tabs') {
+    g += f(0, H - 20, W, 20, P.surface, {stroke: P.line});
+    for (let i = 0; i < 4; i++) g += f(24 + i * 40, H - 13, 10, 6, i === 0 ? P.accent : P.ink, {r: 2, op: i === 0 ? 1 : .3});
+    y1 = H - 28;
+  }
+  const font = s.serif ? 'Georgia,serif' : (s.mono ? 'ui-monospace,Menlo,monospace' : 'system-ui,sans-serif');
+  g += `<text x="${x0}" y="${y0 + 11}" font-family="${font}" font-size="12" font-weight="700" fill="${P.ink}">${esc((s.title || 'Aa').slice(0, 14))}</text>`;
+  g += f(x1 - 26, y0 + 1, 26, 10, P.accent, {r: Math.min(r, 5)});
+  const cy = y0 + 20, ch = y1 - cy;
+  if (dens === 3) {
+    const n = Math.max(3, Math.floor(ch / 11));
+    for (let i = 0; i < n; i++) {
+      const y = cy + i * 11;
+      g += f(x0, y, x1 - x0, 9, i === 0 ? P.line : P.surface, {r: Math.min(r, 3), stroke: P.line});
+      g += f(x0 + 4, y + 3, 18 + ((i * 7) % 14), 3, P.ink, {r: 1, op: .55}) + f(x0 + 70, y + 3, 24, 3, P.ink, {r: 1, op: .25});
+      g += f(x1 - 24, y + 3, 14, 3, P.accent, {r: 1, op: i % 2 ? .5 : .9});
+    }
+  } else {
+    const cols = dens === 2 ? 3 : 2, gap = dens === 2 ? 6 : 10, rows = dens === 2 ? 2 : 1;
+    const cw = (x1 - x0 - gap * (cols - 1)) / cols, h = (ch - (rows - 1) * gap) / rows;
+    for (let rr = 0; rr < rows; rr++) for (let c = 0; c < cols; c++) {
+      const x = x0 + c * (cw + gap), y = cy + rr * (h + gap);
+      if (surf === 'elevated') g += f(x, y + 2, cw, h, '#000', {r: r, op: .12}) + f(x, y, cw, h, P.surface, {r: r});
+      else if (surf === 'open') g += f(x, y, cw, 2, P.ink, {op: .6});
+      else g += f(x, y, cw, h, P.surface, {r: r, stroke: P.line});
+      g += f(x + 6, y + 8, cw * .5, 3, P.ink, {r: 1, op: .7}) + f(x + 6, y + 15, cw * .75, 3, P.ink, {r: 1, op: .25});
+      if (h > 34) g += f(x + 6, y + h - 14, cw * .3, 6, P.accent, {r: Math.min(r, 3)});
+    }
+  }
+  return `<svg class="mini" viewBox="0 0 ${W} ${H}" role="img" aria-label="Layout preview">${g}</svg>`;
+}
+
+/* Result hand-off: always selectable text + copy + download, because sandboxes may block either. */
+function resultPanel(obj, o) {
+  const txt = JSON.stringify(obj);
+  return `<section class="result" aria-live="polite"><h3>${esc(o.title)}</h3><p class="hint">${esc(o.lead)}</p>` +
+    `<textarea id="result-json" readonly rows="6" aria-label="Response to paste back to Claude">${esc(txt)}</textarea>` +
+    `<div class="row"><button type="button" class="btn primary" data-a="copy">Copy</button>` +
+    `<button type="button" class="btn" data-a="download" data-f="${esc(o.filename)}">Download .json</button></div>` +
+    `<p class="hint" id="copy-hint" style="margin-top:8px"></p></section>`;
+}
+function hintMsg(m) { const e = $('#copy-hint'); if (e) e.textContent = m; }
+async function copyResult() {
+  const t = $('#result-json'); if (!t) return;
+  try { await navigator.clipboard.writeText(t.value); hintMsg('Copied. Paste it back to Claude.'); }
+  catch (e) { t.focus(); t.select(); try { document.execCommand('copy'); hintMsg('Copied. Paste it back to Claude.'); } catch (_) { hintMsg('Select the text above and copy it.'); } }
+}
+function downloadResult(name) {
+  try {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([$('#result-json').value], {type: 'application/json'}));
+    a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    hintMsg('Downloaded. If nothing saved, copy the text instead.');
+  } catch (e) { hintMsg('Download is blocked here. Copy the text instead.'); }
+}
+
+</script>
+<script>
+const S = DATA.state, H = DATA.base_hash, KEY = 'pg-dash:' + H;
+const LABEL = {CONFIRMED:'Confirmed', INFERRED:'Inferred', PROPOSED:'Proposed', NEEDS_INPUT:'Needs input', REJECTED:'Rejected', SUPERSEDED:'Superseded'};
+const AREAS = [['strategy','The problem & the bet'],['project','Project'],['users','Users & jobs'],['ux','UX decisions'],['screens','Screen architecture'],['visual','Visual direction'],['responsive','Responsive strategy'],['accessibility','Accessibility']];
+const W = {CONFIRMED:1, INFERRED:.75, PROPOSED:.5, NEEDS_INPUT:0, REJECTED:0};
+
+let edits = {}, selDir = S.selected_direction || null, notes = '', editing = null, confirming = false, result = null;
+const openDirs = new Set();
+(function () { const s = store.get(KEY); if (s) { edits = s.edits || {}; selDir = s.selDir || selDir; notes = s.notes || ''; } })();
+const persist = () => store.set(KEY, {edits, selDir, notes});
+
+const eff = d => Object.assign({}, d, edits[d.id] || {});
+const decs = () => S.decisions.map(eff);
+function counts() { const c = {CONFIRMED:0,INFERRED:0,PROPOSED:0,NEEDS_INPUT:0,REJECTED:0,SUPERSEDED:0}; decs().forEach(d => c[d.status]++); return c; }
+function readiness(c) {
+  const active = c.CONFIRMED + c.INFERRED + c.PROPOSED + c.NEEDS_INPUT + c.REJECTED;
+  if (!active) return 0;
+  return Math.round(Object.keys(W).reduce((s, k) => s + W[k] * c[k], 0) / active * 100);
+}
+function conflicts() {
+  const m = Object.fromEntries(decs().map(d => [d.id, d])), live = x => x && !['REJECTED', 'SUPERSEDED'].includes(x.status);
+  return (S.conflicts || []).filter(c => live(m[c.a]) && live(m[c.b]));
+}
+function blockers() {
+  const c = counts(), b = [];
+  if (c.NEEDS_INPUT) b.push(`${c.NEEDS_INPUT} decision${c.NEEDS_INPUT > 1 ? 's' : ''} still need your input`);
+  if (c.REJECTED) b.push(`${c.REJECTED} rejected: use Request Changes so I can replace ${c.REJECTED > 1 ? 'them' : 'it'}`);
+  const cf = conflicts().length; if (cf) b.push(`${cf} unresolved conflict${cf > 1 ? 's' : ''}`);
+  if (!selDir) b.push('Pick a design direction');
+  return b;
+}
+const pill = s => `<span class="pill s-${s}">${LABEL[s]}</span>`;
+const dirName = id => (S.directions.find(x => x.id === id) || {}).name || '';
+
+/* ---------- pieces ---------- */
+function header(c, pct) {
+  return `<div class="head"><div><div class="eyebrow">Opskeep · Project Gate</div><h1>${esc(S.project.name)}</h1>` +
+    (S.project.one_liner ? `<p class="sub">${esc(S.project.one_liner)}</p>` : '') + `</div>` +
+    `<div class="ready"><div class="big"><span>${pct}%</span><small>READY</small></div>` +
+    `<div class="meter" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>` +
+    `<div class="counts">${['CONFIRMED','INFERRED','PROPOSED','NEEDS_INPUT'].map(k => `<span class="pill s-${k}">${c[k]} ${LABEL[k].toLowerCase()}</span>`).join('')}` +
+    `<span class="pill ${conflicts().length ? 's-REJECTED' : 's-PROPOSED'}">${conflicts().length} conflicts</span></div></div></div>`;
+}
+function reopenBanner() {
+  const g = S.gate || {};
+  if (g.status !== 'reopened' || !(g.reopened || []).length) return '';
+  return `<div class="banner"><b>Reopened.</b> ${g.reopened.length} decision${g.reopened.length > 1 ? 's' : ''} affected by a change (${esc(g.reopened.join(', '))}). Everything else stays as approved.</div>`;
+}
+function strategyBlock() {
+  const st = S.strategy; if (!st) return '';
+  const c = st.constraint || {}, b = st.bet || {}, f = st.forces || {};
+  const rejected = S.directions.filter(x => x.id !== selDir);
+  const forces = ['push', 'pull', 'anxiety', 'habit'].filter(k => f[k]);
+  return `<section class="blk"><h2>The problem &amp; the bet</h2>` +
+    `<p style="font-size:17px;font-weight:650;margin:0 0 6px">${esc(c.statement || '')}</p>` +
+    (c.evidence ? `<p class="hint" style="margin:0 0 14px">Evidence: ${esc(c.evidence)}</p>` : '<p class="hint" style="margin:0 0 14px">No evidence recorded yet.</p>') +
+    (forces.length ? `<dl class="kv">${forces.map(k => `<dt>${k[0].toUpperCase() + k.slice(1)}</dt><dd>${esc(f[k])}</dd>`).join('')}</dl>` : '') +
+    `<h3 class="area-h">Already working or existing</h3><p style="margin:0">${(st.existing_assets || []).map(esc).join('; ')}</p>` +
+    `<h3 class="area-h">The bet</h3><p style="margin:0">We believe ${esc(b.belief || '')}, so we are betting <b>${esc(b.wager || '')}</b> that this produces ${esc(b.expected_outcome || '')}. We will watch ${esc(b.leading_indicator || '')}.</p>` +
+    `<h3 class="area-h">Outcomes</h3><ul style="margin:0;padding-left:18px">${(st.outcomes || []).map(o => `<li>${esc(o)}</li>`).join('')}</ul>` +
+    (rejected.length ? `<h3 class="area-h">Paths considered${selDir ? ' and not chosen' : ''}</h3><ul style="margin:0;padding-left:18px">${rejected.map(x => `<li><b>${esc(x.name)}</b>: ${esc(x.why_not || x.tradeoffs)}</li>`).join('')}</ul>` : '') +
+    `</section>`;
+}
+function intentBlock() {
+  return `<section class="blk"><h2>Project intent</h2><dl class="kv">${(S.intent || []).map(r => `<dt>${esc(r.label)}</dt><dd>${esc(r.value)}</dd>`).join('')}</dl></section>`;
+}
+function characterBlock() {
+  if (!(S.character || []).length) return '';
+  return `<section class="blk"><h2>Product character</h2>${S.character.map(t =>
+    `<div class="trait"><span>${esc(t.trait)}</span><div class="meter" role="img" aria-label="${esc(t.trait)} ${t.score} percent"><i style="width:${t.score}%"></i></div><b>${t.score}%</b></div>`).join('')}</section>`;
+}
+function needBlock() {
+  const ns = decs().filter(d => d.status === 'NEEDS_INPUT');
+  if (!ns.length) return '';
+  return `<section class="blk block-need"><h2>Blocking decisions · ${ns.length}</h2>${ns.map(d => `<div class="need"><span class="pill s-NEEDS_INPUT">Needs input</span> <span class="mono hint">${d.id}</span>` +
+    `<h3>${esc(d.question || d.title)}</h3>${d.rationale ? `<p class="hint">${esc(d.rationale)}</p>` : ''}` +
+    (d.reopened_because ? `<p class="hint">Reopened: ${esc(d.reopened_because)}</p>` : '') +
+    (d.options && d.options.length
+      ? `<div class="opts">${d.options.map(o => `<button type="button" class="opt" data-a="choose" data-id="${d.id}" data-v="${esc(o.value)}" data-l="${esc(o.label)}"><b>${esc(o.label)}</b>${o.hint ? `<small>${esc(o.hint)}</small>` : ''}</button>`).join('')}</div>`
+      : `<textarea id="ed-${d.id}" placeholder="Your answer" aria-label="${esc(d.title)}"></textarea><button type="button" class="btn primary sm" data-a="save-free" data-id="${d.id}">Save answer</button>`) +
+    `</div>`).join('')}</section>`;
+}
+function actions(d, changed) {
+  const b = (a, l, cls) => `<button type="button" class="btn sm ${cls || ''}" data-a="${a}" data-id="${d.id}">${l}</button>`;
+  let r = '';
+  if (d.status === 'INFERRED' || d.status === 'PROPOSED') r = b('confirm', 'Confirm', 'primary') + b('edit', 'Change') + b('reject', 'Reject', 'danger');
+  else if (d.status === 'CONFIRMED') r = b('edit', 'Change') + (changed ? b('reset', 'Undo') : '');
+  else if (d.status === 'REJECTED') r = b('reset', 'Reconsider');
+  return r ? `<div class="row">${r}</div>` : '';
+}
+function editor(d) {
+  return `<div class="row" style="align-items:stretch;flex-direction:column;gap:8px;margin-top:8px">` +
+    (d.options && d.options.length ? `<div class="opts">${d.options.map(o => `<button type="button" class="opt" data-a="choose" data-id="${d.id}" data-v="${esc(o.value)}" data-l="${esc(o.label)}"><b>${esc(o.label)}</b>${o.hint ? `<small>${esc(o.hint)}</small>` : ''}</button>`).join('')}</div>` : '') +
+    `<textarea id="ed-${d.id}" aria-label="Edit ${esc(d.title)}">${esc(d.value)}</textarea>` +
+    `<div class="row"><button type="button" class="btn primary sm" data-a="save-edit" data-id="${d.id}">Save change</button><button type="button" class="btn sm" data-a="cancel-edit">Cancel</button></div></div>`;
+}
+function decRow(d) {
+  const changed = !!edits[d.id];
+  return `<li class="dec ${d.status === 'SUPERSEDED' ? 'muted' : ''} ${changed ? 'changed' : ''}" id="${d.id}"><div class="dec-head"><span class="mono id">${d.id}</span><span class="dec-title">${esc(d.title)}</span>${pill(d.status)}</div>` +
+    `<div class="dec-val">${esc(d.value)}</div>${d.rationale ? `<div class="dec-why">${esc(d.rationale)}</div>` : ''}` +
+    (editing === d.id ? editor(d) : actions(d, changed)) + `</li>`;
+}
+function decisionsBlock() {
+  const all = decs().filter(d => d.status !== 'NEEDS_INPUT');
+  const html = AREAS.map(([k, label]) => {
+    const rows = all.filter(d => d.area === k && d.status !== 'SUPERSEDED');
+    return rows.length ? `<h3 class="area-h">${label}</h3><ul class="decs">${rows.map(decRow).join('')}</ul>` : '';
+  }).join('');
+  const sup = all.filter(d => d.status === 'SUPERSEDED');
+  return `<section class="blk"><h2>Decisions</h2>${html}${sup.length ? `<h3 class="area-h">Superseded</h3><ul class="decs">${sup.map(decRow).join('')}</ul>` : ''}</section>`;
+}
+function conflictBlock() {
+  const cf = conflicts(); if (!cf.length) return '';
+  return `<section class="blk block-need"><h2>Conflicts · ${cf.length}</h2>${cf.map(c => `<p class="need"><span class="mono">${c.a} ↔ ${c.b}</span><br>${esc(c.text)}<br><span class="hint">Reject or change one of them above to resolve.</span></p>`).join('')}</section>`;
+}
+function dirCard(x) {
+  const sel = selDir === x.id, open = openDirs.has(x.id), col = (x.tokens && x.tokens.color) || {};
+  return `<article class="dir ${sel ? 'sel' : ''}"><div class="stage">${miniPreview(Object.assign({title: S.project.name}, x.preview))}</div>` +
+    `<div class="dir-top"><span class="mono hint">${x.id}</span><h3>${esc(x.name)}</h3>${sel ? '<span class="pill s-CONFIRMED">Selected</span>' : ''}</div><p>${esc(x.tagline)}</p>` +
+    (open ? `<div class="detail"><p>${esc(x.fit)}</p><div class="swatchrow" aria-label="Palette">${['bg','surface','primary','text'].map(k => col[k] ? `<i style="background:${esc(col[k])}" title="${k} ${esc(col[k])}"></i>` : '').join('')}</div>` +
+      `<dl>${Object.entries(x.foundation).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl><p><b>Trade-off:</b> ${esc(x.tradeoffs)}</p></div>` : '') +
+    `<div class="row"><button type="button" class="btn ${sel ? '' : 'primary'}" data-a="select-dir" data-id="${x.id}" aria-pressed="${sel}">${sel ? 'Selected' : 'Select direction'}</button>` +
+    `<button type="button" class="btn" data-a="toggle-dir" data-id="${x.id}" aria-expanded="${open}">${open ? 'Hide details' : 'Explore direction'}</button></div></article>`;
+}
+function directionsBlock() {
+  return `<section class="blk"><h2>Design directions</h2><div class="dirs">${S.directions.map(dirCard).join('')}</div></section>`;
+}
+function foundationBlock() {
+  const x = S.directions.find(d => d.id === selDir);
+  return `<section class="blk"><h2>Foundation${x ? ' · ' + esc(x.name) : ''}</h2>` +
+    (x ? `<table class="found">${Object.entries(x.foundation).map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</table>` : '<p class="hint">Select a direction to see its foundation.</p>') + '</section>';
+}
+function riskBlock() {
+  const rs = S.risks || [], as = S.assumptions || [];
+  if (!rs.length && !as.length) return '';
+  return `<section class="blk"><h2>Risks &amp; assumptions</h2>` +
+    rs.map(r => `<div class="risk"><span class="pill ${r.severity === 'high' ? 's-REJECTED' : r.severity === 'low' ? 's-PROPOSED' : 's-NEEDS_INPUT'}">${esc(r.severity || 'med')}</span><span>${esc(r.text)}</span></div>`).join('') +
+    as.map(a => `<div class="risk"><span class="pill s-INFERRED">assumed</span><span>${esc(a.text)}</span></div>`).join('') + '</section>';
+}
+function approvalRail() {
+  const bl = blockers(), c = counts(), unrev = c.INFERRED + c.PROPOSED;
+  return `<div class="gate ${result && result.action === 'approve_project_gate' ? 'ok' : ''}"><div class="eyebrow">Project gate</div>` +
+    `<div class="state">${result && result.action === 'approve_project_gate' ? 'APPROVAL SUBMITTED' : '⚠ NOT APPROVED'}</div>` +
+    `<p class="fine">${result && result.action === 'approve_project_gate' ? 'Not recorded until Claude validates and applies it.' : 'Approving authorises the design direction only, not implementation.'}</p>` +
+    (bl.length ? `<ul>${bl.map(b => `<li>${esc(b)}</li>`).join('')}</ul>` : '') +
+    `<label class="hint" for="notes">Notes for Claude (optional)</label><textarea id="notes" placeholder="Anything to add or change">${esc(notes)}</textarea>` +
+    `<div class="btns"><button type="button" class="btn primary" data-a="ask-approve" ${bl.length ? 'disabled' : ''}>Approve Project Gate</button>` +
+    `<button type="button" class="btn" data-a="submit" data-act="request_changes">Request Changes</button>` +
+    `<button type="button" class="btn" data-a="submit" data-act="explore_alternative">Explore Alternative</button></div>` +
+    (confirming ? `<div class="confirm"><span>Approve <b>${esc(dirName(selDir))}</b> for <b>${esc(S.project.name)}</b>?` +
+      (unrev ? ` ${unrev} inferred/proposed decision${unrev > 1 ? 's' : ''} will be confirmed by approving.` : '') + ` Implementation stays locked until the security gate passes.</span>` +
+      `<div class="row"><button type="button" class="btn primary sm" data-a="submit" data-act="approve_project_gate">Yes, approve</button><button type="button" class="btn sm" data-a="cancel-approve">Cancel</button></div></div>` : '') +
+    (result ? resultPanel(result, {title: {approve_project_gate: 'Approval ready', request_changes: 'Change request ready', explore_alternative: 'Alternative request ready'}[result.action], lead: 'Copy this and paste it back into the chat with Claude, or download it.', filename: 'gate-response.json'}) : '') + '</div>';
+}
+
+function render() {
+  const c = counts();
+  $('#app').innerHTML = header(c, readiness(c)) + reopenBanner() +
+    `<div class="layout"><div>${strategyBlock()}${intentBlock()}${characterBlock()}${needBlock()}${conflictBlock()}${directionsBlock()}${foundationBlock()}${decisionsBlock()}${riskBlock()}</div><aside class="rail">${approvalRail()}</aside></div>`;
+  if (editing) { const t = $('#ed-' + editing); if (t) t.focus(); }
+}
+
+/* ---------- actions ---------- */
+function setEdit(id, patch) { edits[id] = Object.assign({}, edits[id] || {}, patch); result = null; confirming = false; persist(); }
+function buildResponse(action) {
+  const changes = [];
+  Object.entries(edits).forEach(([id, e]) => {
+    const base = S.decisions.find(d => d.id === id); if (!base) return;
+    if (e.status !== base.status || (e.value != null && e.value !== base.value)) {
+      const ch = {id, status: e.status, value: e.value != null ? e.value : base.value};
+      if (e.choice) ch.choice = e.choice; changes.push(ch);
+    }
+  });
+  return {schema: 'opskeep.project-gate/response@1', project: S.project.slug, base_hash: H, action, selected_direction: selDir, changes, notes: notes.trim(), submitted_at: new Date().toISOString()};
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-a]'); if (!t) return;
+  const a = t.dataset.a, id = t.dataset.id;
+  if (a === 'copy') return copyResult();
+  if (a === 'download') return downloadResult(t.dataset.f);
+  if (a === 'confirm') setEdit(id, {status: 'CONFIRMED'});
+  else if (a === 'reject') setEdit(id, {status: 'REJECTED'});
+  else if (a === 'reset') { delete edits[id]; result = null; persist(); }
+  else if (a === 'edit') editing = id;
+  else if (a === 'cancel-edit') editing = null;
+  else if (a === 'save-edit') { const v = $('#ed-' + id).value.trim(); if (v) setEdit(id, {status: 'CONFIRMED', value: v}); editing = null; }
+  else if (a === 'save-free') { const v = $('#ed-' + id).value.trim(); if (!v) return; setEdit(id, {status: 'CONFIRMED', value: v}); }
+  else if (a === 'choose') { setEdit(id, {status: 'CONFIRMED', value: t.dataset.l, choice: t.dataset.v}); editing = null; }
+  else if (a === 'select-dir') { selDir = id; result = null; confirming = false; persist(); }
+  else if (a === 'toggle-dir') { openDirs.has(id) ? openDirs.delete(id) : openDirs.add(id); }
+  else if (a === 'ask-approve') confirming = true;
+  else if (a === 'cancel-approve') confirming = false;
+  else if (a === 'submit') { if (t.dataset.act === 'approve_project_gate' && blockers().length) return; confirming = false; result = buildResponse(t.dataset.act); }
+  else return;
+  render();
+  if (result && (a === 'submit')) { const r = $('#result-json'); if (r) r.scrollIntoView({block: 'nearest', behavior: 'smooth'}); }
+});
+document.addEventListener('input', e => { if (e.target.id === 'notes') { notes = e.target.value; result = null; persist(); } });
+render();
+</script>
+</body>
+</html>

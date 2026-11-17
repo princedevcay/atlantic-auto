@@ -1,0 +1,53 @@
+{
+  "skill": "Opskeep-project-gate",
+  "version": "1.1.0",
+  "project": "Atlantic Auto and Shipping Services",
+  "status": "approved",
+  "approved_at": "2026-11-17T06:30:27Z",
+  "approval_method": "chat",
+  "implementation_authorized": false,
+  "next_gate": "opskeep-elliot-design",
+  "direction": {
+    "id": "A",
+    "name": "Harbour Trust"
+  },
+  "decisions": {
+    "confirmed": 24,
+    "inferred": 0,
+    "open": 0,
+    "blocking": 0,
+    "confirmed_explicitly": 10,
+    "confirmed_by_gate_approval": 14
+  },
+  "state_hash": "fd8a643cbbaeda80",
+  "files": {
+    "PROJECT.md": "21beaf399eaaf9158d259ddbf7b7adad788210de1432d32ba5c3da048a42b580",
+    "assumptions.md": "5cd77328fbcaff7e1f8fd2073c3043b6c66fe621e47669eb84cf8cb723fe75a7",
+    "decisions.yaml": "ace9f404117875dfc0bf05536ab4e7dfd0b6ead0022e583736305496fc5a2006",
+    "tokens.json": "f9e28f26a772db0fe500bbd8e518f7ab60d011627dd01d5b048598bbf9fe0d30",
+    "intake.yaml": "45de42f574506fd958305d1d7edac27496818ee28910cbddb1eab2303986000f",
+    "DESIGN.md": "f0f409e74c6cae2d3756d6a0caa356c62e720070d4291193d83463bc8d9c23b3",
+    "screens.md": "95a82d6914b01c7f6eee3e83eab924253c597663a89bdc669d43ddaba635bbef",
+    "components.md": "a6add67d580900c2460038aa22b95c3ffd2d1cf983d9bf2774b8cf43ac7fc533",
+    "responsive.md": "8e19ea5ab09a4272d96bb0f09f563814f686cc142556b04c0370a98270c46b44",
+    "accessibility.md": "87e519dc56688767df0ba4e804bc743b244157742c5c29a7d94a7e29f7e5b9ad",
+    "state.json": "acd456bf7a16b4046d3ef82ad8d106e84583caf4aa86935cb2c67faa81e5a6c5"
+  },
+  "history": [
+    {
+      "at": "2026-11-17T06:27:12Z",
+      "event": "approved",
+      "detail": "via chat"
+    },
+    {
+      "at": "2026-11-17T06:27:49Z",
+      "event": "reopened",
+      "detail": "PG-014: I will supply the images used in the landing page and also the hero sections"
+    },
+    {
+      "at": "2026-11-17T06:30:27Z",
+      "event": "approved",
+      "detail": "via chat"
+    }
+  ]
+}

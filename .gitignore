@@ -1,0 +1,25 @@
+# Secrets: never commit
+.env
+.env.*
+!.env.example
+config.php
+*.pem
+*.key
+*.sql
+*.sql.gz
+*.dump
+
+# Dependencies and builds
+node_modules/
+vendor/
+dist/
+build/
+.next/
+.vercel/
+
+# OS and editor
+.DS_Store
+._*
+.idea/
+.vscode/
+*.log
