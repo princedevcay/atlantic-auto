@@ -1,0 +1,110 @@
+# Pull request and main-branch checks (GATE-002). Job names are the required checks on main.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secret-scan:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  dependency-audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+          coverage: none
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+      - name: Composer audit (fails on any advisory)
+        run: composer audit --locked --no-interaction
+      - name: npm audit (fails on high or critical)
+        run: npm audit --audit-level=high
+      - name: Security baseline is valid
+        run: |
+          python3 -m pip install --quiet pyyaml==6.0.3
+          python3 .opskeep/elliot/scripts/validate_baseline.py security-baseline.yaml --strict-warnings
+
+  php-lint-and-tests:
+    runs-on: ubuntu-24.04
+    services:
+      db:
+        image: mariadb:10.11
+        env:
+          MARIADB_DATABASE: atlantic
+          MARIADB_USER: atlantic
+          MARIADB_PASSWORD: ci-only-password
+          MARIADB_ROOT_PASSWORD: ci-only-root
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.2'
+          extensions: pdo_mysql, gd, fileinfo, openssl, curl
+          tools: composer:v2
+          coverage: none
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+      - run: composer install --no-interaction --no-progress
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+      - name: PHP syntax
+        run: find app bin public tests -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
+      - name: Banned patterns (SQL built from strings, unescaped output)
+        run: bash scripts/check-patterns.sh
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse --no-progress --memory-limit=1G
+      - name: Test config (CI only, synthetic data)
+        run: |
+          mkdir -p "$RUNNER_TEMP/aa/storage" "$RUNNER_TEMP/aa/backups"
+          cat > "$RUNNER_TEMP/aa/config.php" <<EOF
+          <?php
+          \$c = require '$GITHUB_WORKSPACE/config.example.php';
+          \$c['app'] = ['env' => 'local', 'url' => 'http://127.0.0.1:8080', 'name' => 'Atlantic CI', 'key' => '$(openssl rand -base64 32)'];
+          \$c['db'] = ['dsn' => 'mysql:host=127.0.0.1;port=3306;dbname=atlantic;charset=utf8mb4', 'user' => 'atlantic', 'pass' => 'ci-only-password'];
+          \$c['mail']['host'] = '';
+          \$c['paths'] = ['storage' => '$RUNNER_TEMP/aa/storage', 'backups' => '$RUNNER_TEMP/aa/backups'];
+          return \$c;
+          EOF
+      - name: Migrate
+        env:
+          ATLANTIC_CONFIG: ${{ runner.temp }}/aa/config.php
+        run: php bin/migrate.php
+      - name: Tests (unit and end-to-end access checks)
+        env:
+          ATLANTIC_CONFIG: ${{ runner.temp }}/aa/config.php
+          BASE_URL: http://127.0.0.1:8080
+        run: |
+          php -S 127.0.0.1:8080 -t public scripts/dev-router.php > "$RUNNER_TEMP/server.log" 2>&1 &
+          sleep 1
+          vendor/bin/phpunit

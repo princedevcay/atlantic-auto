@@ -27,6 +27,29 @@ The approved design lives in `.opskeep/project-gate/`. Read `DESIGN.md` before c
 - [GUI.md](GUI.md): interface handoff, capability status, contracts
 - [security-baseline.yaml](security-baseline.yaml): the authoritative security record
 
+## Local development
+
+Needs PHP 8.2+, Composer, Node 22 and MySQL or MariaDB.
+
+```bash
+composer install && npm ci --ignore-scripts && npm run build
+```
+
+1. Copy `config.example.php` to `private/config.php` (gitignored) and set `app.env` to `local`, a database, and `paths` under `private/`.
+2. `php bin/migrate.php`
+3. `php bin/create-admin.php "Your Name" you@example.com` (prints a temporary password once)
+4. `php -S localhost:8080 -t public scripts/dev-router.php`
+
+Tests: `vendor/bin/phpunit` (set `BASE_URL` and `ATLANTIC_CONFIG` to also run the end-to-end access tests against a running server), `vendor/bin/phpstan analyse`, `bash scripts/check-patterns.sh`.
+
+## Server setup (Namecheap cPanel)
+
+- Code deploys to `~/atlantic-auto/` over FTPS; point the domain's document root at `~/atlantic-auto/public`.
+- `~/atlantic-auto-private/config.php` from `config.example.php`, with `storage` and `backups` paths in that folder. Deploys never touch it.
+- In cPanel Terminal: `php ~/atlantic-auto/bin/migrate.php`, then `php ~/atlantic-auto/bin/create-admin.php "Name" email`.
+- Cron jobs: see the header of `bin/cron.php`.
+- Client photos go in `public/assets/img/site/` (names in `brand/LOGOS.md`).
+
 ## Status
 
-Project Gate approved and sealed. Security baseline 0.1.0 approved on 17 Nov 2026 (development and production on Namecheap cPanel). Implementation can start; production deploys wait for the CI and pre-launch gates. No application code exists yet, so there are no setup, test or deploy commands.
+Project Gate approved (reopened on 17 Nov 2026 for the new landing page mockup and car brand logos, PG-028 and PG-029, awaiting re-approval). Security baseline 0.1.0 approved. The site and admin are built and tested locally; production deploys stay blocked until the pre-launch gates have passing evidence.

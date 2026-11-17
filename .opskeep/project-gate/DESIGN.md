@@ -33,8 +33,8 @@ It is deliberately **not** a scroll-story microsite (direction C, rejected as to
 
 1. Every public page offers **Request an Import Quote** (primary, teal filled) and **Request a Vehicle Update** (secondary, outlined). Never more than one filled primary button per view. (PG-003)
 2. Scope is USA to Ghana. Never present the company as shipping between arbitrary places, and never add a pickup/destination planner. (PG-004, PG-026)
-3. The landing page has exactly the 12 sections in `screens.md`, in that order. (PG-027)
-4. Never publish prices, duty rates, transit times, customer counts or reviews the client has not supplied. Cost and clearance sections explain components only. Testimonials stay hidden until real content exists. (PG-015, PG-027, AS-08)
+3. The landing page follows the owner's 17 Nov mockup, in the order listed in `screens.md`. (PG-029)
+4. Never publish prices, duty rates, transit times, customer counts or reviews the client has not supplied. Cost and clearance sections explain components only. Testimonials stay hidden until real content exists. (PG-015, PG-029, AS-08)
 5. Phone numbers are shown and validated in +233 format; WhatsApp links use `wa.me` with the client's number. No placeholder contact details ship. (PG-015, PG-026)
 6. Forms are one column on mobile, labels above fields, inline errors, and a thank-you screen with a reference number and a prefilled "Continue on WhatsApp" link. (PG-006, PG-008, PG-017, PG-020)
 7. Select boxes use `appearance:none`, about 42px right padding and one teal 16px chevron at `right 14px center` (studio rule). (PG-017)
@@ -42,7 +42,7 @@ It is deliberately **not** a scroll-story microsite (direction C, rejected as to
 9. A tracking page opens only from a private link, or tracking reference plus last 4 phone digits. VIN alone never opens one. (PG-022)
 10. Copy says stages are updated by the Atlantic team and the carrier; never imply live GPS. (R-01)
 11. The admin inbox is one inbox with tabs All, Import Quotes, Vehicle Updates, each with a new-item count. Notification email subjects start with `[Import Quote]` or `[Vehicle Update]`. (PG-025)
-12. All landing page and hero images are supplied by the client. Do not generate or use stock images. Until a file arrives, its slot is a plain navy or pale panel. No car brand logos as decoration; third-party marks (WhatsApp, carriers) use official files only. (PG-014)
+12. All landing page and hero photos are supplied by the client. Do not generate or use stock images. Until a file arrives, its slot is a pale panel with an icon. 'What we import' shows the real Toyota, Honda, Ford, Mercedes-Benz and Isuzu logos with example models; every third-party mark uses an official file recorded in brand/LOGOS.md. (PG-028)
 13. Pages stay lean: responsive compressed images (AVIF/WebP with JPEG fallback), no heavy client frameworks on public pages, forms submit without JavaScript. (PG-012)
 14. No em dashes in any copy, UI string or code comment (studio rule).
 

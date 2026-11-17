@@ -4,23 +4,21 @@ Site map from PG-018. Public pages share the top bar (logo, Services, How It Wor
 
 ## Public
 
-### Home (landing page, PG-027)
-Purpose: turn a first-time visitor into a quote request, and route existing customers to tracking or an update request. Sections in this order:
+### Home (landing page, PG-029)
+Purpose: turn a first-time visitor into a quote request, and route existing customers to tracking or an update request. Follows the owner's 17 Nov mockup:
 
-1. **Hero**: navy band, client-supplied image (PG-014). Headline "Import Your Vehicle from the USA", supporting line from the supplied copy, buttons Request an Import Quote and Request a Vehicle Update.
-2. **Track Your Vehicle quick box**: tracking reference and last 4 phone digits, Track button. Errors inline.
-3. **Services**: six cards, Sourcing, Purchase, Pickup, Shipping, Clearance, Delivery, each one line and an icon.
-4. **How it works**: horizontal timeline on desktop, vertical on mobile, US lot to your door in Ghana.
-5. **Why Atlantic**: four points (Ghanaian team, one contact throughout, updates at every stage, paperwork handled). No figures.
-6. **What we import**: cars, SUVs, pickups and trucks; auctions, dealers, private sellers.
-7. **What your cost is made of**: purchase, US towing, ocean freight, Tema duty and clearance, delivery. Explanation only, ends with the quote button.
-8. **Clearing at Tema**: what the team handles and documents the customer provides.
+1. **Hero**: navy band with client photo on the right, headline "Import Your Vehicle from the USA", supporting line, Request an Import Quote and Request a Vehicle Update.
+2. **Track bar**: one-row card overlapping the hero: title, tracking reference, last 4 phone digits, Track Vehicle.
+3. **Services**: six photo cards, Sourcing, Purchase, Pickup, Shipping, Clearance, Delivery.
+4. **Six stages**: icon stepper joined by a line.
+5. **Why Atlantic**: four points with round icons.
+6. **What we import**: five cards with real brand logo, photo, type and example model (Toyota Camry, Honda CR-V, Ford Ranger, Mercedes-Benz Sprinter, Isuzu NPR), then a strip: US auctions, Dealers, Private sellers, Vehicles you already own.
+7. **What your cost is made of**: five parts with icons, no figures.
+8. **Clearing at Tema**: photo, "We take care of" and "What you provide" checklists.
 9. **Recent deliveries and testimonials**: hidden until the client supplies real content.
-10. **FAQ**: accordion, 6 to 10 questions.
-11. **About Us**: supplied copy.
-12. **Closing call to action**: navy band, "Have a question about importing?", both buttons, phone, WhatsApp, office, email.
+10 to 12. **One row**: FAQ accordion, About Us card (photo, text, both buttons), Contact card.
 
-States: images missing show plain panels; section 9 absent until content exists.
+States: missing photos show pale panels with an icon; section 9 absent until content exists.
 
 ### Services
 The six steps in more depth, each with what Atlantic does and what the customer does. Ends with the quote button.

@@ -23,3 +23,19 @@ build/
 .idea/
 .vscode/
 *.log
+
+# Local private folder (config.php, storage) for development
+private/
+storage/
+# Built assets (CI builds them)
+public/assets/css/app.css
+public/assets/fonts/
+public/assets/icons/
+public/assets/img/brands/whatsapp.svg
+.phpunit.cache/
+
+public/assets/img/brands/toyota.svg
+public/assets/img/brands/honda.svg
+public/assets/img/brands/ford.svg
+public/assets/img/brands/mercedes-benz.svg
+public/assets/img/brands/isuzu.svg
