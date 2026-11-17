@@ -32,6 +32,11 @@ final class SiteController
         View::render('pages/contact', ['title' => 'Contact', 'nav' => 'contact']);
     }
 
+    public static function terms(): void
+    {
+        View::render('pages/terms', ['title' => 'Terms of Use', 'nav' => '']);
+    }
+
     public static function privacy(): void
     {
         View::render('pages/privacy', ['title' => 'Privacy', 'nav' => '']);

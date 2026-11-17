@@ -21,6 +21,9 @@ Ghanaian buyers importing a car from the USA, mostly on phones and mobile data, 
 | Request a Vehicle Update | `/update` | public | `POST /update` | NOT BUILT | default, invalid, rate-limited, failed, success | NOT_YET_BUILT | |
 | Track lookup | `/track` and home quick box | public | `POST /track` | NOT BUILT | default, not found (generic), rate-limited | NOT_YET_BUILT | |
 | Tracking page | `/t/{token}` | customer with token or verified lookup | `GET /t/{token}` | NOT BUILT | default, revoked/not found, carrier stale | NOT_YET_BUILT | Carrier provider pending (DEC-005) |
+| Website chat (phase 1) | floating button on every public page | public | none (predefined answers in `app/Models/Chat.php`; nothing typed is sent or stored) | WORKING (local) | closed, open, offline/online, chip answer, typed message hand-off | tests/Unit/ChatTest.php; manual browser check 17 Nov 2026 | Phase 2 AI agent with staff hand-off needs a security baseline change first (AI_AGENT controls) |
+| Terms of Use | `/terms` | public | server-rendered | WORKING (local) | default | manual browser check | Draft text; client to confirm |
+| Mobile menu drawer | header menu under 1024px | public | none | WORKING (local) | open, close by X, overlay or Escape | manual browser check | |
 | Staff sign-in + TOTP | `/admin/login`, `/admin/mfa` | staff, admin | `POST /admin/login`, `POST /admin/mfa` | NOT BUILT | default, wrong credentials, locked, session expired | NOT_YET_BUILT | |
 | Inbox with tabs | `/admin/inbox` (tabs: all, quotes, updates) | staff, admin | `GET /admin/inbox` | NOT BUILT | loading, empty, populated, forbidden | NOT_YET_BUILT | |
 | Shipments list and detail | `/admin/shipments`, `/admin/shipments/{id}` | staff, admin | `GET/POST /admin/shipments...` | NOT BUILT | empty, populated, saving, saved, error | NOT_YET_BUILT | |
@@ -52,6 +55,14 @@ All routes are server-rendered PHP. Every POST carries a CSRF token. The server 
 | Shipment.stage | Sourcing, Purchased, Picked up, Shipped, Clearing, Delivered | yes | CONFIDENTIAL | Timeline | Server |
 | Shipment.reference | 8 random characters | yes | CONFIDENTIAL | Shown to customer and staff | Server generated |
 | CarrierEvent.text | plain text | no | INTERNAL | Escaped; labelled "from carrier" with time | Server |
+
+## Website chat
+
+- Floating "Chat with us" button bottom-right; while open it turns into a round X that closes the panel. Hidden while the mobile menu drawer is open.
+- Header shows Online (green) or Offline (grey) from `chat.online_hours` in config (Accra time); empty means always offline. Hours to be confirmed by the client.
+- Greeting bubble, a horizontal row of question chips with predefined answers and a link, a message box whose replies point to WhatsApp or the contact page, and "Powered by princecaleb.dev".
+- Answers never state prices, duty rates or transit times (DESIGN.md rule 4).
+- The footer bottom row reserves space so the button and the phone action bar never cover footer text or links.
 
 ## Authentication and permissions
 

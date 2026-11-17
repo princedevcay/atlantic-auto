@@ -36,6 +36,11 @@ return [
         'hours' => '',
         'map_url' => '',
     ],
+    'chat' => [
+        // When the chat shows "Online" (green), in Africa/Accra time. Confirm with the client.
+        // Format: day => 'HH:MM-HH:MM'; days missing from the list are offline. Empty array = always offline.
+        'online_hours' => [],
+    ],
     'carrier' => [
         'provider' => null,               // null until DEC-005 picks a provider
         'base_url' => '',

@@ -60,6 +60,7 @@ if ($isAdmin) {
     $router->get('/about', [SiteController::class, 'about']);
     $router->get('/contact', [SiteController::class, 'contact']);
     $router->get('/privacy', [SiteController::class, 'privacy']);
+    $router->get('/terms', [SiteController::class, 'terms']);
 
     $router->get('/quote', [FormController::class, 'quoteForm']);
     $router->post('/quote', [FormController::class, 'quote']);

@@ -2,6 +2,7 @@
 @source "../../app/views";
 @source "../../app/Core";
 @source "../../app/Controllers";
+@source "../../public/assets/js";
 
 /* Fonts are self-hosted (scripts/copy-assets.mjs). */
 @font-face {
@@ -16,6 +17,9 @@
   font-weight: 100 900;
   font-display: swap;
 }
+
+/* While the mobile drawer is open, nothing floats over it (unlayered so it beats display utilities). */
+html.menu-open [data-chat], html.menu-open [data-actionbar] { display: none; }
 
 /* Harbour Trust tokens: .opskeep/project-gate/tokens.json */
 @theme {

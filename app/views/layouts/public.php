@@ -15,7 +15,7 @@ $hideBar = in_array($nav, ['quote', 'update', 'track'], true) || isset($s);
 <link rel="icon" href="<?= e(asset('img/favicon.png')) ?>">
 <script src="<?= e(asset('js/app.js')) ?>" defer></script>
 </head>
-<body class="flex min-h-screen flex-col <?= $hideBar ? '' : 'pb-20 md:pb-0' ?>">
+<body class="flex min-h-screen flex-col">
 <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-surface focus:px-4 focus:py-2">Skip to content</a>
 
 <header class="sticky top-0 z-40 border-b border-line bg-surface">
@@ -32,16 +32,28 @@ $hideBar = in_array($nav, ['quote', 'update', 'track'], true) || isset($s);
       <?php endforeach; ?>
       <a href="/quote" class="btn-primary ml-3">Request an Import Quote</a>
     </nav>
-    <details class="relative lg:hidden" data-menu>
-      <summary class="btn-ghost list-none cursor-pointer px-3" aria-label="Menu"><?= icon('menu', 'icon h-6 w-6') ?><span class="sr-only">Menu</span></summary>
-      <div class="absolute right-0 top-14 w-72 rounded-md border border-line bg-surface p-3 shadow-card">
-        <nav aria-label="Mobile">
+    <details class="lg:hidden" data-menu>
+      <summary class="btn-ghost list-none cursor-pointer px-3" aria-label="Open menu"><?= icon('menu', 'icon h-6 w-6') ?><span class="sr-only">Menu</span></summary>
+      <div class="fixed inset-0 z-[60] bg-navy/60" data-menu-close aria-hidden="true"></div>
+      <div class="fixed inset-y-0 right-0 z-[61] flex w-[86%] max-w-sm flex-col bg-surface shadow-[0_0_40px_rgb(12_42_69/0.35)]" role="dialog" aria-label="Menu">
+        <div class="flex items-center justify-between border-b border-line px-5 py-4">
+          <img src="<?= e(asset('img/logo.png')) ?>" alt="Atlantic Auto and Shipping Services" width="900" height="176" class="h-9 w-auto">
+          <button type="button" class="rounded-md p-2 text-ink hover:bg-bg" aria-label="Close menu" data-menu-close><?= icon('x', 'icon h-6 w-6') ?></button>
+        </div>
+        <nav aria-label="Mobile" class="flex flex-1 flex-col items-center justify-center gap-1 overflow-y-auto px-6 py-8 text-center">
+          <a href="/" class="w-full rounded-md px-4 py-3 text-lg font-semibold no-underline <?= $nav === 'home' ? 'bg-primary-soft text-primary' : 'text-ink hover:bg-bg' ?>" <?= $nav === 'home' ? 'aria-current="page"' : '' ?>>Home</a>
           <?php foreach ($links as $key => [$href, $label]): ?>
-            <a href="<?= e($href) ?>" class="block rounded-md px-3 py-3 font-medium text-ink no-underline hover:bg-bg" <?= $nav === $key ? 'aria-current="page"' : '' ?>><?= e($label) ?></a>
+            <a href="<?= e($href) ?>" class="w-full rounded-md px-4 py-3 text-lg font-semibold no-underline <?= $nav === $key ? 'bg-primary-soft text-primary' : 'text-ink hover:bg-bg' ?>" <?= $nav === $key ? 'aria-current="page"' : '' ?>><?= e($label) ?></a>
           <?php endforeach; ?>
-          <a href="/quote" class="btn-primary mt-2 w-full">Request an Import Quote</a>
-          <a href="/update" class="btn-secondary mt-2 w-full">Request a Vehicle Update</a>
         </nav>
+        <div class="space-y-2 border-t border-line px-5 py-5">
+          <a href="/quote" class="btn-primary w-full">Request an Import Quote</a>
+          <a href="/update" class="btn-secondary w-full">Request a Vehicle Update</a>
+          <?php $menuWa = whatsapp_url('Hello Atlantic, I have a question about importing a vehicle.'); ?>
+          <?php if ($menuWa !== ''): ?>
+            <a href="<?= e($menuWa) ?>" class="btn-ghost w-full border border-line" rel="noopener"><img src="<?= e(asset('img/brands/whatsapp.svg')) ?>" alt="" width="20" height="20" class="h-5 w-5"> Chat on WhatsApp</a>
+          <?php endif; ?>
+        </div>
       </div>
     </details>
   </div>
@@ -67,19 +79,25 @@ $hideBar = in_array($nav, ['quote', 'update', 'track'], true) || isset($s);
       <a href="/about" class="text-white/90 no-underline hover:text-white">About Us</a>
       <a href="/contact" class="text-white/90 no-underline hover:text-white">Contact</a>
       <a href="/privacy" class="text-white/90 no-underline hover:text-white">Privacy</a>
+      <a href="/terms" class="text-white/90 no-underline hover:text-white">Terms of Use</a>
     </nav>
     <?= App\Core\View::fetch('partials/contact-list', ['dark' => true]) ?>
   </div>
   <div class="border-t border-white/15">
-    <p class="container-x py-5 text-sm text-white/70">&copy; <?= e(gmdate('Y')) ?> Atlantic Auto and Shipping Services.</p>
+    <?php // Bottom room so the floating chat button and the phone action bar never cover footer text or links. ?>
+    <div class="container-x flex flex-col gap-2 pt-5 text-sm text-white/70 sm:flex-row sm:items-center sm:justify-between md:pb-24 <?= $hideBar ? 'pb-24' : 'pb-40' ?>">
+      <p>&copy; <?= e(gmdate('Y')) ?> Atlantic Auto and Shipping Services.</p>
+      <p>Built by <a href="https://princecaleb.dev" class="font-semibold text-white/90 no-underline hover:text-white hover:underline" rel="noopener" target="_blank">princecaleb.dev</a></p>
+    </div>
   </div>
 </footer>
 
 <?php if (!$hideBar): ?>
-<div class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-line bg-surface p-2 md:hidden">
+<div class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-line bg-surface p-2 md:hidden" data-actionbar>
   <a href="/quote" class="btn-primary btn-sm text-center leading-tight">Import Quote</a>
   <a href="/update" class="btn-secondary btn-sm text-center leading-tight">Vehicle Update</a>
 </div>
 <?php endif; ?>
+<?= App\Core\View::fetch('partials/chat', ['hideBar' => $hideBar]) ?>
 </body>
 </html>

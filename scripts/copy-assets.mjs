@@ -20,7 +20,7 @@ const icons = [
   'arrow-right', 'phone', 'mail', 'map-pin', 'clock', 'menu', 'x', 'shield-check', 'users', 'refresh-cw',
   'circle-check', 'circle-alert', 'inbox', 'package', 'log-out', 'upload', 'link', 'copy', 'trash-2',
   'user-plus', 'lock', 'car', 'anchor', 'image', 'info', 'file-text', 'smartphone', 'headset', 'bell',
-  'coins', 'clipboard-list', 'car-front', 'bus',
+  'coins', 'clipboard-list', 'car-front', 'bus', 'message-circle', 'send',
 ];
 for (const name of icons) {
   const svg = readFileSync(nm('lucide-static', 'icons', `${name}.svg`), 'utf8')
