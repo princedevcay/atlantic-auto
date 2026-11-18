@@ -247,7 +247,7 @@ final class Auth
             return;
         }
         try {
-            $id = Mailer::queue($to, '[Atlantic security] ' . $subject, $body);
+            $id = Mailer::queue($to, '[' . Mailer::COMPANY . '] Security: ' . $subject, $body);
             Mailer::sendQueued($id);
         } catch (\Throwable $e) {
             Log::error('alert failed', ['subject' => $subject]);

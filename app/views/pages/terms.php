@@ -4,7 +4,7 @@
     <!-- Draft for the client to confirm before launch. Not legal advice. -->
     <div class="mb-8 rounded-md border-2 border-warning bg-surface p-4 text-sm text-warning" role="note">Draft terms of use. Atlantic Auto will confirm this text before the site goes live.</div>
     <h2 class="text-2xl font-bold">About this website</h2>
-    <p>This website is run by Atlantic Auto and Shipping Services, a company based in Ghana that helps customers import vehicles from the USA. By using the site you agree to these terms.</p>
+    <p>This website is run by Atlantic Auto And Shipping Services, a company based in Ghana that helps customers import vehicles from the USA. By using the site you agree to these terms.</p>
     <h2 class="mt-8 text-2xl font-bold">Information on the site</h2>
     <p>The information here is a general guide to our services. It is not a quote or an offer. Prices, duty, taxes and timings depend on each vehicle and are confirmed only in a written quote from our team.</p>
     <h2 class="mt-8 text-2xl font-bold">Quote and update requests</h2>

@@ -7,7 +7,7 @@ return [
     'app' => [
         'env' => 'production',            // production | local
         'url' => 'https://example.com',   // public base URL, no trailing slash
-        'name' => 'Atlantic Auto and Shipping Services',
+        'name' => 'Atlantic Auto And Shipping Services',
         // 32 random bytes, base64. Generate with: php -r 'echo base64_encode(random_bytes(32)), "\n";'
         // Encrypts staff TOTP secrets. Rotating it requires staff to re-enrol MFA.
         'key' => '',
@@ -24,7 +24,7 @@ return [
         'user' => '',
         'pass' => '',
         'from' => 'no-reply@example.com',
-        'from_name' => 'Atlantic Auto website',
+        // The sender name is always "Atlantic Auto And Shipping Services" (set in app/Core/Mailer.php).
         'inbox' => '',                    // the shared inbox that receives both request types
         'alerts' => '',                   // developer address for security alerts
     ],
