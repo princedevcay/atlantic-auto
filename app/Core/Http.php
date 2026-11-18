@@ -69,6 +69,8 @@ final class Http
 
     public static function securityHeaders(bool $noStore = false): void
     {
+        // Shared hosting sends X-Powered-By with the exact PHP version; expose_php cannot be changed there.
+        header_remove('X-Powered-By');
         header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'");
         header('X-Content-Type-Options: nosniff');
         header('Referrer-Policy: strict-origin-when-cross-origin');
