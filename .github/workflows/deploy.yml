@@ -47,7 +47,8 @@ jobs:
       - name: Assemble the deploy bundle (only what the server needs)
         run: |
           mkdir dist
-          cp -R app bin database public vendor composer.json dist/
+          cp -R app bin database public vendor composer.json .htaccess dist/
+          test -f dist/public/.htaccess && test -f dist/.htaccess
           rm -f dist/public/.app-root
           tar -czf bundle.tar.gz -C dist .
       - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
@@ -91,6 +92,11 @@ jobs:
           protocol: ftps
           port: 21
           local-dir: ./dist/
+          # The FTP account's home is the domain folder ~/atlanticautoservices.com, so ./ is that folder.
+          # config.php lives in ~/atlantic-auto-private, outside the FTP account, and is never touched.
           server-dir: ./
+          exclude: |
+            **/.git*
+            **/.git*/**
           dangerous-clean-slate: false
           log-level: minimal

@@ -44,11 +44,29 @@ Tests: `vendor/bin/phpunit` (set `BASE_URL` and `ATLANTIC_CONFIG` to also run th
 
 ## Server setup (Namecheap cPanel)
 
-- Code deploys to `~/atlantic-auto/` over FTPS; point the domain's document root at `~/atlantic-auto/public`.
-- `~/atlantic-auto-private/config.php` from `config.example.php`, with `storage` and `backups` paths in that folder. Deploys never touch it.
-- In cPanel Terminal: `php ~/atlantic-auto/bin/migrate.php`, then `php ~/atlantic-auto/bin/create-admin.php "Name" email`.
-- Cron jobs: see the header of `bin/cron.php`.
-- Client photos go in `public/assets/img/site/` (names in `brand/LOGOS.md`).
+Domain: **atlanticautoservices.com**, folder `~/atlanticautoservices.com` (created by cPanel).
+
+```
+~/atlanticautoservices.com/    deployed by GitHub Actions over FTPS (the FTP account's home)
+  .htaccess                    sends every request into public/, 404s app code
+  public/                      the only web-reachable folder (best: set it as the document root)
+  app/ bin/ database/ vendor/
+~/atlantic-auto-private/       never deployed or overwritten
+  config.php                   from config.example.php
+  storage/ backups/
+```
+
+1. **Document root (recommended):** in cPanel, Domains, set the document root of atlanticautoservices.com to `atlanticautoservices.com/public`. The root `.htaccess` also protects the code if you leave it as is.
+2. **PHP 8.2 or later** for the domain (cPanel, Select PHP Version), with `pdo_mysql`, `gd`, `fileinfo`, `openssl`, `curl`.
+3. **SSL:** AutoSSL certificate active for the domain and www.
+4. **Database:** create a MySQL database and a user with privileges on that database only.
+5. **FTP account:** cPanel, FTP Accounts, create a dedicated account whose directory is `atlanticautoservices.com` (not the account root). Use a long generated password.
+6. **GitHub secrets:** add them yourself in GitHub, Settings, Environments, production (or run `gh secret set NAME --env production` and paste when prompted): `FTP_SERVER` (the server hostname from cPanel), `FTP_USERNAME`, `FTP_PASSWORD`.
+7. **Config:** in cPanel File Manager or Terminal, create `~/atlantic-auto-private/config.php` from `config.example.php` with the real database, mail, contact, `app.url` `https://atlanticautoservices.com` and a new `app.key`; `chmod 600` it.
+8. **After the first deploy** (cPanel Terminal): `php ~/atlanticautoservices.com/bin/migrate.php`, then `php ~/atlanticautoservices.com/bin/create-admin.php "Name" email`.
+9. **Cron jobs:** see the header of `bin/cron.php`, with paths under `~/atlanticautoservices.com`.
+
+Deploys run on every push to `main`, wait for owner approval in the `production` environment, and stop at the security baseline check until the pre-launch gates have passing evidence.
 
 ## Status
 

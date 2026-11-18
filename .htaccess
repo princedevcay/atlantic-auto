@@ -1,0 +1,15 @@
+# Deployed to ~/atlanticautoservices.com (the domain folder cPanel created).
+# If the domain's document root is this folder, every request is sent into public/ and the app
+# code, vendor and deploy files are never served (CTL-CFG-001). If the document root is set to
+# public/ instead, this file is simply not used.
+Options -Indexes
+RewriteEngine On
+
+# Never serve code, dependencies, schema or deploy state from the top folder.
+RewriteRule ^(app|bin|database|vendor)(/|$) - [R=404,L]
+RewriteRule ^(composer\.(json|lock)|\.ftp-deploy-sync-state\.json)$ - [R=404,L]
+RewriteRule (^|/)\. - [R=404,L]
+
+# Everything else is served from public/.
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(.*)$ public/$1 [L]

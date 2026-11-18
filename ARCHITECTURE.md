@@ -51,19 +51,17 @@ Non-goals for v1: online payment, customer accounts, live GPS, CRM integration, 
 ## Directory layout on the server (DEC-006)
 
 ```
-~/atlantic-auto/            deployed by CI (FTPS account jailed here)
-  public/                   document root: index.php, assets/ (built CSS, fonts, images)
-  app/                      PHP source, views, migrations
-  vendor/                   Composer dependencies (no dev packages)
-~/atlantic-auto-private/    never touched by deploys
-  config.php                DB, SMTP, carrier settings (from config.example.php)
-  storage/uploads/          shipment photos
-  storage/logs/             app and audit export logs
-  storage/sessions/         PHP session files
-  backups/                  nightly dumps, 14 days
+~/atlanticautoservices.com/    domain folder; FTP account home; deployed by CI
+  .htaccess                    if this folder is the document root: rewrite into public/, 404 app, bin, database, vendor, composer files, dotfiles, deploy state
+  public/                      document root (recommended): index.php, assets/, .htaccess (HTTPS, no www, front controller, only index.php runs)
+  app/  bin/  database/  vendor/
+~/atlantic-auto-private/       outside the FTP account; never touched by deploys
+  config.php                   DB, SMTP, carrier settings (from config.example.php)
+  storage/uploads/  storage/logs/  storage/sessions/
+  backups/                     nightly dumps, 14 days
 ```
 
-If the domain is the account's primary domain and its document root cannot move from `public_html`, only `public/` is synced to `public_html` and `index.php` loads `app/` from `~/atlantic-auto/`. Either way, nothing but `public/` is web-reachable.
+`Config::load` finds `config.php` in the folder next to the app (`../atlantic-auto-private/`). Both document-root setups were tested under Apache on 18 Nov 2026: code, dependencies, schema, dotfiles and deploy state return 404; HTTP and www redirect to `https://atlanticautoservices.com` keeping the path and query.
 
 ## Data flows and deployment
 
@@ -78,7 +76,7 @@ If the domain is the account's primary domain and its document root cannot move 
 
 Environments: local development (synthetic data) and production on cPanel. No staging in v1; adding one is a scope change.
 
-Deployment identity: a dedicated cPanel FTP account limited to `~/atlantic-auto/`, used only by the GitHub `production` environment, which requires the owner's approval. The sync never deletes `~/atlantic-auto-private/`.
+Deployment identity: a dedicated cPanel FTP account limited to `~/atlanticautoservices.com/`, used only by the GitHub `production` environment, which requires the owner's approval. The sync never touches `~/atlantic-auto-private/`, which is outside the FTP account.
 
 Backup and recovery: nightly `mysqldump` and uploads archive to `backups/` (14 days), weekly encrypted copy off the host (DEC-007), restore rehearsed before launch.
 
