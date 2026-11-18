@@ -10,8 +10,29 @@ $hideBar = in_array($nav, ['quote', 'update', 'track'], true) || isset($s);
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><?= e($title) ?> | Atlantic Auto and Shipping Services</title>
-<meta name="description" content="Atlantic Auto and Shipping Services helps customers in Ghana buy and import vehicles from the USA, with updates from the point of sale through shipping.">
+<?php
+$siteName = 'Atlantic Auto And Shipping Services';
+$pageTitle = $title === $siteName ? $siteName : $title . ' | ' . $siteName;
+$metaDescription = $description ?? 'Atlantic Auto And Shipping Services helps customers in Ghana buy, ship and import vehicles from the USA, with updates from the point of sale through delivery.';
+$baseUrl = rtrim(App\Core\Config::str('app.url', 'https://atlanticautoservices.com'), '/');
+$canonical = $baseUrl . App\Core\Http::path();
+$shareImage = site_image('hero') !== '' ? $baseUrl . strtok(site_image('hero'), '?') : $baseUrl . '/assets/img/logo.png';
+?>
+<title><?= e($pageTitle) ?></title>
+<meta name="description" content="<?= e($metaDescription) ?>">
+<meta name="application-name" content="<?= e($siteName) ?>">
+<link rel="canonical" href="<?= e($canonical) ?>">
+<meta property="og:site_name" content="<?= e($siteName) ?>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="<?= e($pageTitle) ?>">
+<meta property="og:description" content="<?= e($metaDescription) ?>">
+<meta property="og:url" content="<?= e($canonical) ?>">
+<meta property="og:image" content="<?= e($shareImage) ?>">
+<meta property="og:locale" content="en_GH">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<?= e($pageTitle) ?>">
+<meta name="twitter:description" content="<?= e($metaDescription) ?>">
+<meta name="twitter:image" content="<?= e($shareImage) ?>">
 <link rel="preload" href="<?= e(asset('fonts/inter-latin-wght-normal.woff2')) ?>" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="<?= e(asset('css/app.css')) ?>">
 <link rel="icon" href="<?= e(asset('img/favicon.png')) ?>">
@@ -22,10 +43,10 @@ $hideBar = in_array($nav, ['quote', 'update', 'track'], true) || isset($s);
 
 <header class="sticky top-0 z-40 border-b border-line bg-surface">
   <div class="container-x flex h-[72px] items-center justify-between gap-4 md:h-24">
-    <a href="/" class="flex shrink-0 items-center" aria-label="Atlantic Auto and Shipping Services, home">
+    <a href="/" class="flex shrink-0 items-center" aria-label="Atlantic Auto And Shipping Services, home">
       <picture>
         <source srcset="<?= e(asset('img/logo.webp')) ?>" type="image/webp">
-        <img src="<?= e(asset('img/logo.png')) ?>" alt="Atlantic Auto and Shipping Services" width="900" height="176" class="h-11 w-auto sm:h-12 md:h-16">
+        <img src="<?= e(asset('img/logo.png')) ?>" alt="Atlantic Auto And Shipping Services" width="900" height="176" class="h-11 w-auto sm:h-12 md:h-16">
       </picture>
     </a>
     <nav aria-label="Main" class="hidden items-center gap-1 lg:flex">
@@ -39,7 +60,7 @@ $hideBar = in_array($nav, ['quote', 'update', 'track'], true) || isset($s);
       <div class="fixed inset-0 z-[60] bg-navy/60" data-menu-close aria-hidden="true"></div>
       <div class="fixed inset-y-0 right-0 z-[61] flex w-[86%] max-w-sm flex-col bg-surface shadow-[0_0_40px_rgb(12_42_69/0.35)]" role="dialog" aria-label="Menu">
         <div class="flex items-center justify-between border-b border-line px-5 py-4">
-          <img src="<?= e(asset('img/logo.png')) ?>" alt="Atlantic Auto and Shipping Services" width="900" height="176" class="h-9 w-auto">
+          <img src="<?= e(asset('img/logo.png')) ?>" alt="Atlantic Auto And Shipping Services" width="900" height="176" class="h-9 w-auto">
           <button type="button" class="rounded-md p-2 text-ink hover:bg-bg" aria-label="Close menu" data-menu-close><?= icon('x', 'icon h-6 w-6') ?></button>
         </div>
         <nav aria-label="Mobile" class="flex flex-1 flex-col items-center justify-center gap-1 overflow-y-auto px-6 py-8 text-center">
@@ -70,7 +91,7 @@ $hideBar = in_array($nav, ['quote', 'update', 'track'], true) || isset($s);
     <div>
       <picture>
         <source srcset="<?= e(asset('img/logo-white.webp')) ?>" type="image/webp">
-        <img src="<?= e(asset('img/logo-white.png')) ?>" alt="Atlantic Auto and Shipping Services" width="900" height="176" class="h-12 w-auto" loading="lazy">
+        <img src="<?= e(asset('img/logo-white.png')) ?>" alt="Atlantic Auto And Shipping Services" width="900" height="176" class="h-12 w-auto" loading="lazy">
       </picture>
       <p class="mt-4 max-w-xs text-sm text-white/80">Vehicle importation from the USA to Ghana, tracked from the point of sale through shipping.</p>
     </div>
@@ -89,7 +110,7 @@ $hideBar = in_array($nav, ['quote', 'update', 'track'], true) || isset($s);
   <div class="border-t border-white/15">
     <?php // Bottom room so the floating chat button and the phone action bar never cover footer text or links. ?>
     <div class="container-x flex flex-col gap-2 pt-5 text-sm text-white/70 sm:flex-row sm:items-center sm:justify-between md:pb-24 <?= $hideBar ? 'pb-24' : 'pb-40' ?>">
-      <p>&copy; <?= e(gmdate('Y')) ?> Atlantic Auto and Shipping Services.</p>
+      <p>&copy; <?= e(gmdate('Y')) ?> Atlantic Auto And Shipping Services.</p>
       <div class="flex items-center gap-4">
         <p>Built by <a href="https://princecaleb.dev" class="font-semibold text-white/90 no-underline hover:text-white hover:underline" rel="noopener" target="_blank">princecaleb.dev</a></p>
         <a href="/admin/login" class="flex h-9 w-9 items-center justify-center rounded-full text-white/60 hover:bg-white/10 hover:text-white" title="Staff sign in" aria-label="Staff sign in" rel="nofollow"><?= icon('key-round', 'icon h-4 w-4') ?></a>

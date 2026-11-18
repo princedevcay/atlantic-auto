@@ -7,7 +7,7 @@ Last reviewed: 2026-11-17
 
 ## Context and goals
 
-Atlantic Auto and Shipping Services is a Ghanaian company importing vehicles from the USA. The system lets prospects request an import quote, lets customers request a vehicle update and view a private tracking page, and gives staff an admin to manage enquiries and shipments. Design decisions come from the approved Project Gate (`.opskeep/project-gate/DESIGN.md`); security decisions from `security-baseline.yaml`.
+Atlantic Auto And Shipping Services is a Ghanaian company importing vehicles from the USA. The system lets prospects request an import quote, lets customers request a vehicle update and view a private tracking page, and gives staff an admin to manage enquiries and shipments. Design decisions come from the approved Project Gate (`.opskeep/project-gate/DESIGN.md`); security decisions from `security-baseline.yaml`.
 
 Constraints: Namecheap cPanel shared hosting (PHP, MySQL, cron, no Node or containers on the server), deploys over FTPS from GitHub Actions, public GitHub repo, mobile users on slow data.
 
