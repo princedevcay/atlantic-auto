@@ -36,6 +36,10 @@ return [
         'hours' => '',
         'map_url' => '',
     ],
+    'features' => [
+        // Customer tracking pages (/track, private links). Off for now: tracking is for the team (client, 18 Nov 2026).
+        'customer_tracking' => false,
+    ],
     'chat' => [
         // When the chat shows "Online" (green), in Africa/Accra time. Confirm with the client.
         // Format: day => 'HH:MM-HH:MM'; days missing from the list are offline. Empty array = always offline.

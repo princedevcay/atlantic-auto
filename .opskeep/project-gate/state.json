@@ -231,7 +231,7 @@
       "area": "screens",
       "title": "Site map (v2)",
       "status": "CONFIRMED",
-      "value": "Public: Home, Services, How It Works, Request an Import Quote, Request a Vehicle Update, Track Your Vehicle, About Us, Contact, Privacy. Staff: sign-in, shipments list, shipment detail.",
+      "value": "Public: Home, Cars for Sale, car detail pages, Services, How It Works, Request an Import Quote, Request a Vehicle Update, About Us, Contact, Privacy. Staff: sign-in, shipments list, shipment detail.",
       "rationale": "Adds services, tracking and the team area the owner asked for.",
       "depends_on": [
         "PG-003"
@@ -266,10 +266,9 @@
       "id": "PG-021",
       "area": "screens",
       "title": "Team-managed tracking page",
-      "status": "CONFIRMED",
-      "confirmed_via": "interview",
+      "status": "SUPERSEDED",
       "value": "Each vehicle has a tracking page showing its stage on a six-step timeline (Sourcing, Purchased, Picked up, Shipped, Clearing, Delivered) with dates, a short team note and optional photos. Staff set the stage; the carrier feed fills in vessel, ETA and container events while shipped.",
-      "rationale": "Stated by the owner.",
+      "rationale": "Replaced by PG-030 on 18 Nov 2026 (client: tracking is for the company, not customers, for now).",
       "depends_on": [
         "PG-019"
       ]
@@ -278,35 +277,33 @@
       "id": "PG-022",
       "area": "ux",
       "title": "How customers open their tracking page",
-      "status": "CONFIRMED",
+      "status": "SUPERSEDED",
       "value": "Two ways: a private link the team sends on WhatsApp, or the Track Your Vehicle page with tracking reference plus last 4 digits of the phone on file. No customer accounts. VIN alone never opens a page.",
-      "rationale": "Easy for occasional users without exposing someone else's vehicle; details go to the security gate.",
+      "rationale": "Replaced by PG-030 on 18 Nov 2026 (client: tracking is for the company, not customers, for now).",
       "depends_on": [
         "PG-021"
-      ],
-      "confirmed_via": "gate_approval"
+      ]
     },
     {
       "id": "PG-023",
       "area": "ux",
       "title": "Team admin area",
       "status": "CONFIRMED",
-      "value": "Staff sign in to a simple admin: list of shipments with stage filters, create a shipment from a quote, change stage, add notes and photos, enter carrier booking or container number, see incoming quote and update requests. Desktop-first, works on a phone for quick stage changes.",
-      "rationale": "Needed for the team to manage tracking pages.",
+      "value": "Staff sign in to a simple admin: list of shipments with stage filters, create a shipment from a quote, change stage, add notes and photos, enter carrier booking or container number, see incoming quote and update requests. This is where the company tracks every vehicle. Desktop-first, works on a phone for quick stage changes.",
+      "rationale": "Client: tracking is mainly for the company; the admin is the tracking tool.",
       "depends_on": [
-        "PG-021"
+        "PG-030"
       ],
-      "confirmed_via": "gate_approval"
+      "confirmed_via": "interview"
     },
     {
       "id": "PG-024",
       "area": "ux",
       "title": "Carrier integration",
       "status": "CONFIRMED",
-      "value": "Pull vessel name, ETA and container milestones automatically from the carrier (or a container-tracking service covering it) using the booking, bill of lading or container number. Staff can always override, and the page shows when it last updated. Which carriers and which API are chosen at build after a lookup, not guessed.",
+      "value": "Pull vessel name, ETA and container milestones automatically from the carrier (or a container-tracking service covering it) using the booking, bill of lading or container number, shown to staff in the admin. Staff can always override. Which carriers and which API are chosen at build after a lookup, not guessed.",
       "rationale": "Owner asked for a carrier integration; carriers are not yet named.",
       "depends_on": [
-        "PG-021",
         "PG-023"
       ],
       "confirmed_via": "gate_approval"
@@ -316,13 +313,13 @@
       "area": "ux",
       "title": "Who receives enquiries",
       "status": "CONFIRMED",
-      "rationale": "Stated by the owner: one shared inbox, different category tabs.",
+      "rationale": "Owner: one shared inbox with category tabs; Car Enquiries added with car sales (18 Nov 2026).",
       "depends_on": [
         "PG-006",
         "PG-020"
       ],
-      "confirmed_via": "interview",
-      "value": "One shared inbox with category tabs: in the admin area, enquiries sit in one inbox split into tabs (All, Import Quotes, Vehicle Updates), each with a count of new items. Both types also email the same company address, with the category at the start of the subject line, for example [Import Quote] or [Vehicle Update], so mail filters can sort them."
+      "value": "One shared inbox with category tabs: All, Import Quotes, Vehicle Updates and Car Enquiries, each with a count of new items. Every type also emails the same company address with its category at the start of the subject ([Import Quote], [Vehicle Update], [Car Enquiry]) so mail filters can sort them.",
+      "confirmed_via": "interview"
     },
     {
       "id": "PG-026",
@@ -366,14 +363,78 @@
       "area": "screens",
       "title": "Landing page layout (owner mockup)",
       "status": "CONFIRMED",
-      "confirmed_via": "interview",
-      "value": "Follows the owner's 17 Nov mockup: hero (new supporting line), overlapping one-row track bar, six photo service cards, six-stage icon stepper, four 'why Atlantic' points, five vehicle-type cards with brand logos plus a sources strip, five cost parts, Tema section with photo and two checklists, testimonials hidden until real, then one row with FAQ, About Us (with both buttons) and Contact.",
-      "rationale": "Owner supplied the mockup.",
+      "value": "Follows the owner's 17 Nov mockup without the customer track bar: hero, six photo service cards, featured cars for sale (PG-031), six-stage icon stepper ('tracked by our team'), four 'why Atlantic' points, five vehicle-type cards with brand logos plus a sources strip, five cost parts, Tema section, testimonials hidden until real, then FAQ, About Us (CSS shipment-progress illustration) and Contact.",
+      "rationale": "Owner mockup, adjusted on 18 Nov 2026 when customer tracking was hidden.",
       "depends_on": [
         "PG-019",
-        "PG-021",
-        "PG-026"
+        "PG-026",
+        "PG-030",
+        "PG-031"
+      ],
+      "confirmed_via": "interview"
+    },
+    {
+      "id": "PG-030",
+      "area": "project",
+      "title": "Tracking is for the team (customer tracking hidden)",
+      "status": "CONFIRMED",
+      "confirmed_via": "interview",
+      "value": "The company tracks every vehicle in the staff admin (stages, notes, photos, carrier data). Customer tracking pages, private links and the reference lookup are switched off by the features.customer_tracking setting and every public link to them is hidden; the code stays so it can be switched on later. Customers get updates through Request a Vehicle Update, WhatsApp or phone.",
+      "rationale": "Client, 18 Nov 2026: the three main things are selling cars, shipping and tracking, but tracking is mainly for the company, not customers; hide customer tracking for now.",
+      "depends_on": [
+        "PG-019"
       ]
+    },
+    {
+      "id": "PG-031",
+      "area": "screens",
+      "title": "Cars for Sale pages",
+      "status": "CONFIRMED",
+      "value": "New 'Cars for Sale' menu item. /cars lists published cars as photo cards (photo, year, make, model, price, status badge, key specs) with filters for availability and body type. /cars/{reference} is the detail page: photo gallery, price, status, specs (year, make, model, body type, mileage, transmission, fuel, engine, colour, where the car is now: in the USA, in transit or in Ghana), description, and buttons for 'I'm interested' and WhatsApp. The home page gets a 'Featured cars for sale' section directly after the service cards: up to six available cars that staff marked as featured (newest available cars if none are featured), with a 'See all cars' link; hidden when no car is published.",
+      "rationale": "Owner: product sale section with detail pages and amounts; selling cars is one of the three main things the business does. Owner, 18 Nov 2026: featured cars for sale on the landing page after the services cards.",
+      "depends_on": [
+        "PG-019",
+        "PG-028"
+      ],
+      "confirmed_via": "gate_approval"
+    },
+    {
+      "id": "PG-032",
+      "area": "ux",
+      "title": "Prices and availability",
+      "status": "CONFIRMED",
+      "value": "Each car has a price amount and currency (GHS by default, USD allowed per car) or 'Price on request'. Status is Available, Reserved or Sold, shown as a badge. Sold and Reserved cars stay listed with their badge and no enquiry button until staff hide them. Prices are entered by staff; the site never calculates or estimates prices.",
+      "rationale": "Owner: amounts plus available or sold out. Reserved covers a deposit in progress. GHS is the studio's currency of record; USD allowed for cars priced in dollars.",
+      "depends_on": [
+        "PG-031"
+      ],
+      "confirmed_via": "gate_approval"
+    },
+    {
+      "id": "PG-033",
+      "area": "ux",
+      "title": "Car management in the admin",
+      "status": "CONFIRMED",
+      "value": "New 'Cars' section in the staff admin: list with status and visibility filters; add and edit a car (all fields above); upload up to 12 photos and choose the main one; change status in one click; mark a car as Featured for the home page; Publish or Hide (hidden cars disappear from the site immediately but keep their data); delete is Admin only with typed confirmation. Every change is in the audit log.",
+      "rationale": "Owner: update available or sold out, and the ability to hide in the admin.",
+      "depends_on": [
+        "PG-023",
+        "PG-031"
+      ],
+      "confirmed_via": "gate_approval"
+    },
+    {
+      "id": "PG-034",
+      "area": "screens",
+      "title": "Car enquiries",
+      "status": "CONFIRMED",
+      "value": "'I'm interested' on an available car opens a short form (name, phone or WhatsApp, optional message) with the same spam protection as the other forms. It lands in the inbox under Car Enquiries, linked to the car, emails the shared inbox as [Car Enquiry], and the thank-you screen offers 'Continue on WhatsApp' with the car's reference.",
+      "rationale": "Turns a listing into a lead the same way as quotes and updates.",
+      "depends_on": [
+        "PG-025",
+        "PG-031"
+      ],
+      "confirmed_via": "gate_approval"
     }
   ],
   "conflicts": [],
@@ -664,11 +725,26 @@
         "at": "2026-11-17T07:12:54Z",
         "event": "approved",
         "detail": "via chat"
+      },
+      {
+        "at": "2026-11-18T12:43:15Z",
+        "event": "reopened",
+        "detail": "PG-021, PG-022: Client (18 Nov 2026): the main business is selling cars, shipping and tracking, but tracking is mainly for the company, not customers; hide customer tracking for now"
+      },
+      {
+        "at": "2026-11-18T12:44:27Z",
+        "event": "reopened",
+        "detail": "PG-025: Owner (18 Nov 2026): add car sales with enquiries, which adds a Car Enquiries tab to the shared inbox"
+      },
+      {
+        "at": "2026-11-18T12:47:19Z",
+        "event": "approved",
+        "detail": "via chat"
       }
     ],
-    "approved_at": "2026-11-17T07:12:54Z",
+    "approved_at": "2026-11-18T12:47:19Z",
     "approval_method": "chat",
-    "approval_quote": "Approve and commit (answering: Approve the Project Gate change and commit the build?)"
+    "approval_quote": "Approve both (answering: Approve the Project Gate changes and security baseline 0.2.0?)"
   },
   "strategy": {
     "constraint": {

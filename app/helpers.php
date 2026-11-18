@@ -124,3 +124,9 @@ function old(array $old, string $key): string
     $v = $old[$key] ?? '';
     return is_string($v) ? $v : '';
 }
+
+/** Customer-facing tracking pages are switched off unless features.customer_tracking is true. */
+function customer_tracking(): bool
+{
+    return Config::get('features.customer_tracking', false) === true;
+}

@@ -62,6 +62,7 @@ Keeps what you already liked in the mockup (navy hero, teal buttons, photo cards
 - **PG-004 USA import scope**: The site is about importing vehicles from the USA, from point of sale through shipping. The mockup's general pickup/destination planner is dropped.
 - **PG-019 Full-service scope**: Atlantic handles sourcing, purchase, pickup, shipping, clearance and delivery. Services page and How It Works present these six steps, and customers can ask for any or all of them in the quote form.
 - **PG-026 Ghanaian company, Ghana market**: Atlantic is a Ghanaian company importing vehicles from the USA into Ghana. Copy speaks to Ghanaian buyers, arrival and clearance are at Tema port, phone numbers use +233 format, WhatsApp is the main contact channel, and photography shows Ghanaian people and Tema rather than generic foreign ports.
+- **PG-030 Tracking is for the team (customer tracking hidden)**: The company tracks every vehicle in the staff admin (stages, notes, photos, carrier data). Customer tracking pages, private links and the reference lookup are switched off by the features.customer_tracking setting and every public link to them is hidden; the code stays so it can be switched on later. Customers get updates through Request a Vehicle Update, WhatsApp or phone.
 
 ## Risks
 

@@ -13,7 +13,7 @@
     <a href="/update" class="card block p-6 no-underline hover:border-primary">
       <?= icon('ship', 'icon h-8 w-8 text-primary') ?>
       <h2 class="mt-3 text-xl font-semibold">Vehicle already with us?</h2>
-      <p class="mt-1 text-muted">Request a Vehicle Update with your VIN or tracking reference.</p>
+      <p class="mt-1 text-muted">Request a Vehicle Update with your VIN or reference.</p>
       <span class="mt-4 inline-flex items-center gap-1 font-semibold text-primary">Request an update <?= icon('arrow-right') ?></span>
     </a>
   </div>

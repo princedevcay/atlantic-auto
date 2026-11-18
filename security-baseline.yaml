@@ -1,10 +1,10 @@
 schema_version: "2.3"
-baseline_version: "0.1.0"
-record_digest: "36050147b52211e6a135ed94cc0b972b2f9204c642c09aeec26d5088f3a992c5"
+baseline_version: "0.2.0"
+record_digest: "fa7e68331dc9e5d1548958e6fe18f7fc4f3bf5b32a2fd70c07b57b67a8867ae4"
 project:
   id: "PRJ-ATLANTIC-AUTO-001"
   name: "Atlantic Auto and Shipping Services website"
-  purpose: "Public website for a Ghanaian USA vehicle importer: import quote and vehicle update requests, customer tracking pages fed by staff and a carrier API, and a staff admin. PHP and MySQL on Namecheap cPanel shared hosting, deployed from a public GitHub repo by GitHub Actions over FTPS."
+  purpose: "Public website for a Ghanaian USA vehicle importer and seller: cars for sale with enquiries, import quote and vehicle update requests, team tracking of shipments in a staff admin (customer tracking pages built but switched off), and a carrier API. PHP and MySQL on Namecheap cPanel shared hosting, deployed from a public GitHub repo by GitHub Actions over FTPS."
   owner: "developer (PrinceCaleb.dev)"
   intake:
     constraint:
@@ -97,6 +97,11 @@ assets:
     classification: "PUBLIC"
     owner: "developer (PrinceCaleb.dev)"
     retention: "Versioned in the public repo"
+  - id: "AST-008"
+    name: "Car listings for sale: specs, price, status, photos, featured and published flags"
+    classification: "PUBLIC"
+    owner: "client owner (Atlantic Auto)"
+    retention: "Until staff delete the listing; hidden listings are INTERNAL until published"
   - id: "AST-007"
     name: "Audit and security logs (logins, admin actions, rate-limit hits)"
     classification: "INTERNAL"
@@ -197,6 +202,22 @@ data_flows:
     classification: "INTERNAL"
     retention: "Kept with the shipment"
     boundaries: ["TB-004", "TB-003"]
+  - id: "FLW-007"
+    name: "Browse cars for sale"
+    origin: "Website visitor"
+    processing: "List and show only published cars and their photos"
+    destination: "Visitor browser"
+    classification: "PUBLIC"
+    retention: "Cacheable public pages and images"
+    boundaries: ["TB-001", "TB-003"]
+  - id: "FLW-008"
+    name: "Car enquiry"
+    origin: "Website visitor on an available car"
+    processing: "Same checks as FLW-001; linked to the car"
+    destination: "MySQL enquiries table; [Car Enquiry] email to the shared inbox"
+    classification: "CONFIDENTIAL"
+    retention: "See AST-001"
+    boundaries: ["TB-001", "TB-003", "TB-004"]
   - id: "FLW-006"
     name: "Deploy"
     origin: "GitHub Actions on main after owner approval"
@@ -211,7 +232,7 @@ identities:
     type: "HUMAN"
     authentication: "Email + password (Argon2id or bcrypt hash) + TOTP MFA"
     resources: ["CMP-002", "CMP-003", "CMP-008"]
-    permissions: ["all Staff permissions", "create, disable and reset staff accounts", "delete enquiries and shipments", "export data"]
+    permissions: ["all Staff permissions", "create, disable and reset staff accounts", "delete enquiries, shipments and car listings", "export data"]
     forbidden_actions: ["read secrets or server configuration", "deploy code"]
     human_approval: "Deleting a shipment or disabling a staff account needs a typed confirmation"
   - id: "ID-002"
@@ -219,15 +240,15 @@ identities:
     type: "HUMAN"
     authentication: "Email + password + TOTP MFA"
     resources: ["CMP-002", "CMP-003", "CMP-008"]
-    permissions: ["read and update enquiries", "create and update shipments and stages", "upload photos", "copy tracking links"]
-    forbidden_actions: ["manage staff accounts", "delete records", "export all data", "change carrier settings"]
+    permissions: ["read and update enquiries", "create and update shipments and stages", "upload photos", "copy tracking links (when customer tracking is on)", "create and edit car listings, prices, status, featured flag and photos", "publish or hide car listings"]
+    forbidden_actions: ["manage staff accounts", "delete records or car listings", "export all data", "change carrier settings"]
     human_approval: "None beyond their own session"
   - id: "ID-003"
     name: "Customer (tracking viewer)"
     type: "HUMAN"
     authentication: "Possession of a private link token, or reference plus last 4 phone digits; no account"
     resources: ["CMP-001"]
-    permissions: ["view their own shipment's tracking page", "submit forms"]
+    permissions: ["view their own shipment's tracking page (only when customer tracking is on)", "view published cars for sale", "submit forms, including car enquiries"]
     forbidden_actions: ["view any other shipment", "see full phone, email, price or internal notes"]
     human_approval: "None"
   - id: "ID-004"
@@ -395,6 +416,16 @@ threats:
     residual_risk: "LOW"
     owner: "developer (PrinceCaleb.dev)"
     status: "OPEN"
+  - id: "THR-016"
+    component_ids: ["CMP-001", "CMP-008"]
+    scenario: "A hidden or deleted car listing, its price or its photos are exposed by guessing a URL, reference or photo id, or a visitor tampers with price or status"
+    likelihood: "MEDIUM"
+    impact: "LOW"
+    control_ids: ["CTL-AUTHZ-003", "CTL-FILE-001"]
+    refs: ["OWASP-T10-2025:A01"]
+    residual_risk: "LOW"
+    owner: "developer (PrinceCaleb.dev)"
+    status: "OPEN"
   - id: "THR-015"
     component_ids: ["CMP-007"]
     scenario: "Implementation or deployment proceeds from an unreviewed design"
@@ -446,6 +477,14 @@ controls:
     acceptance: "Tests: wrong token, VIN only, or wrong digits all show the same error; a revoked link stops working"
     refs: ["ASVS-5.0:V8"]
     evidence_ids: []
+  - id: "CTL-AUTHZ-003"
+    domain: "AUTHZ"
+    requirement: "Public car pages, lists, the home featured section and car photo URLs return only published cars (hidden or deleted give one 404); listings use random references, not sequential ids; car enquiries are accepted only for published, available cars; creating, editing, pricing, status, featured and publish or hide are staff actions behind the admin middleware with CSRF and audit log; deleting a listing is Admin only"
+    status: "PLANNED"
+    owner: "developer (PrinceCaleb.dev)"
+    acceptance: "Tests: a hidden car and its photos return 404 by reference and photo id; a visitor cannot post price, status or visibility; a Staff user cannot delete a listing"
+    refs: ["ASVS-5.0:V8", "OWASP-T10-2025:A01"]
+    evidence_ids: []
   - id: "CTL-SES-001"
     domain: "SESSION"
     requirement: "Admin sessions: PHP sessions stored in a private directory (not shared /tmp), cookie Secure, HttpOnly, SameSite=Strict, __Host- prefix; session ID regenerated at login and MFA; 30-minute idle and 8-hour absolute timeout; logout destroys the session; CSRF token on every state-changing form, public forms included"
@@ -480,7 +519,7 @@ controls:
     evidence_ids: []
   - id: "CTL-FILE-001"
     domain: "FILE"
-    requirement: "Staff photo uploads: JPEG, PNG or WebP only, checked by content (finfo) not extension, maximum 8 MB, re-encoded with GD or Imagick to strip metadata, renamed to a random name, stored outside the web root and served through a PHP handler that checks shipment access; no public listing"
+    requirement: "Staff photo uploads (shipments and car listings): JPEG, PNG or WebP only, checked by content (finfo) not extension, maximum 8 MB, up to 12 per car, re-encoded with GD or Imagick to strip metadata, renamed to a random name, stored outside the web root and served through a PHP handler that checks access (shipment photos: staff only while customer tracking is off; car photos: only while the car is published); no directory listing"
     status: "PLANNED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "Uploading a .php file renamed as .jpg is rejected; stored files cannot be fetched directly by URL"
@@ -560,10 +599,10 @@ controls:
     evidence_ids: []
   - id: "CTL-SC-001"
     domain: "SUPPLY_CHAIN"
-    requirement: "composer.lock and package-lock.json committed; composer audit and npm audit fail the build on HIGH or CRITICAL; every GitHub Action pinned to a full commit SHA; Dependabot for Composer, npm and Actions; few dependencies (PHPMailer, a TOTP library, Tailwind CLI)"
+    requirement: "composer.lock and package-lock.json committed; composer audit and npm audit (scripts/npm-audit.mjs) fail the build on HIGH or CRITICAL, except owner-approved exceptions in .github/audit-exceptions.json that each name one advisory and stop counting at their expiry date or when the package publishes a newer release; every GitHub Action pinned to a full release-tag commit SHA; Dependabot with a 14-day cooldown for Composer, npm and Actions; few dependencies (PHPMailer, a QR code library, Tailwind CLI)"
     status: "PLANNED"
     owner: "developer (PrinceCaleb.dev)"
-    acceptance: "A known-vulnerable test dependency fails the pull request check"
+    acceptance: "A known-vulnerable test dependency fails the pull request check; an expired exception, or one whose package has a newer release, fails it too"
     refs: ["OWASP-T10-2025:A03", "SLSA-1.2:BUILD-L1", "SSDF-1.1:PW.4"]
     evidence_ids: []
   - id: "CTL-DEP-001"
@@ -595,7 +634,7 @@ gates:
     name: "Pull request security checks (secrets, dependency audit, PHP lint and tests)"
     stage: "PULL_REQUEST"
     blocking: true
-    control_ids: ["CTL-SC-001", "CTL-SEC-001", "CTL-INP-001", "CTL-AUTHZ-001", "CTL-AUTHZ-002"]
+    control_ids: ["CTL-SC-001", "CTL-SEC-001", "CTL-INP-001", "CTL-AUTHZ-001", "CTL-AUTHZ-002", "CTL-AUTHZ-003"]
     required_evidence: ["EVD-002"]
     status: "NOT_YET_BUILT"
     evidence_ids: []
@@ -665,7 +704,7 @@ decisions:
     blocks_approval: false
     status: "OPEN"
 evidence:
-  - {id: "EVD-001", type: "OWNER_APPROVAL", status: "PASSED", observed_at: "2026-11-17T06:41:15Z", observer: "Claude Code session (owner typed: Approve baseline 0.1.0)", location: "Claude Code chat, 17 Nov 2026"}
+  - {id: "EVD-001", type: "OWNER_APPROVAL", status: "PASSED", observed_at: "2026-11-18T12:47:33Z", observer: "Claude Code session (owner typed: Approve both, for Project Gate changes and baseline 0.2.0; 0.1.0 approved 2026-11-17)", location: "Claude Code chat, 18 Nov 2026"}
   - {id: "EVD-002", type: "CI_RUN", status: "NOT_YET_BUILT", observed_at: null, observer: null, location: null}
   - {id: "EVD-003", type: "CI_RUN", status: "NOT_YET_BUILT", observed_at: null, observer: null, location: null}
   - {id: "EVD-004", type: "MANUAL_REVIEW", status: "NOT_YET_BUILT", observed_at: null, observer: null, location: null}
@@ -675,8 +714,8 @@ monitoring:
     provider: "NONE"
     owner: "developer (PrinceCaleb.dev)"
     configuration_status: "NOT_CONFIGURED"
-    baseline_version: "0.1.0"
-    record_digest: "36050147b52211e6a135ed94cc0b972b2f9204c642c09aeec26d5088f3a992c5"
+    baseline_version: "0.2.0"
+    record_digest: "fa7e68331dc9e5d1548958e6fe18f7fc4f3bf5b32a2fd70c07b57b67a8867ae4"
     environments: ["production"]
     handed_off_at: null
     acknowledged_at: null
@@ -712,7 +751,7 @@ supply_chain:
     support_policy: "Security fixes provided for the life of the client support agreement with PrinceCaleb.dev"
     monitoring_sources: "Dependabot alerts, composer audit and npm audit in CI, GitHub secret scanning, PHP release notes"
     triage_method: "CRITICAL and HIGH fixed within the SLA; lower severities in the next monthly update; exploited issues handled as incidents"
-    details: "Critical issues reachable from the internet are patched within 72 hours"
+    details: "Critical issues reachable from the internet are patched within 72 hours. Open exception (CHG-001): GHSA-fc5q-39xc-vjpf, picomatch ReDoS, build-time only, no patched release; expires 2026-12-02 or when picomatch publishes a release newer than 4.0.7"
 capabilities:
   handles_files: true
   uses_self_contained_tokens: false
@@ -736,9 +775,35 @@ engineering:
 approval:
   decision: "APPROVED"
   approver: "Prince Caleb (owner, PrinceCaleb.dev)"
-  approved_at: "2026-11-17T06:41:15Z"
-  baseline_version: "0.1.0"
-  record_digest: "36050147b52211e6a135ed94cc0b972b2f9204c642c09aeec26d5088f3a992c5"
+  approved_at: "2026-11-18T12:47:33Z"
+  baseline_version: "0.2.0"
+  record_digest: "fa7e68331dc9e5d1548958e6fe18f7fc4f3bf5b32a2fd70c07b57b67a8867ae4"
   scope: ["development", "production:namecheap-cpanel"]
   expires_at: null
-changes: []
+changes:
+  - id: "CHG-001"
+    type: "MODIFIED"
+    status: "PROPOSED"
+    material: true
+    security_impact: "LOW"
+    targets: ["CTL-SC-001", "GATE-002", "THR-009"]
+    summary: "Allow a time-limited npm audit exception for GHSA-fc5q-39xc-vjpf (picomatch ReDoS)"
+    old_rule: "npm audit fails the build on any HIGH or CRITICAL advisory"
+    new_rule: "Same, except owner-approved exceptions in .github/audit-exceptions.json, each for one advisory, ending on its expiry date or when the package publishes a newer release"
+    reason: "Advisory published 2026-10-19 affects every picomatch release (no fix). It reaches only the build chain through @tailwindcss/cli and @parcel/watcher; nothing from npm is deployed, watch mode is not used and the glob patterns are our own"
+    compensating_controls: "Exception expires 2026-12-02 (14-day remediation SLA); expires early when picomatch publishes a release newer than 4.0.7; any other HIGH or CRITICAL advisory still fails CI; Dependabot security updates are not delayed by the cooldown"
+    requested_by: "owner (chat, 18 Nov 2026: Allow the exception)"
+    proposed_at: "2026-11-18"
+  - id: "CHG-002"
+    type: "ADDED"
+    status: "PROPOSED"
+    material: true
+    security_impact: "MEDIUM"
+    targets: ["AST-008", "FLW-007", "FLW-008", "THR-016", "CTL-AUTHZ-003", "CTL-FILE-001", "ID-001", "ID-002", "ID-003", "GATE-002"]
+    summary: "Add cars for sale: public listings with prices and photos, featured cars on the home page, car enquiries, and staff car management with publish or hide"
+    old_rule: "No public catalogue; all uploaded photos are private"
+    new_rule: "Published car listings and their photos are public; hidden ones are not; staff manage listings, Admins delete them"
+    reason: "Owner and client, 18 Nov 2026: selling cars is one of the three main things the business does; listings need amounts, available or sold status, and a hide option in the admin"
+    compensating_controls: "CTL-AUTHZ-003 (published-only access, random references, staff-only changes, audit log), CTL-FILE-001 (upload checks, access-checked handler), the existing form abuse limits (CTL-API-001) for car enquiries"
+    requested_by: "owner (chat, 18 Nov 2026)"
+    proposed_at: "2026-11-18"

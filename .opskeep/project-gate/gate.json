@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "project": "Atlantic Auto and Shipping Services",
   "status": "approved",
-  "approved_at": "2026-11-17T07:12:54Z",
+  "approved_at": "2026-11-18T12:47:19Z",
   "approval_method": "chat",
   "implementation_authorized": false,
   "next_gate": "opskeep-elliot-design",
@@ -12,26 +12,26 @@
     "name": "Harbour Trust"
   },
   "decisions": {
-    "confirmed": 24,
+    "confirmed": 27,
     "inferred": 0,
     "open": 0,
     "blocking": 0,
-    "confirmed_explicitly": 11,
-    "confirmed_by_gate_approval": 13
+    "confirmed_explicitly": 12,
+    "confirmed_by_gate_approval": 15
   },
-  "state_hash": "134892bf695eff40",
+  "state_hash": "9c6c89f1f8f850c9",
   "files": {
-    "PROJECT.md": "21beaf399eaaf9158d259ddbf7b7adad788210de1432d32ba5c3da048a42b580",
-    "assumptions.md": "1a06f8f4c305708e4bed1752dd768050d5d783652bdcb8b17ca7fd6e58e251d7",
-    "decisions.yaml": "89ddd2ea988d4dd77f810dfbcd4683dc23db0f3aa7ec478408febe8fa70e75b7",
+    "PROJECT.md": "5f1f0932d8969cfcdd36dad70b8108290ac58c54ff26c21b78539cc68bef6e90",
+    "assumptions.md": "e37f2c27f3f81a180fee14171a8fdd88f3ff7d8c972fc6a4ada57f31c8175657",
+    "decisions.yaml": "50b74840496289cee17d81dce36d1de20c5e8e3751a53d7c986761e557ea325f",
     "tokens.json": "f9e28f26a772db0fe500bbd8e518f7ab60d011627dd01d5b048598bbf9fe0d30",
     "intake.yaml": "45de42f574506fd958305d1d7edac27496818ee28910cbddb1eab2303986000f",
-    "DESIGN.md": "5a9358d049ec0e2f6bf585483b5b13c26dcaa009f739e077e84c7cba0bb3b65a",
-    "screens.md": "82870a8413626165ecbba3a85cac596e562c5c849df91353e17c8891937209b8",
+    "DESIGN.md": "136697256c58678460b9d0bb91a967491e07b5ea7215f864df60ef294b6ce997",
+    "screens.md": "9b7183abdc7601ad8ad2ce3bd8c44e98c9479f7ce08e6f36a0db1be75dbc58df",
     "components.md": "a6add67d580900c2460038aa22b95c3ffd2d1cf983d9bf2774b8cf43ac7fc533",
     "responsive.md": "8e19ea5ab09a4272d96bb0f09f563814f686cc142556b04c0370a98270c46b44",
     "accessibility.md": "87e519dc56688767df0ba4e804bc743b244157742c5c29a7d94a7e29f7e5b9ad",
-    "state.json": "49137b48171a68f235d8af165a2b449ab81bb83c10056936766f2498801979ff"
+    "state.json": "418a845958b2b9b3fcd3ad4bfee5fa66ad39749f6e145d58967519eff8493b25"
   },
   "history": [
     {
@@ -56,6 +56,21 @@
     },
     {
       "at": "2026-11-17T07:12:54Z",
+      "event": "approved",
+      "detail": "via chat"
+    },
+    {
+      "at": "2026-11-18T12:43:15Z",
+      "event": "reopened",
+      "detail": "PG-021, PG-022: Client (18 Nov 2026): the main business is selling cars, shipping and tracking, but tracking is mainly for the company, not customers; hide customer tracking for now"
+    },
+    {
+      "at": "2026-11-18T12:44:27Z",
+      "event": "reopened",
+      "detail": "PG-025: Owner (18 Nov 2026): add car sales with enquiries, which adds a Car Enquiries tab to the shared inbox"
+    },
+    {
+      "at": "2026-11-18T12:47:19Z",
       "event": "approved",
       "detail": "via chat"
     }

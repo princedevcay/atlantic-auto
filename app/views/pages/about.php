@@ -5,7 +5,7 @@
       <p class="text-xl leading-relaxed">Atlantic Auto and Shipping Services provides vehicle importation and tracking services for customers bringing vehicles in from the USA. We help you follow your vehicle&rsquo;s progress from the point of sale through shipping, so you know where it is and what comes next.</p>
       <div class="mt-8 grid gap-4 sm:grid-cols-2">
         <div class="card p-5"><h2 class="text-lg font-semibold">What we do</h2><p class="mt-1 text-muted">Sourcing, purchase, pickup, shipping, clearance at Tema and delivery in Ghana.</p></div>
-        <div class="card p-5"><h2 class="text-lg font-semibold">How we keep you informed</h2><p class="mt-1 text-muted">A private tracking page for every vehicle, updated by our team.</p></div>
+        <div class="card p-5"><h2 class="text-lg font-semibold">How we keep you informed</h2><p class="mt-1 text-muted">Our team tracks every vehicle and updates you at each stage.</p></div>
       </div>
       <div class="mt-8 flex flex-col gap-3 sm:flex-row">
         <a href="/quote" class="btn-primary">Request an Import Quote</a>

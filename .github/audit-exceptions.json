@@ -1,0 +1,13 @@
+{
+  "_note": "Time-limited npm audit exceptions (security baseline CHG-001). Each needs owner approval. An entry stops counting once it expires or once the package publishes a version newer than max_version, so a fix forces a re-check.",
+  "exceptions": [
+    {
+      "id": "GHSA-fc5q-39xc-vjpf",
+      "package": "picomatch",
+      "max_version": "4.0.7",
+      "expires": "2026-12-02",
+      "reason": "ReDoS in extglob matching. No patched release exists. Reached only through @tailwindcss/cli -> @parcel/watcher at build time (watch mode, which the build does not use), with our own glob patterns. Nothing from npm is deployed to the server.",
+      "approved_by": "owner, 18 Nov 2026"
+    }
+  ]
+}

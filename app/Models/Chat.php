@@ -40,8 +40,10 @@ final class Chat
             ['q' => 'How do I get a quote?', 'a' => 'Send us a short import quote request with the vehicle and what you need help with. Our team replies by WhatsApp or phone.', 'link' => '/quote', 'label' => 'Request an Import Quote'],
             ['q' => 'Can you find a car for me?', 'a' => 'Yes. Tell us the make, model, year range and budget. We look for suitable vehicles in the US and share the options with you before anything is bought.', 'link' => '/quote', 'label' => 'Start with a quote'],
             ['q' => 'What does it cost?', 'a' => 'Every vehicle is priced individually. Your total is made of the purchase price, US towing, ocean freight, duty and clearance at Tema, and delivery. Your quote explains each part.', 'link' => '/quote', 'label' => 'Get my quote'],
-            ['q' => 'How long does shipping take?', 'a' => 'It depends on where the vehicle is in the US, the shipping schedule and clearing at Tema. We give you an estimate with your quote, and your tracking page shows the expected arrival once it is on a ship.', 'link' => '/how-it-works', 'label' => 'See how it works'],
-            ['q' => 'Where is my vehicle?', 'a' => 'Open your tracking page with your private link, or use your tracking reference and the last 4 digits of your phone number.', 'link' => '/track', 'label' => 'Track my vehicle'],
+            ['q' => 'How long does shipping take?', 'a' => 'It depends on where the vehicle is in the US, the shipping schedule and clearing at Tema. We give you an estimate with your quote, and we tell you the expected arrival once it is on a ship.', 'link' => '/how-it-works', 'label' => 'See how it works'],
+            customer_tracking()
+                ? ['q' => 'Where is my vehicle?', 'a' => 'Open your tracking page with your private link, or use your tracking reference and the last 4 digits of your phone number.', 'link' => '/track', 'label' => 'Track my vehicle']
+                : ['q' => 'Where is my vehicle?', 'a' => 'Our team tracks every vehicle from purchase to delivery. Send a Vehicle Update request with your VIN or reference and we will tell you where it is.', 'link' => '/update', 'label' => 'Request a Vehicle Update'],
             ['q' => 'Do you clear at Tema?', 'a' => 'Yes. We handle import documentation, customs clearance and port release at Tema, and tell you if we need anything from you, such as your ID.', 'link' => '/services', 'label' => 'Our services'],
         ];
         $wa = whatsapp_url('Hello Atlantic, I have a question about importing a vehicle.');

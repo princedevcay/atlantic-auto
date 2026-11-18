@@ -41,8 +41,8 @@ jobs:
           node-version: '22'
       - name: Composer audit (fails on any advisory)
         run: composer audit --locked --no-interaction
-      - name: npm audit (fails on high or critical)
-        run: npm audit --audit-level=high
+      - name: npm audit (fails on high or critical, except approved time-limited exceptions)
+        run: node scripts/npm-audit.mjs
       - name: Security baseline is valid
         run: |
           python3 -m pip install --quiet pyyaml==6.0.3

@@ -96,8 +96,12 @@ final class ShipmentController
         });
         Session::forget('prefill_shipment');
         Audit::log('shipment_created', 'shipment', $id);
-        Session::flash('new_link', $token);
-        Session::flash('toast', 'Shipment created. Copy the private tracking link below now; it is shown only once.');
+        if (customer_tracking()) {
+            Session::flash('new_link', $token);
+            Session::flash('toast', 'Shipment created. Copy the private tracking link below now; it is shown only once.');
+        } else {
+            Session::flash('toast', 'Shipment created.');
+        }
         Http::redirect('/admin/shipments/' . $id);
     }
 
@@ -230,6 +234,9 @@ final class ShipmentController
     public static function newLink(string $id): void
     {
         Auth::requireStaff();
+        if (!customer_tracking()) {
+            Http::abort(404);
+        }
         Csrf::check();
         $s = self::find($id);
         $token = Tokens::trackingToken();

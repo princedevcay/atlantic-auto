@@ -20,7 +20,7 @@ $wa = whatsapp_url($isQuote
         <?php endif; ?>
         <a href="/" class="btn-secondary">Back to home</a>
       </div>
-      <?php if (!$isQuote): ?>
+      <?php if (!$isQuote && customer_tracking()): ?>
         <p class="mt-6 text-sm text-muted">If you have your tracking reference, you can also check your vehicle's stage on <a href="/track">Track Your Vehicle</a>.</p>
       <?php endif; ?>
     </div>

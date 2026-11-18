@@ -29,10 +29,10 @@ $types = [
     ['truck', 'truck', 'Trucks', 'Isuzu NPR', 'isuzu', 'Isuzu'],
 ];
 $faqs = [
-    ['Can you help me find a vehicle in the US?', 'Yes. Tell us the make, model, year range and budget in the quote form. We look for suitable vehicles and share the options with you before anything is bought.'],
-    ['How long does shipping to Ghana take?', 'It depends on where the vehicle is in the US, the shipping schedule and clearing at Tema. We give you an estimate with your quote, and your tracking page shows the expected arrival once the vehicle is on a ship.'],
+    ['Can you help me find a vehicle in the US?', 'Yes. We sell vehicles sourced from the US. Tell us the make, model, year range and budget in the quote form and we share suitable options with you before anything is bought.'],
+    ['How long does shipping to Ghana take?', 'It depends on where the vehicle is in the US, the shipping schedule and clearing at Tema. We give you an estimate with your quote, and we tell you the expected arrival once the vehicle is on a ship.'],
     ['Will you handle customs clearance in Ghana?', 'Yes. We handle the import documentation, customs clearance and port formalities at Tema, and tell you if we need anything from you.'],
-    ['How will I know the status of my vehicle?', 'You get a private tracking link and a reference. Your tracking page shows each stage with dates and notes from our team. It is updated by our team, not live GPS.'],
+    ['How will I know the status of my vehicle?', 'Our team tracks your vehicle at every stage, from purchase to delivery, and keeps you updated by WhatsApp or phone. You can also send a Vehicle Update request at any time.'],
     ['Can you deliver to my location in Ghana?', 'Yes. Tell us where you want the vehicle in your quote request and we will include delivery.'],
 ];
 ?>
@@ -45,7 +45,7 @@ $faqs = [
     </picture>
     <div class="absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/75 to-navy/10 md:from-navy/90 md:via-navy/50 md:to-transparent" aria-hidden="true"></div>
   <?php endif; ?>
-  <div class="container-x relative pb-24 pt-14 sm:pb-28 sm:pt-20 lg:pb-32">
+  <div class="container-x relative pt-14 sm:pt-20 <?= customer_tracking() ? 'pb-24 sm:pb-28 lg:pb-32' : 'pb-14 sm:pb-20 lg:pb-24' ?>">
     <div class="max-w-lg">
       <h1 class="text-4xl font-bold leading-[1.05] text-white sm:text-5xl lg:text-6xl">Import Your Vehicle from the USA</h1>
       <p class="mt-5 text-lg text-white/90">We help you source your vehicle in the US, ship it to Ghana, clear it at the port and deliver it to you, with reliable updates at every stage.</p>
@@ -57,6 +57,7 @@ $faqs = [
   </div>
 </section>
 
+<?php if (customer_tracking()): ?>
 <!-- 2. Track your vehicle -->
 <section class="relative z-10 -mt-14">
   <div class="container-x">
@@ -77,6 +78,7 @@ $faqs = [
     </form>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- 3. Services -->
 <section class="bg-gradient-to-b from-bg to-primary-soft/60 py-14" aria-labelledby="services-h">
@@ -100,7 +102,7 @@ $faqs = [
 <!-- 4. How it works -->
 <section class="bg-surface py-14" aria-labelledby="how-h">
   <div class="container-x">
-    <h2 id="how-h" class="text-center text-3xl font-bold">Six stages, and you see each one</h2>
+    <h2 id="how-h" class="text-center text-3xl font-bold"><?= customer_tracking() ? 'Six stages, and you see each one' : 'Six stages, tracked by our team' ?></h2>
     <div class="rule mx-auto"></div>
     <ol class="relative mt-10 grid grid-cols-2 gap-y-8 sm:grid-cols-3 lg:grid-cols-6">
       <span class="absolute left-[8%] right-[8%] top-8 hidden h-0.5 bg-primary/30 lg:block" aria-hidden="true"></span>
@@ -239,12 +241,12 @@ $faqs = [
 
     <div class="card p-5" aria-labelledby="about-h">
       <h2 id="about-h" class="text-xl font-bold">About Us</h2>
-      <?php // CSS-only illustration of a tracking page (owner's request: no photo here). Example data, labelled as such. ?>
-      <figure class="on-navy mt-4 overflow-hidden rounded-md bg-gradient-to-br from-navy to-navy-2 p-4 text-white" aria-label="Example of a customer tracking page">
+      <?php // CSS-only illustration of shipment progress (owner's request: no photo here). Example data. ?>
+      <figure class="on-navy mt-4 overflow-hidden rounded-md bg-gradient-to-br from-navy to-navy-2 p-4 text-white" aria-label="Example of shipment progress tracked by the Atlantic team">
         <div class="rounded-md bg-white p-3 text-ink shadow-card">
           <div class="flex items-center justify-between gap-2">
             <div class="min-w-0">
-              <p class="text-[10px] font-semibold uppercase tracking-wide text-muted">Your vehicle</p>
+              <p class="text-[10px] font-semibold uppercase tracking-wide text-muted">Shipment progress</p>
               <p class="truncate text-sm font-bold">2020 Saloon car</p>
             </div>
             <span class="chip shrink-0 bg-primary-soft font-mono text-[10px] text-primary">K7MP3QXA</span>

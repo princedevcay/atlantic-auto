@@ -2,10 +2,12 @@
 <?= App\Core\View::fetch('partials/page-head', ['eyebrow' => 'Existing customers', 'heading' => 'Request a Vehicle Update', 'lead' => 'Ask about a vehicle that is already with us. Our team will reply by WhatsApp or phone.']) ?>
 <section class="section pt-10">
   <div class="container-x max-w-2xl">
+    <?php if (customer_tracking()): ?>
     <div class="mb-6 flex gap-3 rounded-md border border-line bg-surface p-4 text-sm">
       <?= icon('info', 'icon text-primary') ?>
       <p>Have your tracking reference? You can see your vehicle's stage right now on <a href="/track">Track Your Vehicle</a>.</p>
     </div>
+    <?php endif; ?>
     <?= App\Core\View::fetch('partials/error-summary', ['errors' => $errors, 'notice' => $notice ?? null]) ?>
     <form method="post" action="/update" class="card space-y-5 p-5 sm:p-8" novalidate>
       <?= csrf_field() ?>
@@ -23,9 +25,9 @@
         <?= field_error($errors, 'phone') ?>
       </div>
       <div>
-        <label for="vin_or_reference">VIN or tracking reference</label>
+        <label for="vin_or_reference">VIN or reference</label>
         <input id="vin_or_reference" name="vin_or_reference" type="text" maxlength="40" autocapitalize="characters" autocomplete="off" required value="<?= e(old($old, 'vin_or_reference')) ?>" class="mt-1 uppercase"<?= field_attrs($errors, 'vin_or_reference', true) ?>>
-        <p id="vin_or_reference-hint" class="hint">The 17-character VIN, or the 8-character reference we sent you.</p>
+        <p id="vin_or_reference-hint" class="hint">The 17-character VIN, or the 8-character reference our team gave you.</p>
         <?= field_error($errors, 'vin_or_reference') ?>
       </div>
       <div>

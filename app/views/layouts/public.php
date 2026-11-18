@@ -1,7 +1,9 @@
 <?php
 /** @var string $content @var string $title */
 $nav = $nav ?? '';
-$links = ['services' => ['/services', 'Services'], 'how' => ['/how-it-works', 'How It Works'], 'track' => ['/track', 'Track'], 'about' => ['/about', 'About'], 'contact' => ['/contact', 'Contact']];
+$links = ['services' => ['/services', 'Services'], 'how' => ['/how-it-works', 'How It Works']]
+    + (customer_tracking() ? ['track' => ['/track', 'Track']] : [])
+    + ['about' => ['/about', 'About'], 'contact' => ['/contact', 'Contact']];
 $hideBar = in_array($nav, ['quote', 'update', 'track'], true) || isset($s);
 ?><!doctype html>
 <html lang="en">
@@ -9,7 +11,7 @@ $hideBar = in_array($nav, ['quote', 'update', 'track'], true) || isset($s);
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= e($title) ?> | Atlantic Auto and Shipping Services</title>
-<meta name="description" content="Atlantic Auto and Shipping Services helps customers in Ghana import vehicles from the USA and track them from the point of sale through shipping.">
+<meta name="description" content="Atlantic Auto and Shipping Services helps customers in Ghana buy and import vehicles from the USA, with updates from the point of sale through shipping.">
 <link rel="preload" href="<?= e(asset('fonts/inter-latin-wght-normal.woff2')) ?>" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="<?= e(asset('css/app.css')) ?>">
 <link rel="icon" href="<?= e(asset('img/favicon.png')) ?>">
@@ -75,7 +77,7 @@ $hideBar = in_array($nav, ['quote', 'update', 'track'], true) || isset($s);
     <nav aria-label="Footer" class="grid grid-cols-2 gap-2 text-sm">
       <a href="/services" class="text-white/90 no-underline hover:text-white">Services</a>
       <a href="/how-it-works" class="text-white/90 no-underline hover:text-white">How It Works</a>
-      <a href="/track" class="text-white/90 no-underline hover:text-white">Track Your Vehicle</a>
+      <?php if (customer_tracking()): ?><a href="/track" class="text-white/90 no-underline hover:text-white">Track Your Vehicle</a><?php endif; ?>
       <a href="/about" class="text-white/90 no-underline hover:text-white">About Us</a>
       <a href="/contact" class="text-white/90 no-underline hover:text-white">Contact</a>
       <a href="/privacy" class="text-white/90 no-underline hover:text-white">Privacy</a>

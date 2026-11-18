@@ -9,8 +9,10 @@
     <p>The information here is a general guide to our services. It is not a quote or an offer. Prices, duty, taxes and timings depend on each vehicle and are confirmed only in a written quote from our team.</p>
     <h2 class="mt-8 text-2xl font-bold">Quote and update requests</h2>
     <p>Sending a request does not create a contract. We will contact you to confirm details. Any import service is agreed separately in writing, including payment terms.</p>
+    <?php if (customer_tracking()): ?>
     <h2 class="mt-8 text-2xl font-bold">Tracking pages</h2>
     <p>Your tracking link and reference are private. Do not share them with people you do not want to see your vehicle's progress. Stages are updated by our team and, while at sea, by information from the shipping line. They are not live GPS and may change.</p>
+    <?php endif; ?>
     <h2 class="mt-8 text-2xl font-bold">Website chat</h2>
     <p>The chat on this site gives general answers to common questions. It is not advice about your specific vehicle. For anything about your own import, contact our team.</p>
     <h2 class="mt-8 text-2xl font-bold">Acceptable use</h2>

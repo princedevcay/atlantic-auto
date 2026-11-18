@@ -118,7 +118,7 @@ final class FormController
         $v = new Validator();
         $v->required('name', $old['name'], 'name', 120);
         $phone = $v->phone('phone', $old['phone']);
-        $v->required('vin_or_reference', $old['vin_or_reference'], 'VIN or tracking reference', 40);
+        $v->required('vin_or_reference', $old['vin_or_reference'], 'VIN or reference', 40);
         $v->required('question', $old['question'], 'question', 2000);
         $idValue = '';
         if (!isset($v->errors['vin_or_reference'])) {
@@ -129,7 +129,7 @@ final class FormController
             } elseif (Tokens::isReference($ref)) {
                 $idValue = $ref;
             } else {
-                $v->errors['vin_or_reference'] = 'Enter the 17-character VIN or your 8-character tracking reference.';
+                $v->errors['vin_or_reference'] = 'Enter the 17-character VIN or the 8-character reference our team gave you.';
             }
         }
         if (!$v->ok()) {

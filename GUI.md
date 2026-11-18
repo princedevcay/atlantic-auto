@@ -19,8 +19,8 @@ Ghanaian buyers importing a car from the USA, mostly on phones and mobile data, 
 | Services, How It Works, About, Contact, Privacy | `/services`, `/how-it-works`, `/about`, `/contact`, `/privacy` | public | server-rendered | NOT BUILT | default | NOT_YET_BUILT | Contact details pending |
 | Request an Import Quote | `/quote` | public | `POST /quote` | NOT BUILT | default, invalid, rate-limited, failed, success | NOT_YET_BUILT | |
 | Request a Vehicle Update | `/update` | public | `POST /update` | NOT BUILT | default, invalid, rate-limited, failed, success | NOT_YET_BUILT | |
-| Track lookup | `/track` and home quick box | public | `POST /track` | NOT BUILT | default, not found (generic), rate-limited | NOT_YET_BUILT | |
-| Tracking page | `/t/{token}` | customer with token or verified lookup | `GET /t/{token}` | NOT BUILT | default, revoked/not found, carrier stale | NOT_YET_BUILT | Carrier provider pending (DEC-005) |
+| Track lookup | `/track` and home quick box | public | `POST /track` | PARTIAL | default, not found (generic), rate-limited | NOT_YET_BUILT | |
+| Tracking page | `/t/{token}` | customer with token or verified lookup | `GET /t/{token}` | PARTIAL | default, revoked/not found, carrier stale | NOT_YET_BUILT | Carrier provider pending (DEC-005) |
 | Website chat (phase 1) | floating button on every public page | public | none (predefined answers in `app/Models/Chat.php`; nothing typed is sent or stored) | WORKING (local) | closed, open, offline/online, chip answer, typed message hand-off | tests/Unit/ChatTest.php; manual browser check 17 Nov 2026 | Phase 2 AI agent with staff hand-off needs a security baseline change first (AI_AGENT controls) |
 | Terms of Use | `/terms` | public | server-rendered | WORKING (local) | default | manual browser check | Draft text; client to confirm |
 | Mobile menu drawer | header menu under 1024px | public | none | WORKING (local) | open, close by X, overlay or Escape | manual browser check | |
@@ -55,6 +55,10 @@ All routes are server-rendered PHP. Every POST carries a CSRF token. The server 
 | Shipment.stage | Sourcing, Purchased, Picked up, Shipped, Clearing, Delivered | yes | CONFIDENTIAL | Timeline | Server |
 | Shipment.reference | 8 random characters | yes | CONFIDENTIAL | Shown to customer and staff | Server generated |
 | CarrierEvent.text | plain text | no | INTERNAL | Escaped; labelled "from carrier" with time | Server |
+
+## Customer tracking (switched off)
+
+Built, but switched off by `features.customer_tracking = false` (PG-030, client 18 Nov 2026: tracking is for the company). With it off, `/track`, `/track/view`, `/track/photo/{id}` and `/t/{token}` return 404, nav, footer, home, update, thanks, privacy and terms show no tracking links or promises, the chat answers "Where is my vehicle?" with the update request, and the admin hides private-link tools. Tested by `testTrackingIsHiddenWhenSwitchedOff`; switching it on runs `testTrackingAccessRules` instead.
 
 ## Website chat
 

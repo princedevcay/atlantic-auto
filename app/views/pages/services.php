@@ -5,7 +5,7 @@
       ['search', 'Sourcing', 'Tell us the make, model, year range and budget. We look for suitable vehicles in the USA and share the options with you before anything is bought.', 'Your preferences and budget, and a decision on the options we send.'],
       ['shopping-cart', 'Purchase', 'We buy the chosen vehicle on your behalf at auction, from a dealer or from a private seller, and collect the title and bill of sale.', 'Approval of the vehicle and payment as agreed in your quote.'],
       ['truck', 'Pickup in the USA', 'We arrange towing or transport from the seller to the port of loading.', 'Nothing, unless you bought the vehicle yourself: then the seller and pickup details.'],
-      ['ship', 'Shipping to Tema', 'Your vehicle is booked, loaded and shipped to Tema. Your tracking page shows the vessel and expected arrival when we have them.', 'Nothing. Watch your tracking page.'],
+      ['ship', 'Shipping to Tema', 'Your vehicle is booked, loaded and shipped to Tema. We tell you the vessel and expected arrival at Tema as soon as we have them.', 'Nothing. We keep you updated.'],
       ['file-check', 'Clearance at Tema port', 'Our team handles the documents, customs declaration and duty process, and the release of the vehicle from the port.', 'Your identification and any documents we confirm for your vehicle.'],
       ['house', 'Delivery', 'We hand the vehicle over to you, or deliver it to an agreed place in Ghana.', 'Be available to receive the vehicle.'],
     ] as $i => [$ic, $name, $what, $you]): ?>

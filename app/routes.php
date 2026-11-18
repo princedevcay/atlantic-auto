@@ -68,11 +68,13 @@ if ($isAdmin) {
     $router->post('/update', [FormController::class, 'update']);
     $router->get('/thanks', [FormController::class, 'thanks']);
 
-    $router->get('/track', [TrackController::class, 'form']);
-    $router->post('/track', [TrackController::class, 'lookup']);
-    $router->get('/track/view', [TrackController::class, 'view']);
-    $router->get('/track/photo/{id}', [TrackController::class, 'photo']);
-    $router->get('/t/{token}', [TrackController::class, 'byToken']);
+    if (customer_tracking()) {
+        $router->get('/track', [TrackController::class, 'form']);
+        $router->post('/track', [TrackController::class, 'lookup']);
+        $router->get('/track/view', [TrackController::class, 'view']);
+        $router->get('/track/photo/{id}', [TrackController::class, 'photo']);
+        $router->get('/t/{token}', [TrackController::class, 'byToken']);
+    }
 }
 
 $router->dispatch(Http::method(), $path);

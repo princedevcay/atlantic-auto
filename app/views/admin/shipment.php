@@ -18,7 +18,7 @@ $trackingOff = $s['link_disabled_at'] !== null;
   </div>
 </div>
 
-<?php if ($newLink !== null): ?>
+<?php if ($newLink !== null && customer_tracking()): ?>
   <div class="card mt-5 border-2 border-primary p-5" role="status">
     <h2 class="flex items-center gap-2 text-lg font-semibold"><?= icon('link', 'icon text-primary') ?>Private tracking link</h2>
     <p class="mt-1 text-sm text-muted">Copy it now and send it to the customer. For security it is not stored and will not be shown again. You can always create a new one.</p>
@@ -48,7 +48,7 @@ $trackingOff = $s['link_disabled_at'] !== null;
           <label for="note">Note <span class="font-normal text-muted">(optional)</span></label>
           <textarea id="note" name="note" rows="3" maxlength="2000" class="mt-1" placeholder="For example: Picked up from the auction yard today."></textarea>
         </div>
-        <label class="flex items-center gap-3 font-normal"><input type="checkbox" name="is_public" value="1" checked> Show this note on the customer's tracking page</label>
+        <?php if (customer_tracking()): ?><label class="flex items-center gap-3 font-normal"><input type="checkbox" name="is_public" value="1" checked> Show this note on the customer's tracking page</label><?php endif; ?>
         <button type="submit" class="btn-primary btn-sm">Save update</button>
       </form>
     </section>
@@ -60,7 +60,7 @@ $trackingOff = $s['link_disabled_at'] !== null;
           <li class="rounded-md border border-line p-3 text-sm">
             <div class="flex flex-wrap items-center gap-2">
               <span class="chip bg-primary-soft text-primary"><?= e(stage_label((string) $u['stage'])) ?></span>
-              <?php if ((int) $u['is_public'] === 0): ?><span class="chip border border-line text-muted">Internal</span><?php endif; ?>
+              <?php if (customer_tracking() && (int) $u['is_public'] === 0): ?><span class="chip border border-line text-muted">Internal</span><?php endif; ?>
               <span class="text-xs text-muted"><?= e(fmt_date((string) $u['created_at'], 'j M Y, g:ia')) ?><?= $u['staff_name'] ? ' by ' . e($u['staff_name']) : '' ?></span>
             </div>
             <?php if (!empty($u['note'])): ?><p class="mt-2 whitespace-pre-line"><?= e($u['note']) ?></p><?php endif; ?>
@@ -79,7 +79,7 @@ $trackingOff = $s['link_disabled_at'] !== null;
           <input id="photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" required class="mt-1 block w-full text-sm" aria-describedby="photo-hint">
           <p id="photo-hint" class="hint">JPEG, PNG or WebP, up to 8 MB.</p>
         </div>
-        <label class="flex items-center gap-2 font-normal"><input type="checkbox" name="is_public" value="1" checked> Customer can see it</label>
+        <?php if (customer_tracking()): ?><label class="flex items-center gap-2 font-normal"><input type="checkbox" name="is_public" value="1" checked> Customer can see it</label><?php endif; ?>
         <button type="submit" class="btn-secondary btn-sm"><?= icon('upload') ?>Upload</button>
       </form>
       <?php if ($photos !== []): ?>
@@ -88,7 +88,7 @@ $trackingOff = $s['link_disabled_at'] !== null;
           <li class="overflow-hidden rounded-md border border-line">
             <a href="/admin/photos/<?= (int) $p['id'] ?>"><img src="/admin/photos/<?= (int) $p['id'] ?>" alt="Shipment photo" width="<?= (int) $p['width'] ?>" height="<?= (int) $p['height'] ?>" loading="lazy" class="h-32 w-full object-cover"></a>
             <div class="flex items-center justify-between p-2 text-xs text-muted">
-              <span><?= (int) $p['is_public'] === 1 ? 'Customer can see' : 'Internal' ?></span>
+              <span><?= customer_tracking() ? ((int) $p['is_public'] === 1 ? 'Customer can see' : 'Internal') : 'Team only' ?></span>
               <?php if (Auth::isAdmin()): ?>
                 <form method="post" action="/admin/photos/<?= (int) $p['id'] ?>/delete"><?= csrf_field() ?><button type="submit" class="text-danger" aria-label="Delete photo"><?= icon('trash-2', 'icon h-4 w-4') ?></button></form>
               <?php endif; ?>
@@ -113,6 +113,7 @@ $trackingOff = $s['link_disabled_at'] !== null;
       </dl>
     </section>
 
+    <?php if (customer_tracking()): ?>
     <section class="card p-5" aria-labelledby="link-h">
       <h2 id="link-h" class="text-lg font-semibold">Customer tracking</h2>
       <?php if ($trackingOff): ?>
@@ -132,6 +133,7 @@ $trackingOff = $s['link_disabled_at'] !== null;
       <?php endif; ?>
       <p class="mt-3 text-xs text-muted">A new link replaces the old one. Use it if a link was shared with the wrong person.</p>
     </section>
+    <?php endif; ?>
 
     <?php if ($requests !== []): ?>
     <section class="card p-5" aria-labelledby="req-h">

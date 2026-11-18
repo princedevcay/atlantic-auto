@@ -104,7 +104,9 @@ final class AccessTest extends TestCase
     public function testFormsRejectMissingCsrf(): void
     {
         $this->assertSame(419, $this->req('POST', '/quote', ['name' => 'x'])['code']);
-        $this->assertSame(419, $this->req('POST', '/track', ['reference' => 'x'])['code']);
+        if (customer_tracking()) {
+            $this->assertSame(419, $this->req('POST', '/track', ['reference' => 'x'])['code']);
+        }
         $this->assertSame(419, $this->req('POST', '/admin/login', ['email' => 'x'])['code']);
     }
 
@@ -137,8 +139,28 @@ final class AccessTest extends TestCase
         $this->assertSame($before, (int) Db::value('SELECT COUNT(*) FROM enquiries'));
     }
 
+    public function testTrackingIsHiddenWhenSwitchedOff(): void
+    {
+        if (customer_tracking()) {
+            $this->markTestSkipped('customer tracking is switched on');
+        }
+        foreach (['/track', '/track/view', '/track/photo/1', '/t/AAAAAAAAAAAAAAAAAAAAAA'] as $p) {
+            $this->assertSame(404, $this->req('GET', $p)['code'], $p);
+        }
+        $this->assertSame(404, $this->req('POST', '/track', ['reference' => 'x'])['code']);
+        foreach (['/', '/how-it-works', '/update', '/contact', '/privacy', '/terms', '/services'] as $p) {
+            $body = $this->req('GET', $p)['body'];
+            $this->assertStringNotContainsString('href="/track"', $body, $p . ' links to /track');
+            $this->assertStringNotContainsString('action="/track"', $body, $p . ' has a tracking form');
+            $this->assertDoesNotMatchRegularExpression('/tracking (page|link)/i', $body, $p . ' promises a tracking page');
+        }
+    }
+
     public function testTrackingAccessRules(): void
     {
+        if (!customer_tracking()) {
+            $this->markTestSkipped('customer tracking is switched off (features.customer_tracking)');
+        }
         $token = Tokens::trackingToken();
         $ref = Tokens::reference();
         $id = Db::insert('shipments', [

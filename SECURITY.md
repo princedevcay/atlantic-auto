@@ -1,8 +1,8 @@
 # Security
 
-Status: APPROVED (17 Nov 2026, scope: development, production:namecheap-cpanel)
-Design digest: 36050147b52211e6a135ed94cc0b972b2f9204c642c09aeec26d5088f3a992c5
-Baseline version: 0.1.0
+Status: APPROVED 0.2.0 on 18 Nov 2026 (CHG-001 audit exception, CHG-002 cars for sale; 0.1.0 approved 17 Nov 2026). Scope: development, production:namecheap-cpanel
+Design digest: fa7e68331dc9e5d1548958e6fe18f7fc4f3bf5b32a2fd70c07b57b67a8867ae4
+Baseline version: 0.2.0
 Canonical record: `security-baseline.yaml`
 Owner: developer (PrinceCaleb.dev)
 Last reviewed: 2026-11-17
@@ -17,7 +17,7 @@ Please use GitHub's private vulnerability reporting on this repository (Security
 
 - Risk: **MEDIUM / STANDARD**. Staff login and admin, customer personal data, private tracking pages, a carrier API and staff photo uploads. No payments and no AI.
 - Environments: development (synthetic data) and production on Namecheap cPanel. Proposed approval scope: `development`, `production:namecheap-cpanel`.
-- Locks: development `UNLOCKED` and deployment `UNLOCKED` by the owner's approval of 0.1.0. Deploys still need the gates below to pass.
+- Locks: development and deployment `UNLOCKED` by the owner's approval of 0.2.0. Deploys still need the gates below to pass.
 - Excluded from v1: payments, customer accounts, live GPS, staging environment.
 
 ## Assurance targets and standards
@@ -82,6 +82,14 @@ This is not legal advice.
 | GATE-002 PR checks: secrets, audits, lint, access-control tests | PULL_REQUEST | yes | NOT_YET_BUILT |
 | GATE-003 Production deploy: protected main, owner approval, digest check | PRE_DEPLOY | yes | NOT_YET_BUILT |
 | GATE-004 Pre-launch security review | PRE_DEPLOY | yes | NOT_YET_BUILT |
+
+## Dependency audit exceptions
+
+CI fails on any HIGH or CRITICAL npm advisory except owner-approved exceptions in `.github/audit-exceptions.json` (CHG-001). Each names one advisory and stops counting on its expiry date or when the package publishes a newer release.
+
+| Advisory | Package | Why it is allowed | Ends |
+|---|---|---|---|
+| GHSA-fc5q-39xc-vjpf | picomatch (ReDoS) | No patched release exists. Build-time only, via the Tailwind CLI's file watcher; nothing from npm is deployed and watch mode is not used | 2 Dec 2026, or when picomatch releases a version newer than 4.0.7 |
 
 ## Known risks and open decisions
 

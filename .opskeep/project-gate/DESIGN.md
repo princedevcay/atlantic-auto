@@ -38,11 +38,12 @@ It is deliberately **not** a scroll-story microsite (direction C, rejected as to
 5. Phone numbers are shown and validated in +233 format; WhatsApp links use `wa.me` with the client's number. No placeholder contact details ship. (PG-015, PG-026)
 6. Forms are one column on mobile, labels above fields, inline errors, and a thank-you screen with a reference number and a prefilled "Continue on WhatsApp" link. (PG-006, PG-008, PG-017, PG-020)
 7. Select boxes use `appearance:none`, about 42px right padding and one teal 16px chevron at `right 14px center` (studio rule). (PG-017)
-8. Tracking pages show the six stages Sourcing, Purchased, Picked up, Shipped, Clearing, Delivered as a vertical timeline, current stage highlighted, "last updated" always visible. (PG-021, PG-024)
-9. A tracking page opens only from a private link, or tracking reference plus last 4 phone digits. VIN alone never opens one. (PG-022)
+8. Customer tracking is switched off (PG-030): no public tracking page, private link or reference lookup, and no copy that promises one. The team tracks vehicles in the admin. If `features.customer_tracking` is switched on later, tracking pages show the six stages as a vertical timeline with "last updated" visible.
+9. If customer tracking is switched on later, a tracking page opens only from a private link, or reference plus last 4 phone digits; VIN alone never opens one.
 10. Copy says stages are updated by the Atlantic team and the carrier; never imply live GPS. (R-01)
 11. The admin inbox is one inbox with tabs All, Import Quotes, Vehicle Updates, each with a new-item count. Notification email subjects start with `[Import Quote]` or `[Vehicle Update]`. (PG-025)
 12. All landing page and hero photos are supplied by the client. Do not generate or use stock images. Until a file arrives, its slot is a pale panel with an icon. 'What we import' shows the real Toyota, Honda, Ford, Mercedes-Benz and Isuzu logos with example models; every third-party mark uses an official file recorded in brand/LOGOS.md. (PG-028)
+15. Cars for sale (PG-031 to PG-034): only published cars appear anywhere on the site; a hidden car and its photos give a 404. Prices are shown exactly as staff enter them (GHS by default, USD allowed, or "Price on request"); never calculate, convert or estimate a price. Sold and Reserved cars keep their badge and have no enquiry button. The home page shows "Featured cars for sale" directly after the service cards, and only when a car is published.
 13. Pages stay lean: responsive compressed images (AVIF/WebP with JPEG fallback), no heavy client frameworks on public pages, forms submit without JavaScript. (PG-012)
 14. No em dashes in any copy, UI string or code comment (studio rule).
 
