@@ -90,7 +90,10 @@ $hideBar = in_array($nav, ['quote', 'update', 'track'], true) || isset($s);
     <?php // Bottom room so the floating chat button and the phone action bar never cover footer text or links. ?>
     <div class="container-x flex flex-col gap-2 pt-5 text-sm text-white/70 sm:flex-row sm:items-center sm:justify-between md:pb-24 <?= $hideBar ? 'pb-24' : 'pb-40' ?>">
       <p>&copy; <?= e(gmdate('Y')) ?> Atlantic Auto and Shipping Services.</p>
-      <p>Built by <a href="https://princecaleb.dev" class="font-semibold text-white/90 no-underline hover:text-white hover:underline" rel="noopener" target="_blank">princecaleb.dev</a></p>
+      <div class="flex items-center gap-4">
+        <p>Built by <a href="https://princecaleb.dev" class="font-semibold text-white/90 no-underline hover:text-white hover:underline" rel="noopener" target="_blank">princecaleb.dev</a></p>
+        <a href="/admin/login" class="flex h-9 w-9 items-center justify-center rounded-full text-white/60 hover:bg-white/10 hover:text-white" title="Staff sign in" aria-label="Staff sign in" rel="nofollow"><?= icon('key-round', 'icon h-4 w-4') ?></a>
+      </div>
     </div>
   </div>
 </footer>

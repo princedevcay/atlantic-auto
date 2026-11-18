@@ -12,8 +12,9 @@ RewriteCond %{THE_REQUEST} ^\S+\s([^?\s]+)
 RewriteCond %1::%{HTTP_HOST} ^(.*)::www\.(.+)$ [NC]
 RewriteRule ^ https://%2%1 [R=301,L,NE]
 
-# No dotfiles, and no PHP file other than the front controller.
+# No dotfiles, no server error_log files, and no PHP file other than the front controller.
 RewriteRule (^|/)\. - [R=404,L]
+RewriteRule (^|/)error_log$ - [R=404,L]
 RewriteCond %{REQUEST_FILENAME} \.php$ [NC]
 RewriteCond %{REQUEST_FILENAME} !/index\.php$
 RewriteRule ^ - [R=404,L]
