@@ -102,7 +102,7 @@ $shareImage = site_image('hero') !== '' ? $baseUrl . strtok(site_image('hero'), 
       <?php if (customer_tracking()): ?><a href="/track" class="text-white/90 no-underline hover:text-white">Track Your Vehicle</a><?php endif; ?>
       <a href="/about" class="text-white/90 no-underline hover:text-white">About Us</a>
       <a href="/contact" class="text-white/90 no-underline hover:text-white">Contact</a>
-      <a href="/privacy" class="text-white/90 no-underline hover:text-white">Privacy</a>
+      <a href="/privacy" class="text-white/90 no-underline hover:text-white">Privacy Policy</a>
       <a href="/terms" class="text-white/90 no-underline hover:text-white">Terms of Use</a>
     </nav>
     <?= App\Core\View::fetch('partials/contact-list', ['dark' => true]) ?>
