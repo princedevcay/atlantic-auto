@@ -289,7 +289,7 @@ $faqs = [
           </div>
         </div>
       </figure>
-      <p class="mt-4 text-sm text-muted">Atlantic Auto and Shipping Services helps individuals and businesses in Ghana import vehicles from the USA, with end-to-end support from sourcing and shipping to clearance and delivery.</p>
+      <p class="mt-4 text-sm text-muted">Atlantic Auto And Shipping Services helps individuals and businesses in Ghana import vehicles from the USA, with end-to-end support from sourcing and shipping to clearance and delivery.</p>
       <div class="mt-4 grid gap-2">
         <a href="/quote" class="btn-primary btn-sm">Request an Import Quote</a>
         <a href="/update" class="btn-secondary btn-sm">Request a Vehicle Update</a>

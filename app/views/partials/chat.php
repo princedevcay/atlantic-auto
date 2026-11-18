@@ -24,7 +24,7 @@ $wa = whatsapp_url('Hello Atlantic, I have a question about importing a vehicle.
     <div class="flex-1 space-y-3 overflow-y-auto bg-bg px-4 py-4" aria-live="polite" data-chat-log>
       <div class="flex gap-2">
         <div class="max-w-[85%] rounded-lg rounded-tl-sm bg-surface px-4 py-3 text-[15px] leading-relaxed shadow-card">
-          Hello! Welcome to Atlantic Auto and Shipping Services. How can we help with your vehicle import today?
+          Hello! Welcome to Atlantic Auto And Shipping Services. How can we help with your vehicle import today?
         </div>
       </div>
     </div>

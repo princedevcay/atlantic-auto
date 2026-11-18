@@ -12,6 +12,9 @@ use PHPMailer\PHPMailer\PHPMailer;
  */
 final class Mailer
 {
+    /** Every email from the website goes out under the company's registered name. */
+    public const COMPANY = 'Atlantic Auto And Shipping Services';
+
     public static function queue(string $to, string $subject, string $body, ?string $replyTo = null): int
     {
         $subject = preg_replace('/[\r\n]+/', ' ', $subject) ?? '';
@@ -81,13 +84,13 @@ final class Mailer
         $mail->SMTPSecure = Config::str('mail.encryption', 'ssl') === 'tls' ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
         $mail->Timeout = 15;
         $mail->CharSet = 'UTF-8';
-        $mail->setFrom(Config::str('mail.from'), Config::str('mail.from_name'));
+        $mail->setFrom(Config::str('mail.from'), self::COMPANY);
         $mail->addAddress($to);
         if ($replyTo !== null) {
             $mail->addReplyTo($replyTo);
         }
         $mail->Subject = $subject;
-        $mail->Body = $body;
+        $mail->Body = $body . "\n\n--\n" . self::COMPANY . "\n" . rtrim(Config::str('app.url', 'https://atlanticautoservices.com'), '/') . "\n";
         $mail->isHTML(false);
         $mail->send();
     }

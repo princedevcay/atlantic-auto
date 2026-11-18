@@ -26,6 +26,7 @@ final class CarController
         $body = Http::query('body');
         View::render('pages/cars', [
             'title' => 'Cars for Sale', 'nav' => 'cars',
+            'description' => 'Cars, SUVs, pickups, vans and trucks for sale from Atlantic Auto And Shipping Services, sourced in the USA for buyers in Ghana.',
             'cars' => Cars::publishedList($status, $body),
             'status' => isset(Cars::STATUSES[$status]) ? $status : '',
             'body' => isset(Cars::BODY_TYPES[$body]) ? $body : '',
@@ -39,6 +40,7 @@ final class CarController
         View::render('pages/car', [
             'title' => Cars::title($car), 'nav' => 'cars', 'car' => $car, 'photos' => Cars::photos((int) $car['id']),
             'old' => [], 'errors' => [], 'started' => FormController::stamp(),
+            'description' => Cars::title($car) . ' for sale at Atlantic Auto And Shipping Services: ' . Cars::price($car) . ', ' . (Cars::STATUSES[$car['status']] ?? '') . '.',
         ]);
     }
 

@@ -1,4 +1,4 @@
-# Atlantic Auto and Shipping Services
+# Atlantic Auto And Shipping Services
 
 Website for a Ghanaian company importing vehicles from the USA: import quote requests, vehicle update requests, team-managed tracking pages with a carrier feed, and a staff admin.
 

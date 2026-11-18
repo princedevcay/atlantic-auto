@@ -2,8 +2,8 @@
 
 | File | Brand | Source | Notes |
 |---|---|---|---|
-| `public/assets/img/logo.png`, `logo.webp` | Atlantic Auto and Shipping Services | Client-supplied `Atlantic Auto Shipping Services Logo on White.png` | Outer white background removed and margins trimmed for the site header; colours unchanged |
-| `public/assets/img/logo-white.png`, `logo-white.webp` | Atlantic Auto and Shipping Services | Made from the client logo: navy parts turned white for the navy footer, teal wave unchanged | |
+| `public/assets/img/logo.png`, `logo.webp` | Atlantic Auto And Shipping Services | Client-supplied `Atlantic Auto Shipping Services Logo on White.png` | Outer white background removed and margins trimmed for the site header; colours unchanged |
+| `public/assets/img/logo-white.png`, `logo-white.webp` | Atlantic Auto And Shipping Services | Made from the client logo: navy parts turned white for the navy footer, teal wave unchanged | |
 | `public/assets/img/favicon.png` | Atlantic Auto | Cropped from the client logo mark | |
 | `public/assets/img/brands/whatsapp.svg` | WhatsApp | simple-icons 16.36.0 (`node_modules/simple-icons/icons/whatsapp.svg`), copied at build by `scripts/copy-assets.mjs` | Official one-colour glyph; shown black or inverted to white only |
 | `public/assets/img/brands/toyota.svg` | Toyota | simple-icons 16.36.0, coloured #EB0A1E (brand colour from simple-icons) | Owner asked for real car brand logos (PG-028) |
