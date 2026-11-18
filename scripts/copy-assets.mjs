@@ -37,6 +37,10 @@ copy(nm('simple-icons', 'icons', 'whatsapp.svg'), out('img', 'brands', 'whatsapp
 
 // Car brands shown on "What we import" (owner's request, PG-028). Official one-colour glyphs in each brand's colour.
 const si = await import('simple-icons');
+// Social media icons (official one-colour glyphs; shown white on navy or in ink on light backgrounds).
+for (const slug of ['tiktok', 'youtube', 'instagram']) {
+  copy(nm('simple-icons', 'icons', `${slug}.svg`), out('img', 'brands', `${slug}.svg`));
+}
 for (const [slug, key] of [['toyota', 'siToyota'], ['honda', 'siHonda'], ['ford', 'siFord']]) {
   const svg = readFileSync(nm('simple-icons', 'icons', `${slug}.svg`), 'utf8').replace('<svg ', `<svg fill="#${si[key].hex}" `);
   writeFileSync(out('img', 'brands', `${slug}.svg`), svg);

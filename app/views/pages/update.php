@@ -15,28 +15,39 @@
       <div class="hidden" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
       <div>
         <label for="name">Full name</label>
-        <input id="name" name="name" type="text" autocomplete="name" maxlength="120" required value="<?= e(old($old, 'name')) ?>" class="mt-1"<?= field_attrs($errors, 'name') ?>>
+        <input id="name" data-wa-label="Name" name="name" type="text" autocomplete="name" maxlength="120" required value="<?= e(old($old, 'name')) ?>" class="mt-1"<?= field_attrs($errors, 'name') ?>>
         <?= field_error($errors, 'name') ?>
       </div>
       <div>
         <label for="phone">Phone or WhatsApp number</label>
-        <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" required value="<?= e(old($old, 'phone')) ?>" class="mt-1"<?= field_attrs($errors, 'phone', true) ?>>
+        <input id="phone" data-wa-label="Phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" required value="<?= e(old($old, 'phone')) ?>" class="mt-1"<?= field_attrs($errors, 'phone', true) ?>>
         <p id="phone-hint" class="hint">Use the number you gave us when you started.</p>
         <?= field_error($errors, 'phone') ?>
       </div>
       <div>
         <label for="vin_or_reference">VIN or reference</label>
-        <input id="vin_or_reference" name="vin_or_reference" type="text" maxlength="40" autocapitalize="characters" autocomplete="off" required value="<?= e(old($old, 'vin_or_reference')) ?>" class="mt-1 uppercase"<?= field_attrs($errors, 'vin_or_reference', true) ?>>
+        <input id="vin_or_reference" data-wa-label="VIN or reference" name="vin_or_reference" type="text" maxlength="40" autocapitalize="characters" autocomplete="off" required value="<?= e(old($old, 'vin_or_reference')) ?>" class="mt-1 uppercase"<?= field_attrs($errors, 'vin_or_reference', true) ?>>
         <p id="vin_or_reference-hint" class="hint">The 17-character VIN, or the 8-character reference our team gave you.</p>
         <?= field_error($errors, 'vin_or_reference') ?>
       </div>
       <div>
         <label for="question">Your question</label>
-        <textarea id="question" name="question" rows="5" maxlength="2000" required class="mt-1"<?= field_attrs($errors, 'question') ?>><?= e(old($old, 'question')) ?></textarea>
+        <textarea id="question" data-wa-label="Question" name="question" rows="5" maxlength="2000" required class="mt-1"<?= field_attrs($errors, 'question') ?>><?= e(old($old, 'question')) ?></textarea>
         <?= field_error($errors, 'question') ?>
       </div>
       <p class="text-sm text-muted">Updates are given by the Atlantic team. See our <a href="/privacy">privacy notice</a>.</p>
-      <button type="submit" class="btn-primary w-full sm:w-auto" data-busy="Sending...">Send update request</button>
+      <?php $waBase = whatsapp_url(); ?>
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <button type="submit" class="btn-primary w-full sm:w-auto" data-busy="Sending...">Send update request</button>
+        <?php if ($waBase !== ''): ?>
+          <button type="button" class="btn-secondary w-full sm:w-auto" data-wa-send="<?= e($waBase) ?>" data-wa-intro="Hello Atlantic Auto And Shipping Services, I would like an update on my vehicle." hidden>
+            <img src="<?= e(asset('img/brands/whatsapp.svg')) ?>" alt="" width="20" height="20" class="h-5 w-5"> Send on WhatsApp
+          </button>
+        <?php endif; ?>
+      </div>
+      <?php if ($waBase !== ''): ?>
+        <p class="hidden text-xs text-muted" data-wa-note>Send on WhatsApp opens WhatsApp with your details filled in. Check them, then press send in WhatsApp.</p>
+      <?php endif; ?>
     </form>
   </div>
 </section>

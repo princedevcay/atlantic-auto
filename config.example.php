@@ -35,6 +35,10 @@ return [
         'address' => '',
         'hours' => '',
         'map_url' => '',
+        // Social media profile links (full https:// URLs). Leave '' to hide an icon.
+        'tiktok' => '',
+        'youtube' => '',
+        'instagram' => '',
     ],
     'features' => [
         // Customer tracking pages (/track, private links). Off for now: tracking is for the team (client, 18 Nov 2026).

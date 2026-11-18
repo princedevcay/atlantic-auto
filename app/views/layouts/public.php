@@ -83,6 +83,9 @@ $shareImage = $baseUrl . '/assets/img/og-image.jpg'; // logo on white, 1200x630,
           <?php if ($menuWa !== ''): ?>
             <a href="<?= e($menuWa) ?>" class="btn-ghost w-full border border-line" rel="noopener"><img src="<?= e(asset('img/brands/whatsapp.svg')) ?>" alt="" width="20" height="20" class="h-5 w-5"> Chat on WhatsApp</a>
           <?php endif; ?>
+          <?php if (contact('phone') !== ''): ?>
+            <a href="<?= e(tel_url(contact('phone'))) ?>" class="btn-ghost w-full border border-line"><?= icon('phone', 'icon h-5 w-5 text-primary') ?> Call <?= e(contact('phone')) ?></a>
+          <?php endif; ?>
         </div>
       </div>
     </details>

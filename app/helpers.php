@@ -44,6 +44,19 @@ function whatsapp_url(string $text = ''): string
     return 'https://wa.me/' . $num . ($text !== '' ? '?text=' . rawurlencode($text) : '');
 }
 
+/** The WhatsApp number for display, e.g. 233241234567 becomes +233 24 123 4567. */
+function whatsapp_display(): string
+{
+    $num = preg_replace('/\D/', '', contact('whatsapp')) ?? '';
+    if ($num === '') {
+        return '';
+    }
+    if (strlen($num) === 12 && str_starts_with($num, '233')) {
+        return '+233 ' . substr($num, 3, 2) . ' ' . substr($num, 5, 3) . ' ' . substr($num, 8);
+    }
+    return '+' . $num;
+}
+
 function tel_url(string $phone): string
 {
     return 'tel:' . preg_replace('/[^\d+]/', '', $phone);
@@ -129,4 +142,23 @@ function old(array $old, string $key): string
 function customer_tracking(): bool
 {
     return Config::get('features.customer_tracking', false) === true;
+}
+
+/**
+ * Social profiles from config (contact.tiktok, contact.youtube, contact.instagram).
+ * Only full https:// links on the expected site are shown.
+ * @return list<array{key: string, label: string, url: string}>
+ */
+function social_links(): array
+{
+    $sites = ['tiktok' => ['TikTok', 'tiktok.com'], 'youtube' => ['YouTube', 'youtube.com'], 'instagram' => ['Instagram', 'instagram.com']];
+    $out = [];
+    foreach ($sites as $key => [$label, $host]) {
+        $url = contact($key);
+        $h = strtolower((string) parse_url($url, PHP_URL_HOST));
+        if ($url !== '' && str_starts_with($url, 'https://') && ($h === $host || str_ends_with($h, '.' . $host))) {
+            $out[] = ['key' => $key, 'label' => $label, 'url' => $url];
+        }
+    }
+    return $out;
 }
