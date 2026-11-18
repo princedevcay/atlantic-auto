@@ -552,11 +552,11 @@ controls:
   - id: "CTL-SEC-002"
     domain: "SECRETS"
     requirement: "FTP credentials only as GitHub production-environment secrets, added by the owner; a dedicated FTP account jailed to the application directory; MySQL app user limited to its own database; secrets rotated on staff change, suspected exposure, or yearly; never printed in logs"
-    status: "IMPLEMENTED"
+    status: "VERIFIED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "Inspection: FTP account home is the app directory; the DB user has no global privileges"
     refs: ["ASVS-5.0:V13"]
-    evidence_ids: []
+    evidence_ids: ["EVD-005"]
   - id: "CTL-CFG-001"
     domain: "CONFIG"
     requirement: "Application code, vendor and config outside the document root (only public/ is served); display_errors off in production; directory listing off; security headers (CSP, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, frame-ancestors) set; PHP 8.2 or later selected in cPanel; no phpinfo or debug routes deployed"
@@ -716,8 +716,8 @@ evidence:
   - {id: "EVD-002", type: "CI_RUN", status: "PASSED", observed_at: "2026-11-18T13:09:54Z", observer: "Claude Code session, 18 Nov 2026", location: "CI pass on 09671aa https://github.com/princedevcay/atlantic-auto/actions/runs/44308783954 ; blocked run (dependency-audit) https://github.com/princedevcay/atlantic-auto/actions/runs/44304563632 ; branch protection rejected a direct push to main (GH006) with 3 required checks"}
   - {id: "EVD-003", type: "CI_RUN", status: "PASSED", observed_at: "2026-11-18T13:09:54Z", observer: "Claude Code session, 18 Nov 2026", location: "Deploy from a non-main branch refused (deploy job skipped) https://github.com/princedevcay/atlantic-auto/actions/runs/44309190966 ; production environment allows main only with owner approval ; validate_baseline --stage PRE_DEPLOY fails while EVD-004 and EVD-005 are not PASSED"}
   - {id: "EVD-004", type: "MANUAL_REVIEW", status: "PASSED", observed_at: "2026-11-18T13:21:42Z", observer: "Claude Code session, local pre-launch review 18 Nov 2026", location: ".opskeep/elliot/prelaunch-review.md (local review: all GATE-004 controls pass; two findings fixed in PR #7, merged as 3b44e8c)"}
-  - {id: "EVD-006", type: "MANUAL_REVIEW", status: "NOT_YET_BUILT", observed_at: null, observer: null, location: ".opskeep/elliot/prelaunch-review.md (live checks section)"}
-  - {id: "EVD-005", type: "CONFIG_INSPECTION", status: "PENDING", observed_at: null, observer: null, location: "GitHub side inspected 18 Nov 2026 (main protected, 3 required checks, admins included, no force push; production env: owner approval, main only, BASELINE_DIGEST set). Still to inspect on the server: FTP account limited to ~/atlanticautoservices.com, DB user limited to its database"}
+  - {id: "EVD-006", type: "MANUAL_REVIEW", status: "PENDING", observed_at: null, observer: null, location: ".opskeep/elliot/prelaunch-review.md live checks, 18 Nov 2026: HTTPS valid for domain and www to 2027-06-04, HTTP and www redirect, HSTS on, CSP and security headers live, __Host- Secure HttpOnly cookies (admin SameSite=Strict), code and config paths 404, safe error pages, CSRF 419, cron jobs installed, backup created and verified (12 tables, owner-only), test enquiry email delivered. Open: client contact details, privacy notice and terms (DEC-004, DEC-008)"}
+  - {id: "EVD-005", type: "CONFIG_INSPECTION", status: "PASSED", observed_at: "2026-11-18T14:38:35Z", observer: "Owner inspected in cPanel and confirmed, 18 Nov 2026", location: "cPanel FTP Accounts: deploy account directory is atlanticautoservices.com; cPanel MySQL Databases: the app user is attached only to its own database; GitHub: main protected with 3 required checks, production environment owner-approved and main-only, FTP secrets only in that environment"}
 monitoring:
   handoff:
     provider: "NONE"

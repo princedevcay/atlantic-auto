@@ -40,17 +40,28 @@ Baseline 0.2.0 (digest `fa7e6833...`), reviewed 18 Nov 2026 on a local build (PH
 2. Database and a user limited to it; dedicated FTP account whose directory is `atlanticautoservices.com`.
 3. FTP secrets in the GitHub production environment; `~/atlantic-auto-private/config.php` with `chmod 600`.
 
-## GATE-005: live checks within 48 hours of the first public deploy (EVD-005, EVD-006)
+## GATE-005: live checks after the first public deploy (EVD-005, EVD-006)
 
-1. FTP account limited to `atlanticautoservices.com`; database user limited to its own database (EVD-005).
-2. HTTPS certificate valid for the domain and www; then turn on HSTS (`security.hsts`).
-3. Security headers and cookie flags (`Secure`, `__Host-`, `SameSite`) on the live domain.
-4. `display_errors` off and PHP 8.2 or later on the live PHP.
-5. Migrations run, first Admin created; cron jobs installed (mail, backup, retention, health) and the first backup restored once on the host.
-6. A test enquiry reaches the shared inbox by email (SMTP over TLS).
-7. Contact details, chat opening hours and the shared inbox in `config.php`; privacy notice and terms confirmed by the client (DEC-004, DEC-008).
+First deploy on 18 Nov 2026 (run 44313791210, commit b1573f1). Checked the same day:
 
-If a GATE-005 check fails, it is fixed straight away or the developer takes the site offline until it is.
+| Check | Result | How |
+|---|---|---|
+| FTP account limited to `atlanticautoservices.com`; database user limited to its own database | Pass (EVD-005) | Owner inspected in cPanel and confirmed |
+| HTTPS certificate for the domain and www | Pass | SSL.com certificate, valid to 4 Jun 2027, both names |
+| HTTP and www redirect to `https://atlanticautoservices.com`, keeping path and query | Pass | curl against the live domain |
+| HSTS | Pass | Switched on after the certificate check; `max-age=31536000` live |
+| Security headers | Pass | CSP, nosniff, frame DENY, referrer and permissions policies live |
+| Session cookies | Pass | `__Host-` prefix, Secure, HttpOnly; admin `SameSite=Strict`; admin pages no-store and noindex |
+| Code, config, dependencies, schema, dotfiles, deploy state, `error_log` | Pass | All 404 or 403 live |
+| Errors safe | Pass | The 500s before the database was set up showed the site's error page with no technical details |
+| Form protection | Pass | POST without a token gets 419 on the quote form and admin login |
+| PHP version | Pass | 8.5.12 (minimum 8.2); the version header is removed by PR #9 |
+| Cron jobs | Pass | mail, carrier, backup, retention, health installed in cPanel |
+| Backup on the host | Pass | Created, owner-only, gzip verified, 12 tables; full restore rehearsed locally |
+| Test enquiry email over SMTP | Pass | A test quote reached the shared inbox with the [Import Quote] subject |
+| Contact details, privacy notice and terms confirmed | **Open (client)** | DEC-004 retention and DEC-008 Act 843 with the client; contact details to add in `config.php` |
+
+EVD-006 stays PENDING until the last row is done; everything technical has passed.
 
 ## Client items (not blocking the deploy)
 
