@@ -1,14 +1,15 @@
 <?php
 // Contact details come from config.php. An empty value is hidden; placeholders never ship (PG-015).
 $dark = $dark ?? false;
+$socials = social_links();
 $text = $dark ? 'text-white/90 hover:text-white' : 'text-ink hover:text-primary';
 $muted = $dark ? 'text-white/70' : 'text-muted';
 $items = [];
 if (contact('phone') !== '') {
-    $items[] = ['phone', 'Phone', contact('phone'), tel_url(contact('phone'))];
+    $items[] = ['phone', 'Call us', contact('phone'), tel_url(contact('phone'))];
 }
 if (whatsapp_url() !== '') {
-    $items[] = ['whatsapp', 'WhatsApp', 'Chat with us on WhatsApp', whatsapp_url()];
+    $items[] = ['whatsapp', 'WhatsApp', whatsapp_display(), whatsapp_url('Hello Atlantic, I have a question.')];
 }
 if (contact('email') !== '') {
     $items[] = ['mail', 'Email', contact('email'), 'mailto:' . contact('email')];
@@ -22,9 +23,10 @@ if (contact('hours') !== '') {
 ?>
 <div>
   <h2 class="<?= isset($heading) ? 'text-xl font-bold' : 'text-base font-semibold' ?> <?= $dark ? 'text-white' : '' ?>"><?= e($heading ?? 'Contact us') ?></h2>
-  <?php if ($items === []): ?>
+  <?php if ($items === [] && $socials === []): ?>
     <p class="mt-3 text-sm <?= e($muted) ?>">Contact details will be published here soon.</p>
   <?php else: ?>
+  <?php if ($items !== []): ?>
   <ul class="mt-3 space-y-3 text-sm">
     <?php foreach ($items as [$ic, $label, $value, $href]): ?>
       <li class="flex items-start gap-3">
@@ -44,5 +46,18 @@ if (contact('hours') !== '') {
       </li>
     <?php endforeach; ?>
   </ul>
+  <?php endif; ?>
+  <?php if ($socials !== []): ?>
+  <p class="mt-5 text-xs <?= e($muted) ?>">Follow us</p>
+  <ul class="mt-2 flex gap-2" aria-label="Social media">
+    <?php foreach ($socials as $s): ?>
+      <li>
+        <a href="<?= e($s['url']) ?>" class="flex h-10 w-10 items-center justify-center rounded-full border <?= $dark ? 'border-white/25 hover:bg-white/10' : 'border-line hover:border-primary hover:bg-primary-soft' ?>" rel="noopener me" target="_blank" aria-label="<?= e($s['label']) ?> (opens in a new tab)" title="<?= e($s['label']) ?>">
+          <img src="<?= e(asset('img/brands/' . $s['key'] . '.svg')) ?>" alt="" width="18" height="18" class="h-[18px] w-[18px] <?= $dark ? 'invert' : '' ?>">
+        </a>
+      </li>
+    <?php endforeach; ?>
+  </ul>
+  <?php endif; ?>
   <?php endif; ?>
 </div>

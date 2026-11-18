@@ -140,6 +140,54 @@
     });
   }
 
+  // Send a quote or update request on WhatsApp: builds the message from the form, nothing is sent to our server.
+  document.querySelectorAll('[data-wa-send]').forEach(function (btn) {
+    var form = btn.closest('form');
+    if (!form) return;
+    btn.hidden = false;
+    var note = form.querySelector('[data-wa-note]');
+    if (note) note.classList.remove('hidden');
+    var labelFor = function (el) {
+      if (el.hasAttribute('data-wa-label')) return el.getAttribute('data-wa-label');
+      var l = form.querySelector('label[for="' + el.id + '"]');
+      if (!l) return el.name;
+      var c = l.cloneNode(true);
+      c.querySelectorAll('span').forEach(function (s) { s.remove(); });
+      return c.textContent.trim();
+    };
+    btn.addEventListener('click', function () {
+      // The same required fields as the website form.
+      form.querySelectorAll('[data-wa-missing]').forEach(function (el) { el.removeAttribute('aria-invalid'); el.removeAttribute('data-wa-missing'); });
+      var missing = Array.prototype.find.call(form.querySelectorAll('[required]'), function (el) { return el.value.trim() === ''; });
+      if (missing) {
+        missing.setAttribute('aria-invalid', 'true');
+        missing.setAttribute('data-wa-missing', '');
+        missing.reportValidity();
+        missing.focus();
+        return;
+      }
+      var lines = [btn.getAttribute('data-wa-intro'), ''];
+      var seen = {};
+      form.querySelectorAll('input, select, textarea').forEach(function (el) {
+        if (!el.name || el.type === 'hidden' || el.name === 'website' || el.name === 'started' || el.closest('[aria-hidden="true"]')) return;
+        if (el.type === 'checkbox') {
+          if (seen[el.name]) return;
+          seen[el.name] = true;
+          var picked = Array.prototype.map.call(form.querySelectorAll('input[name="' + el.name + '"]:checked'), function (c) { return c.closest('label').textContent.trim(); });
+          if (picked.length) {
+            var fs = el.closest('fieldset');
+            lines.push(((fs && fs.getAttribute('data-wa-label')) || 'Services') + ': ' + picked.join(', '));
+          }
+          return;
+        }
+        var v = el.tagName === 'SELECT' ? (el.value ? el.options[el.selectedIndex].text : '') : el.value.trim();
+        if (v !== '') lines.push(labelFor(el) + ': ' + v);
+      });
+      var text = lines.join('\n').slice(0, 3000);
+      window.open(btn.getAttribute('data-wa-send') + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+    });
+  });
+
   // Focus the error summary after a failed submit.
   var summary = document.querySelector('[data-error-summary]');
   if (summary) summary.focus();
