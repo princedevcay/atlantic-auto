@@ -13,10 +13,12 @@ $hideBar = in_array($nav, ['quote', 'update', 'track'], true) || isset($s);
 <?php
 $siteName = 'Atlantic Auto And Shipping Services';
 $pageTitle = $title === $siteName ? $siteName : $title . ' | ' . $siteName;
+// Link previews (WhatsApp, Facebook, X): the home page shows the company name; other pages their own title.
+$shareTitle = ($nav ?? '') === 'home' ? $siteName : $pageTitle;
 $metaDescription = $description ?? 'Atlantic Auto And Shipping Services helps customers in Ghana buy, ship and import vehicles from the USA, with updates from the point of sale through delivery.';
 $baseUrl = rtrim(App\Core\Config::str('app.url', 'https://atlanticautoservices.com'), '/');
 $canonical = $baseUrl . App\Core\Http::path();
-$shareImage = site_image('hero') !== '' ? $baseUrl . strtok(site_image('hero'), '?') : $baseUrl . '/assets/img/logo.png';
+$shareImage = $baseUrl . '/assets/img/og-image.jpg'; // logo on white, 1200x630, for link previews
 ?>
 <title><?= e($pageTitle) ?></title>
 <meta name="description" content="<?= e($metaDescription) ?>">
@@ -24,13 +26,18 @@ $shareImage = site_image('hero') !== '' ? $baseUrl . strtok(site_image('hero'), 
 <link rel="canonical" href="<?= e($canonical) ?>">
 <meta property="og:site_name" content="<?= e($siteName) ?>">
 <meta property="og:type" content="website">
-<meta property="og:title" content="<?= e($pageTitle) ?>">
+<meta property="og:title" content="<?= e($shareTitle) ?>">
 <meta property="og:description" content="<?= e($metaDescription) ?>">
 <meta property="og:url" content="<?= e($canonical) ?>">
 <meta property="og:image" content="<?= e($shareImage) ?>">
+<meta property="og:image:secure_url" content="<?= e($shareImage) ?>">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="<?= e($siteName) ?> logo">
 <meta property="og:locale" content="en_GH">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<?= e($pageTitle) ?>">
+<meta name="twitter:title" content="<?= e($shareTitle) ?>">
 <meta name="twitter:description" content="<?= e($metaDescription) ?>">
 <meta name="twitter:image" content="<?= e($shareImage) ?>">
 <link rel="preload" href="<?= e(asset('fonts/inter-latin-wght-normal.woff2')) ?>" as="font" type="font/woff2" crossorigin>

@@ -9,7 +9,7 @@ final class SiteController
 {
     public static function home(): void
     {
-        View::render('pages/home', ['title' => 'Import Your Vehicle from the USA', 'nav' => 'home', 'description' => 'Atlantic Auto And Shipping Services sells quality used cars from the USA and ships, clears and delivers vehicles to customers in Ghana. Request an import quote today.']);
+        View::render('pages/home', ['title' => 'Import Your Vehicle from the USA', 'nav' => 'home', 'description' => 'Buy quality cars from the USA, or import your own: we source, ship, clear at Tema and deliver to you in Ghana.']);
     }
 
     public static function services(): void
