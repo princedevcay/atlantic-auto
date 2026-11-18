@@ -49,6 +49,9 @@ switch ($task) {
         $stamp = gmdate('Ymd-His');
         $file = "{$dir}/db-{$stamp}.sql.gz";
         $gz = gzopen($file, 'wb6');
+        // Tables are written alphabetically, so a child table can come before the table it references;
+        // foreign key checks are off while restoring and back on at the end.
+        gzwrite($gz, "SET NAMES utf8mb4;\nSET FOREIGN_KEY_CHECKS=0;\n");
         $tables = array_map(fn ($r) => array_values($r)[0], Db::all('SHOW TABLES'));
         foreach ($tables as $t) {
             if (!preg_match('/^[a-z_]+$/', (string) $t)) {
@@ -62,6 +65,7 @@ switch ($task) {
                 gzwrite($gz, "INSERT INTO `{$t}` VALUES (" . implode(',', $vals) . ");\n");
             }
         }
+        gzwrite($gz, "SET FOREIGN_KEY_CHECKS=1;\n");
         gzclose($gz);
         chmod($file, 0600);
         // Uploaded photos

@@ -133,6 +133,35 @@ final class CarsTest extends TestCase
         $this->assertSame('12345.00', (string) Db::value('SELECT price_amount FROM cars WHERE id = ?', [$c['id']]));
     }
 
+    public function testUploadRejectsDisguisedScriptsAndPhotosStayPrivate(): void
+    {
+        $c = $this->car(['published' => 0]);
+        $secret = Totp::newSecret();
+        Db::insert('staff', [
+            'email' => 'upload@cars-test.invalid', 'name' => 'Upload Test', 'role' => 'staff', 'password_hash' => password_hash('harbour lamp blue 2026', PASSWORD_BCRYPT),
+            'must_change_password' => 0, 'totp_secret_enc' => Crypto::encrypt($secret), 'active' => 1, 'failed_logins' => 0, 'created_at' => Db::now(), 'updated_at' => Db::now(),
+        ]);
+        $login = $this->req('GET', '/admin/login');
+        $this->req('POST', '/admin/login', ['_csrf' => $this->csrf($login['body']), 'email' => 'upload@cars-test.invalid', 'password' => 'harbour lamp blue 2026']);
+        $mfa = $this->req('GET', '/admin/mfa');
+        $this->req('POST', '/admin/mfa', ['_csrf' => $this->csrf($mfa['body']), 'code' => Totp::code($secret, intdiv(time(), 30))]);
+        $csrf = $this->csrf($this->req('GET', '/admin/cars/' . $c['id'])['body']);
+        $before = (int) Db::value('SELECT COUNT(*) FROM car_photos WHERE car_id = ?', [$c['id']]);
+
+        $fake = tempnam(sys_get_temp_dir(), 'up') . '.jpg';
+        file_put_contents($fake, "\xFF\xD8\xFF<?php echo 'owned'; ?>");
+        $ch = curl_init(self::$base . '/admin/cars/' . $c['id'] . '/photos');
+        curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_COOKIEJAR => $this->jar, CURLOPT_COOKIEFILE => $this->jar, CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => ['_csrf' => $csrf, 'photo' => new \CURLFile($fake, 'image/jpeg', 'car.jpg')]]);
+        curl_exec($ch);
+        curl_close($ch);
+        @unlink($fake);
+        $this->assertSame($before, (int) Db::value('SELECT COUNT(*) FROM car_photos WHERE car_id = ?', [$c['id']]), 'a script disguised as a JPEG is not stored');
+        $flash = $this->req('GET', '/admin/cars/' . $c['id'])['body'];
+        $this->assertMatchesRegularExpression('/not a usable image|Only JPEG, PNG or WebP/', $flash);
+        $this->assertSame(404, $this->req('GET', '/storage/uploads/')['code']);
+    }
+
     public function testStaffCannotDeleteCars(): void
     {
         $c = $this->car(['published' => 1]);

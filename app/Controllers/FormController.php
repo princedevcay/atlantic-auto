@@ -50,6 +50,11 @@ final class FormController
 
     public static function quote(): void
     {
+        self::guarded('pages/quote', 'Request an Import Quote', 'quote', fn () => self::handleQuote());
+    }
+
+    private static function handleQuote(): void
+    {
         Session::start();
         Csrf::check();
         if (self::looksLikeBot()) {
@@ -103,6 +108,11 @@ final class FormController
 
     public static function update(): void
     {
+        self::guarded('pages/update', 'Request a Vehicle Update', 'update', fn () => self::handleUpdate());
+    }
+
+    private static function handleUpdate(): void
+    {
         Session::start();
         Csrf::check();
         if (self::looksLikeBot()) {
@@ -154,6 +164,28 @@ final class FormController
         );
         Session::flash('thanks', ['type' => 'update', 'ref' => $ref, 'vehicle' => '']);
         Http::redirect('/thanks');
+    }
+
+    /**
+     * If the database is unavailable, show the form again with what the visitor typed and a
+     * retry message, instead of an error page that loses their input (CTL-ERR-001).
+     */
+    private static function guarded(string $view, string $title, string $nav, callable $handler): void
+    {
+        try {
+            $handler();
+        } catch (\PDOException $e) {
+            Log::error('form could not be saved', ['form' => $nav, 'code' => (string) $e->getCode()]);
+            $old = [];
+            foreach ($_POST as $k => $v) {
+                if (is_string($k) && $k !== '_csrf' && $k !== 'started' && $k !== 'website') {
+                    $old[$k] = is_array($v) ? array_values(array_filter($v, 'is_string')) : (is_string($v) ? trim($v) : '');
+                }
+            }
+            http_response_code(503);
+            View::render($view, ['title' => $title, 'nav' => $nav, 'old' => $old, 'errors' => [], 'started' => self::stamp(),
+                'notice' => 'We could not save your request just now. Your details are still here: please try again in a minute, or message us on WhatsApp.']);
+        }
     }
 
     public static function thanks(): void
