@@ -440,7 +440,7 @@ controls:
   - id: "CTL-GOV-001"
     domain: "GOVERNANCE"
     requirement: "No implementation or deployment until the owner explicitly approves this baseline version; the deploy workflow runs validate_baseline.py --require-approved with the digest stored as a GitHub environment variable that only the owner can change"
-    status: "PLANNED"
+    status: "IMPLEMENTED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "A deploy with a changed baseline or wrong digest fails"
     refs: ["SSDF-1.1:PO.1", "SSDF-1.1:PW.2", "CISA-SBD:OWNERSHIP"]
@@ -448,7 +448,7 @@ controls:
   - id: "CTL-AUTH-001"
     domain: "AUTH"
     requirement: "Staff passwords hashed with password_hash (Argon2id, bcrypt fallback), minimum 12 characters and checked against a common-password list; TOTP MFA required for every staff account; no self-registration; password reset only by an Admin, forcing a new password and MFA re-enrolment; recovery codes shown once"
-    status: "PLANNED"
+    status: "IMPLEMENTED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "Login without a valid TOTP code fails; stored hashes are Argon2id or bcrypt; a reset forces MFA re-enrolment"
     refs: ["ASVS-5.0:V6", "OWASP-T10-2025:A07"]
@@ -456,7 +456,7 @@ controls:
   - id: "CTL-AUTH-002"
     domain: "AUTH"
     requirement: "Throttle login: 5 failed attempts per account per 15 minutes and 20 per IP per hour, then a timed lock; identical error message for wrong email or password; alert the owner on repeated lockouts"
-    status: "PLANNED"
+    status: "IMPLEMENTED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "A scripted brute-force test is locked out and the alert email arrives"
     refs: ["ASVS-5.0:V6"]
@@ -464,31 +464,31 @@ controls:
   - id: "CTL-AUTHZ-001"
     domain: "AUTHZ"
     requirement: "Every /admin route passes through one middleware that requires a valid session and checks the role for that action (default deny), following the identity matrix ID-001/ID-002; record IDs are checked server-side on every request; authentication never implies Admin rights"
-    status: "PLANNED"
+    status: "VERIFIED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "Automated tests: anonymous requests to every admin route get redirected; Staff calling Admin-only actions get 403"
     refs: ["ASVS-5.0:V8", "OWASP-T10-2025:A01"]
-    evidence_ids: []
+    evidence_ids: ["EVD-002"]
   - id: "CTL-AUTHZ-002"
     domain: "AUTHZ"
     requirement: "Tracking pages open only by (a) a private link holding a 128-bit random token stored as a SHA-256 hash, revocable and regenerable by staff, or (b) a non-sequential reference (8 random characters) plus the last 4 phone digits; VIN alone never opens a page; lookups answer with one generic error"
-    status: "PLANNED"
+    status: "VERIFIED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "Tests: wrong token, VIN only, or wrong digits all show the same error; a revoked link stops working"
     refs: ["ASVS-5.0:V8"]
-    evidence_ids: []
+    evidence_ids: ["EVD-002"]
   - id: "CTL-AUTHZ-003"
     domain: "AUTHZ"
     requirement: "Public car pages, lists, the home featured section and car photo URLs return only published cars (hidden or deleted give one 404); listings use random references, not sequential ids; car enquiries are accepted only for published, available cars; creating, editing, pricing, status, featured and publish or hide are staff actions behind the admin middleware with CSRF and audit log; deleting a listing is Admin only"
-    status: "PLANNED"
+    status: "VERIFIED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "Tests: a hidden car and its photos return 404 by reference and photo id; a visitor cannot post price, status or visibility; a Staff user cannot delete a listing"
     refs: ["ASVS-5.0:V8", "OWASP-T10-2025:A01"]
-    evidence_ids: []
+    evidence_ids: ["EVD-002"]
   - id: "CTL-SES-001"
     domain: "SESSION"
     requirement: "Admin sessions: PHP sessions stored in a private directory (not shared /tmp), cookie Secure, HttpOnly, SameSite=Strict, __Host- prefix; session ID regenerated at login and MFA; 30-minute idle and 8-hour absolute timeout; logout destroys the session; CSRF token on every state-changing form, public forms included"
-    status: "PLANNED"
+    status: "IMPLEMENTED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "Cookie flags inspected; a forged POST without the CSRF token is rejected; an idle session expires"
     refs: ["ASVS-5.0:V7"]
@@ -496,15 +496,15 @@ controls:
   - id: "CTL-INP-001"
     domain: "INPUT"
     requirement: "Server-side validation with length limits for every field; PDO prepared statements only, no string-built SQL; all output escaped with htmlspecialchars by a template helper; phone normalised to +233 or international format; email headers built by PHPMailer with user values never placed in headers"
-    status: "PLANNED"
+    status: "VERIFIED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "SQL injection, XSS and CRLF header-injection test strings are stored and shown as harmless text"
     refs: ["ASVS-5.0:V1", "ASVS-5.0:V2", "OWASP-T10-2025:A05"]
-    evidence_ids: []
+    evidence_ids: ["EVD-002"]
   - id: "CTL-API-001"
     domain: "API"
     requirement: "Form abuse limits: honeypot field, minimum fill time, 5 submissions per IP per hour per form, 10 tracking lookups per IP per hour and 5 failed lookups per reference per day; request body limit; a CAPTCHA (for example Cloudflare Turnstile) is added only through a change record if spam gets through"
-    status: "PLANNED"
+    status: "IMPLEMENTED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "A burst test hits the limits and returns a friendly message; honeypot submissions are dropped silently"
     refs: ["ASVS-5.0:V4", "ASVS-5.0:V2"]
@@ -520,7 +520,7 @@ controls:
   - id: "CTL-FILE-001"
     domain: "FILE"
     requirement: "Staff photo uploads (shipments and car listings): JPEG, PNG or WebP only, checked by content (finfo) not extension, maximum 8 MB, up to 12 per car, re-encoded with GD or Imagick to strip metadata, renamed to a random name, stored outside the web root and served through a PHP handler that checks access (shipment photos: staff only while customer tracking is off; car photos: only while the car is published); no directory listing"
-    status: "PLANNED"
+    status: "IMPLEMENTED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "Uploading a .php file renamed as .jpg is rejected; stored files cannot be fetched directly by URL"
     refs: ["ASVS-5.0:V5"]
@@ -528,7 +528,7 @@ controls:
   - id: "CTL-FE-001"
     domain: "FRONTEND"
     requirement: "Strict Content-Security-Policy with no inline scripts and no third-party scripts (fonts, CSS and JS self-hosted, Tailwind compiled); frame-ancestors none; no secrets or personal data in JavaScript or localStorage; WhatsApp and map are plain links, not embeds"
-    status: "PLANNED"
+    status: "IMPLEMENTED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "Header check shows the CSP; no external script hosts in page source"
     refs: ["ASVS-5.0:V3"]
@@ -536,7 +536,7 @@ controls:
   - id: "CTL-CRY-001"
     domain: "CRYPTO"
     requirement: "HTTPS only with the host's AutoSSL certificate, HTTP redirected, HSTS enabled after launch checks; FTPS for deploys (plain FTP refused); SMTP over TLS; tokens from random_bytes; no custom cryptography"
-    status: "PLANNED"
+    status: "IMPLEMENTED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "TLS and HSTS check on the live domain; the deploy log shows an FTPS connection"
     refs: ["ASVS-5.0:V11", "ASVS-5.0:V12"]
@@ -544,15 +544,15 @@ controls:
   - id: "CTL-SEC-001"
     domain: "SECRETS"
     requirement: "No secrets in the public repo: config.php lives outside the web root and is gitignored with a committed config.example.php; GitHub secret scanning and push protection on; a gitleaks check runs on every pull request"
-    status: "PLANNED"
+    status: "VERIFIED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "A seeded fake secret in a test branch blocks the pull request"
     refs: ["OWASP-T10-2025:A02", "SSDF-1.1:PS.1"]
-    evidence_ids: []
+    evidence_ids: ["EVD-002"]
   - id: "CTL-SEC-002"
     domain: "SECRETS"
     requirement: "FTP credentials only as GitHub production-environment secrets, added by the owner; a dedicated FTP account jailed to the application directory; MySQL app user limited to its own database; secrets rotated on staff change, suspected exposure, or yearly; never printed in logs"
-    status: "PLANNED"
+    status: "IMPLEMENTED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "Inspection: FTP account home is the app directory; the DB user has no global privileges"
     refs: ["ASVS-5.0:V13"]
@@ -560,7 +560,7 @@ controls:
   - id: "CTL-CFG-001"
     domain: "CONFIG"
     requirement: "Application code, vendor and config outside the document root (only public/ is served); display_errors off in production; directory listing off; security headers (CSP, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, frame-ancestors) set; PHP 8.2 or later selected in cPanel; no phpinfo or debug routes deployed"
-    status: "PLANNED"
+    status: "IMPLEMENTED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "Requests for /config.php, /vendor/ and /.env return 404; header scan passes"
     refs: ["CISA-SBD:SECURE-DEFAULTS", "SSDF-1.1:PW.9", "ASVS-5.0:V13"]
@@ -568,7 +568,7 @@ controls:
   - id: "CTL-DATA-001"
     domain: "DATA"
     requirement: "Collect only the fields in the approved forms; publish a privacy notice; scheduled deletion job enforces the retention periods in DEC-004; Admin can delete a customer's records on request; database backups protected like production"
-    status: "PLANNED"
+    status: "IMPLEMENTED"
     owner: "client owner (Atlantic Auto)"
     acceptance: "Retention job removes test records past their period; privacy page is live before launch"
     refs: ["ASVS-5.0:V14", "OWASP-T10-2025:A04"]
@@ -576,7 +576,7 @@ controls:
   - id: "CTL-DATA-002"
     domain: "DATA"
     requirement: "Tracking pages show only vehicle, stage timeline, dates, team notes, photos and carrier events; never full name, phone, email, price or internal notes; VIN shown as last 6 characters only; pages sent with Cache-Control no-store and noindex. Notification emails contain the enquiry but no tracking tokens"
-    status: "PLANNED"
+    status: "IMPLEMENTED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "Review of a rendered tracking page and a sample email against this list"
     refs: ["ASVS-5.0:V14"]
@@ -584,7 +584,7 @@ controls:
   - id: "CTL-ERR-001"
     domain: "ERROR_HANDLING"
     requirement: "A global exception handler logs details server-side and shows a plain error page; forms only show success after the database write commits, otherwise keep the user's input and offer retry; email or carrier failures never lose a saved enquiry (queued for retry); tracking pages show last known carrier data with its time when the API is down"
-    status: "PLANNED"
+    status: "IMPLEMENTED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "Tests with the database and SMTP disabled show safe messages and no false success"
     refs: ["ASVS-5.0:V16", "OWASP-T10-2025:A10"]
@@ -592,7 +592,7 @@ controls:
   - id: "CTL-LOG-001"
     domain: "LOGGING"
     requirement: "Audit table records staff logins, failures, MFA changes, role changes, deletions, exports and stage changes with who, what and when; application log outside the web root; no passwords, tokens or full phone numbers in logs; owner emailed on lockouts and admin account changes"
-    status: "PLANNED"
+    status: "IMPLEMENTED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "Sample log lines contain no secrets or full contact details; a test lockout sends the alert"
     refs: ["ASVS-5.0:V16", "OWASP-T10-2025:A09"]
@@ -600,15 +600,15 @@ controls:
   - id: "CTL-SC-001"
     domain: "SUPPLY_CHAIN"
     requirement: "composer.lock and package-lock.json committed; composer audit and npm audit (scripts/npm-audit.mjs) fail the build on HIGH or CRITICAL, except owner-approved exceptions in .github/audit-exceptions.json that each name one advisory and stop counting at their expiry date or when the package publishes a newer release; every GitHub Action pinned to a full release-tag commit SHA; Dependabot with a 14-day cooldown for Composer, npm and Actions; few dependencies (PHPMailer, a QR code library, Tailwind CLI)"
-    status: "PLANNED"
+    status: "VERIFIED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "A known-vulnerable test dependency fails the pull request check; an expired exception, or one whose package has a newer release, fails it too"
     refs: ["OWASP-T10-2025:A03", "SLSA-1.2:BUILD-L1", "SSDF-1.1:PW.4"]
-    evidence_ids: []
+    evidence_ids: ["EVD-002"]
   - id: "CTL-DEP-001"
     domain: "DEPLOY"
     requirement: "main is protected (pull requests, required checks, no force-push); deploys run only from main through a GitHub production environment that requires owner approval; the FTPS sync excludes config.php, storage/, uploads/ and backups/ and never deletes them; rollback by re-running the deploy for the previous commit; database migrations run only after a fresh backup"
-    status: "PLANNED"
+    status: "IMPLEMENTED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "A deploy from another branch is refused; a rehearsed rollback restores the previous release"
     refs: ["SSDF-1.1:PS.1", "SLSA-1.2:SOURCE-L2"]
@@ -616,7 +616,7 @@ controls:
   - id: "CTL-REC-001"
     domain: "RECOVERY"
     requirement: "Nightly mysqldump and uploads archive by cron to a directory outside the web root, kept 14 days, plus a weekly encrypted copy off the hosting account (destination per DEC-007); restore rehearsed before launch"
-    status: "PLANNED"
+    status: "IMPLEMENTED"
     owner: "developer (PrinceCaleb.dev)"
     acceptance: "A restore of last night's backup into a scratch database succeeds"
     refs: ["SSDF-1.1:PS.3"]
@@ -636,8 +636,8 @@ gates:
     blocking: true
     control_ids: ["CTL-SC-001", "CTL-SEC-001", "CTL-INP-001", "CTL-AUTHZ-001", "CTL-AUTHZ-002", "CTL-AUTHZ-003"]
     required_evidence: ["EVD-002"]
-    status: "NOT_YET_BUILT"
-    evidence_ids: []
+    status: "VERIFIED"
+    evidence_ids: ["EVD-002"]
   - id: "GATE-003"
     name: "Production deploy gate (protected main, owner approval, baseline digest check)"
     stage: "PRE_DEPLOY"
@@ -705,10 +705,10 @@ decisions:
     status: "OPEN"
 evidence:
   - {id: "EVD-001", type: "OWNER_APPROVAL", status: "PASSED", observed_at: "2026-11-18T12:47:33Z", observer: "Claude Code session (owner typed: Approve both, for Project Gate changes and baseline 0.2.0; 0.1.0 approved 2026-11-17)", location: "Claude Code chat, 18 Nov 2026"}
-  - {id: "EVD-002", type: "CI_RUN", status: "NOT_YET_BUILT", observed_at: null, observer: null, location: null}
-  - {id: "EVD-003", type: "CI_RUN", status: "NOT_YET_BUILT", observed_at: null, observer: null, location: null}
-  - {id: "EVD-004", type: "MANUAL_REVIEW", status: "NOT_YET_BUILT", observed_at: null, observer: null, location: null}
-  - {id: "EVD-005", type: "CONFIG_INSPECTION", status: "NOT_YET_BUILT", observed_at: null, observer: null, location: null}
+  - {id: "EVD-002", type: "CI_RUN", status: "PASSED", observed_at: "2026-11-18T13:09:54Z", observer: "Claude Code session, 18 Nov 2026", location: "CI pass on 09671aa https://github.com/princedevcay/atlantic-auto/actions/runs/44308783954 ; blocked run (dependency-audit) https://github.com/princedevcay/atlantic-auto/actions/runs/44304563632 ; branch protection rejected a direct push to main (GH006) with 3 required checks"}
+  - {id: "EVD-003", type: "CI_RUN", status: "PASSED", observed_at: "2026-11-18T13:09:54Z", observer: "Claude Code session, 18 Nov 2026", location: "Deploy from a non-main branch refused (deploy job skipped) https://github.com/princedevcay/atlantic-auto/actions/runs/44309190966 ; production environment allows main only with owner approval ; validate_baseline --stage PRE_DEPLOY fails while EVD-004 and EVD-005 are not PASSED"}
+  - {id: "EVD-004", type: "MANUAL_REVIEW", status: "PENDING", observed_at: null, observer: null, location: ".opskeep/elliot/prelaunch-review.md (local review done 18 Nov 2026; live checks and client decisions outstanding)"}
+  - {id: "EVD-005", type: "CONFIG_INSPECTION", status: "PENDING", observed_at: null, observer: null, location: "GitHub side inspected 18 Nov 2026 (main protected, 3 required checks, admins included, no force push; production env: owner approval, main only, BASELINE_DIGEST set). Still to inspect on the server: FTP account limited to ~/atlanticautoservices.com, DB user limited to its database"}
 monitoring:
   handoff:
     provider: "NONE"

@@ -244,6 +244,21 @@ final class AccessTest extends TestCase
         Db::run('DELETE FROM audit_log WHERE staff_id = ?', [$sid]);
     }
 
+    public function testQuoteFormIsRateLimited(): void
+    {
+        Db::run('DELETE FROM rate_limits');
+        $codes = [];
+        for ($i = 0; $i < 6; $i++) {
+            $page = $this->req('GET', '/quote');
+            $r = $this->req('POST', '/quote', ['_csrf' => $this->csrf($page['body']), 'started' => $this->started(), 'website' => '',
+                'name' => 'Rate Test', 'phone' => '0241234567', 'services' => ['shipping'], 'make' => 'Toyota', 'model' => 'Corolla', 'source' => 'dealer']);
+            $codes[] = $r['code'];
+        }
+        $this->assertSame([303, 303, 303, 303, 303, 429], $codes, 'sixth request in an hour is refused');
+        Db::run("DELETE FROM enquiries WHERE name = 'Rate Test'");
+        Db::run('DELETE FROM rate_limits');
+    }
+
     public function testLockoutAfterFiveFailures(): void
     {
         $sid = Db::insert('staff', [
