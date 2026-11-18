@@ -1,7 +1,7 @@
 <?php
 /** @var string $content @var string $title */
 $nav = $nav ?? '';
-$links = ['services' => ['/services', 'Services'], 'how' => ['/how-it-works', 'How It Works']]
+$links = ['cars' => ['/cars', 'Cars for Sale'], 'services' => ['/services', 'Services'], 'how' => ['/how-it-works', 'How It Works']]
     + (customer_tracking() ? ['track' => ['/track', 'Track']] : [])
     + ['about' => ['/about', 'About'], 'contact' => ['/contact', 'Contact']];
 $hideBar = in_array($nav, ['quote', 'update', 'track'], true) || isset($s);
@@ -75,6 +75,7 @@ $hideBar = in_array($nav, ['quote', 'update', 'track'], true) || isset($s);
       <p class="mt-4 max-w-xs text-sm text-white/80">Vehicle importation from the USA to Ghana, tracked from the point of sale through shipping.</p>
     </div>
     <nav aria-label="Footer" class="grid grid-cols-2 gap-2 text-sm">
+      <a href="/cars" class="text-white/90 no-underline hover:text-white">Cars for Sale</a>
       <a href="/services" class="text-white/90 no-underline hover:text-white">Services</a>
       <a href="/how-it-works" class="text-white/90 no-underline hover:text-white">How It Works</a>
       <?php if (customer_tracking()): ?><a href="/track" class="text-white/90 no-underline hover:text-white">Track Your Vehicle</a><?php endif; ?>

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Controllers\Admin;
+use App\Controllers\CarController;
 use App\Controllers\FormController;
 use App\Controllers\SiteController;
 use App\Controllers\TrackController;
@@ -48,6 +49,20 @@ if ($isAdmin) {
     $router->get('/admin/photos/{id}', [Admin\ShipmentController::class, 'photo']);
     $router->post('/admin/photos/{id}/delete', [Admin\ShipmentController::class, 'deletePhoto']);
 
+    $router->get('/admin/cars', [Admin\CarController::class, 'index']);
+    $router->get('/admin/cars/new', [Admin\CarController::class, 'createForm']);
+    $router->post('/admin/cars/new', [Admin\CarController::class, 'create']);
+    $router->get('/admin/cars/{id}', [Admin\CarController::class, 'edit']);
+    $router->post('/admin/cars/{id}', [Admin\CarController::class, 'update']);
+    $router->post('/admin/cars/{id}/status', [Admin\CarController::class, 'status']);
+    $router->post('/admin/cars/{id}/featured', [Admin\CarController::class, 'featured']);
+    $router->post('/admin/cars/{id}/publish', [Admin\CarController::class, 'publish']);
+    $router->post('/admin/cars/{id}/photos', [Admin\CarController::class, 'upload']);
+    $router->post('/admin/cars/{id}/delete', [Admin\CarController::class, 'delete']);
+    $router->get('/admin/car-photos/{id}', [Admin\CarController::class, 'photo']);
+    $router->post('/admin/car-photos/{id}/main', [Admin\CarController::class, 'mainPhoto']);
+    $router->post('/admin/car-photos/{id}/delete', [Admin\CarController::class, 'deletePhoto']);
+
     $router->get('/admin/staff', [Admin\StaffController::class, 'index']);
     $router->post('/admin/staff', [Admin\StaffController::class, 'create']);
     $router->post('/admin/staff/{id}/toggle', [Admin\StaffController::class, 'toggle']);
@@ -61,6 +76,11 @@ if ($isAdmin) {
     $router->get('/contact', [SiteController::class, 'contact']);
     $router->get('/privacy', [SiteController::class, 'privacy']);
     $router->get('/terms', [SiteController::class, 'terms']);
+
+    $router->get('/cars', [CarController::class, 'index']);
+    $router->get('/cars/photo/{id}', [CarController::class, 'photo']);
+    $router->get('/cars/{ref}', [CarController::class, 'show']);
+    $router->post('/cars/{ref}/enquire', [CarController::class, 'enquire']);
 
     $router->get('/quote', [FormController::class, 'quoteForm']);
     $router->post('/quote', [FormController::class, 'quote']);

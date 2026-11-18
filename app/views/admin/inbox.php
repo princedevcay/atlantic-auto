@@ -3,7 +3,8 @@ use App\Controllers\Admin\InboxController;
 use App\Controllers\FormController;
 use App\Core\Auth;
 
-$tabs = ['all' => 'All', 'quotes' => 'Import Quotes', 'updates' => 'Vehicle Updates'];
+$tabs = ['all' => 'All', 'quotes' => 'Import Quotes', 'updates' => 'Vehicle Updates', 'cars' => 'Car Enquiries'];
+$typeLabel = ['quote' => 'Import Quote', 'update' => 'Vehicle Update', 'car' => 'Car Enquiry'];
 $statusChip = ['new' => 'bg-primary-soft text-primary', 'in_progress' => 'bg-[#fbefdc] text-warning', 'done' => 'bg-bg text-muted'];
 $qs = fn (array $extra) => '/admin/inbox?' . http_build_query(array_merge(['tab' => $tab, 'status' => $status], $extra));
 ?>
@@ -46,9 +47,9 @@ $qs = fn (array $extra) => '/admin/inbox?' . http_build_query(array_merge(['tab'
       <tbody>
         <?php foreach ($rows as $r): ?>
           <tr class="<?= $open !== null && (int) $open['id'] === (int) $r['id'] ? 'bg-primary-soft' : 'hover:bg-bg' ?>">
-            <td><span class="chip <?= $r['type'] === 'quote' ? 'bg-navy text-white' : 'border border-line text-ink' ?>"><?= $r['type'] === 'quote' ? 'Import Quote' : 'Vehicle Update' ?></span></td>
+            <td><span class="chip <?= ['quote' => 'bg-navy text-white', 'car' => 'bg-primary text-white'][$r['type']] ?? 'border border-line text-ink' ?>"><?= e($typeLabel[$r['type']] ?? $r['type']) ?></span></td>
             <td><a href="<?= e($qs(['open' => $r['id']])) ?>" class="font-semibold"><?= e($r['name']) ?></a><span class="block text-xs text-muted"><?= e($r['reference']) ?></span></td>
-            <td><?= $r['type'] === 'quote' ? e(trim($r['vehicle_year'] . ' ' . $r['vehicle_make'] . ' ' . $r['vehicle_model'])) : '<span class="font-mono text-xs">' . e($r['vin_or_reference']) . '</span>' ?></td>
+            <td><?= $r['type'] !== 'update' ? e(trim($r['vehicle_year'] . ' ' . $r['vehicle_make'] . ' ' . $r['vehicle_model'])) : '<span class="font-mono text-xs">' . e($r['vin_or_reference']) . '</span>' ?></td>
             <td class="whitespace-nowrap"><?= e(fmt_date((string) $r['created_at'], 'j M, g:ia')) ?></td>
             <td><span class="chip <?= $statusChip[$r['status']] ?? '' ?>"><?= e(InboxController::STATUSES[$r['status']] ?? $r['status']) ?></span></td>
           </tr>
@@ -62,7 +63,7 @@ $qs = fn (array $extra) => '/admin/inbox?' . http_build_query(array_merge(['tab'
   <aside class="card self-start p-5" aria-labelledby="detail-h">
     <div class="flex items-start justify-between gap-3">
       <div>
-        <p class="text-xs font-semibold uppercase tracking-wide text-muted"><?= $open['type'] === 'quote' ? 'Import Quote' : 'Vehicle Update' ?> &middot; <?= e($open['reference']) ?></p>
+        <p class="text-xs font-semibold uppercase tracking-wide text-muted"><?= e($typeLabel[$open['type']] ?? $open['type']) ?> &middot; <?= e($open['reference']) ?></p>
         <h2 id="detail-h" class="mt-1 text-xl font-bold"><?= e($open['name']) ?></h2>
       </div>
       <a href="<?= e($qs([])) ?>" class="btn-ghost btn-sm px-2" aria-label="Close details"><?= icon('x') ?></a>
@@ -70,7 +71,10 @@ $qs = fn (array $extra) => '/admin/inbox?' . http_build_query(array_merge(['tab'
     <dl class="mt-4 space-y-3 text-sm">
       <div><dt class="text-muted">Phone / WhatsApp</dt><dd class="font-medium"><a href="<?= e(tel_url((string) $open['phone'])) ?>"><?= e($open['phone']) ?></a></dd></div>
       <?php if (!empty($open['email'])): ?><div><dt class="text-muted">Email</dt><dd class="font-medium"><a href="mailto:<?= e($open['email']) ?>"><?= e($open['email']) ?></a></dd></div><?php endif; ?>
-      <?php if ($open['type'] === 'quote'): ?>
+      <?php if ($open['type'] === 'car'): ?>
+        <div><dt class="text-muted">Car</dt><dd class="font-medium"><?= e(trim($open['vehicle_year'] . ' ' . $open['vehicle_make'] . ' ' . $open['vehicle_model'])) ?></dd></div>
+        <div><dt class="text-muted">Listing</dt><dd><?= $open['car_reference'] ? '<a href="/admin/cars/' . (int) $open['car_id'] . '" class="font-mono">' . e($open['car_reference']) . '</a> &middot; ' . e(App\Models\Cars::STATUSES[$open['car_status']] ?? '') : 'Deleted' ?></dd></div>
+      <?php elseif ($open['type'] === 'quote'): ?>
         <div><dt class="text-muted">Vehicle</dt><dd class="font-medium"><?= e(trim($open['vehicle_year'] . ' ' . $open['vehicle_make'] . ' ' . $open['vehicle_model'])) ?></dd></div>
         <div><dt class="text-muted">Where it is</dt><dd><?= e(FormController::SOURCES[$open['source']] ?? $open['source']) ?></dd></div>
         <?php if (!empty($open['listing_url'])): ?><div><dt class="text-muted">Listing</dt><dd class="break-all"><?= e($open['listing_url']) ?></dd></div><?php endif; ?>
@@ -79,7 +83,7 @@ $qs = fn (array $extra) => '/admin/inbox?' . http_build_query(array_merge(['tab'
         <div><dt class="text-muted">VIN or reference</dt><dd class="font-mono"><?= e($open['vin_or_reference']) ?></dd></div>
         <div><dt class="text-muted">Matched shipment</dt><dd><?= $open['shipment_reference'] ? '<a href="/admin/shipments/' . (int) $open['shipment_id'] . '">' . e($open['shipment_reference']) . '</a>' : 'None found' ?></dd></div>
       <?php endif; ?>
-      <?php if (!empty($open['message'])): ?><div><dt class="text-muted"><?= $open['type'] === 'quote' ? 'Notes' : 'Question' ?></dt><dd class="whitespace-pre-line rounded-md bg-bg p-3"><?= e($open['message']) ?></dd></div><?php endif; ?>
+      <?php if (!empty($open['message'])): ?><div><dt class="text-muted"><?= ['quote' => 'Notes', 'car' => 'Message'][$open['type']] ?? 'Question' ?></dt><dd class="whitespace-pre-line rounded-md bg-bg p-3"><?= e($open['message']) ?></dd></div><?php endif; ?>
       <div><dt class="text-muted">Received</dt><dd><?= e(fmt_date((string) $open['created_at'], 'j M Y, g:ia')) ?></dd></div>
     </dl>
 

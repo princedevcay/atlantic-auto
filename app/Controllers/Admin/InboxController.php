@@ -20,7 +20,7 @@ final class InboxController
     {
         Auth::requireStaff();
         $tab = Http::query('tab', 'all');
-        $tab = in_array($tab, ['all', 'quotes', 'updates'], true) ? $tab : 'all';
+        $tab = in_array($tab, ['all', 'quotes', 'updates', 'cars'], true) ? $tab : 'all';
         $status = Http::query('status', 'open');
         $status = in_array($status, ['open', 'new', 'in_progress', 'done', 'any'], true) ? $status : 'open';
 
@@ -28,7 +28,7 @@ final class InboxController
         $params = [];
         if ($tab !== 'all') {
             $where[] = 'type = ?';
-            $params[] = $tab === 'quotes' ? 'quote' : 'update';
+            $params[] = ['quotes' => 'quote', 'updates' => 'update', 'cars' => 'car'][$tab];
         }
         if ($status === 'open') {
             $where[] = "status <> 'done'";
@@ -40,16 +40,16 @@ final class InboxController
             . ($where ? ' WHERE ' . implode(' AND ', $where) : '') . ' ORDER BY created_at DESC LIMIT 200';
         $rows = Db::all($sql, $params);
 
-        $counts = ['all' => 0, 'quotes' => 0, 'updates' => 0];
+        $counts = ['all' => 0, 'quotes' => 0, 'updates' => 0, 'cars' => 0];
         foreach (Db::all("SELECT type, COUNT(*) AS n FROM enquiries WHERE status = 'new' GROUP BY type") as $c) {
-            $counts[$c['type'] === 'quote' ? 'quotes' : 'updates'] = (int) $c['n'];
+            $counts[['quote' => 'quotes', 'update' => 'updates', 'car' => 'cars'][$c['type']] ?? 'updates'] = (int) $c['n'];
         }
-        $counts['all'] = $counts['quotes'] + $counts['updates'];
+        $counts['all'] = $counts['quotes'] + $counts['updates'] + $counts['cars'];
 
         $open = null;
         $openId = (int) Http::query('open', '0');
         if ($openId > 0) {
-            $open = Db::one('SELECT e.*, s.reference AS shipment_reference FROM enquiries e LEFT JOIN shipments s ON s.id = e.shipment_id WHERE e.id = ?', [$openId]);
+            $open = Db::one('SELECT e.*, s.reference AS shipment_reference, c.reference AS car_reference, c.price_amount AS car_price, c.currency AS car_currency, c.status AS car_status FROM enquiries e LEFT JOIN shipments s ON s.id = e.shipment_id LEFT JOIN cars c ON c.id = e.car_id WHERE e.id = ?', [$openId]);
             if ($open !== null) {
                 Audit::log('enquiry_viewed', 'enquiry', $openId);
             }
@@ -116,6 +116,6 @@ final class InboxController
     private static function back(int $id): string
     {
         $tab = Http::input('tab');
-        return '/admin/inbox?' . http_build_query(['tab' => in_array($tab, ['all', 'quotes', 'updates'], true) ? $tab : 'all', 'open' => $id]);
+        return '/admin/inbox?' . http_build_query(['tab' => in_array($tab, ['all', 'quotes', 'updates', 'cars'], true) ? $tab : 'all', 'open' => $id]);
     }
 }

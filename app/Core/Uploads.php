@@ -70,15 +70,45 @@ final class Uploads
         return ['name' => $name, 'width' => $nw, 'height' => $nh];
     }
 
+    /**
+     * Imports an image from a trusted local path (CLI seeding only), with the same re-encoding as uploads.
+     * @return array{name: string, width: int, height: int}|string
+     */
+    public static function importFile(string $path): array|string
+    {
+        if (PHP_SAPI !== 'cli' || !is_file($path)) {
+            return 'Import is only available from the command line.';
+        }
+        $mime = (new \finfo(FILEINFO_MIME_TYPE))->file($path);
+        $src = match ($mime) {
+            'image/jpeg' => @imagecreatefromjpeg($path),
+            'image/png' => @imagecreatefrompng($path),
+            'image/webp' => @imagecreatefromwebp($path),
+            default => false,
+        };
+        if ($src === false) {
+            return 'Not a usable image.';
+        }
+        $name = bin2hex(random_bytes(16)) . '.jpg';
+        $ok = imagejpeg($src, self::dir() . '/' . $name, 85);
+        [$w, $h] = [imagesx($src), imagesy($src)];
+        imagedestroy($src);
+        if (!$ok) {
+            return 'Could not save the image.';
+        }
+        @chmod(self::dir() . '/' . $name, 0600);
+        return ['name' => $name, 'width' => $w, 'height' => $h];
+    }
+
     /** Streams a stored image after the caller has checked access. */
-    public static function stream(string $name): never
+    public static function stream(string $name, bool $public = false): never
     {
         if (!preg_match('/^[a-f0-9]{32}\.jpg$/', $name) || !is_file(self::dir() . '/' . $name)) {
             Http::abort(404);
         }
         header('Content-Type: image/jpeg');
         header('Content-Length: ' . filesize(self::dir() . '/' . $name));
-        header('Cache-Control: private, max-age=3600');
+        header('Cache-Control: ' . ($public ? 'public, max-age=600' : 'private, max-age=3600'));
         header('X-Content-Type-Options: nosniff');
         header("Content-Security-Policy: default-src 'none'");
         readfile(self::dir() . '/' . $name);

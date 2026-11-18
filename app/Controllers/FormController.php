@@ -167,7 +167,7 @@ final class FormController
     }
 
     /** @param array<string, mixed> $row */
-    private static function saveEnquiry(array $row): string
+    public static function saveEnquiry(array $row): string
     {
         for ($i = 0; $i < 5; $i++) {
             $ref = Tokens::reference();
@@ -186,7 +186,7 @@ final class FormController
         throw new \RuntimeException('Could not allocate a reference');
     }
 
-    private static function notify(string $subject, string $body, ?string $replyTo): void
+    public static function notify(string $subject, string $body, ?string $replyTo): void
     {
         $inbox = Config::str('mail.inbox');
         if ($inbox === '') {
@@ -201,14 +201,14 @@ final class FormController
         }
     }
 
-    private static function stamp(): string
+    public static function stamp(): string
     {
         $t = (string) time();
         return $t . '.' . substr(hash_hmac('sha256', $t, Config::str('app.key', 'local')), 0, 16);
     }
 
     /** Honeypot and minimum fill time (CTL-API-001). Bots get a normal-looking redirect. */
-    private static function looksLikeBot(): bool
+    public static function looksLikeBot(): bool
     {
         if (Http::input('website') !== '') {
             return true;

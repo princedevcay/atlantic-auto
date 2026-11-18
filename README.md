@@ -65,6 +65,7 @@ Domain: **atlanticautoservices.com**, folder `~/atlanticautoservices.com` (creat
 7. **Config:** in cPanel File Manager or Terminal, create `~/atlantic-auto-private/config.php` from `config.example.php` with the real database, mail, contact, `app.url` `https://atlanticautoservices.com` and a new `app.key`; `chmod 600` it.
 8. **After the first deploy** (cPanel Terminal): `php ~/atlanticautoservices.com/bin/migrate.php`, then `php ~/atlanticautoservices.com/bin/create-admin.php "Name" email`.
 9. **Cron jobs:** see the header of `bin/cron.php`, with paths under `~/atlanticautoservices.com`.
+10. **Sample cars:** `php bin/seed-sample-cars.php` adds five sample listings (Sample badge, reference prices, no enquiries). **Before launch run `php bin/seed-sample-cars.php --remove`** and add the client's real cars in the admin.
 
 Deploys run on every push to `main`, wait for owner approval in the `production` environment, and stop at the security baseline check until the pre-launch gates have passing evidence.
 

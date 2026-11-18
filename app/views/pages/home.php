@@ -99,6 +99,26 @@ $faqs = [
   </div>
 </section>
 
+<!-- 3b. Featured cars for sale (PG-031): only when a car is published. -->
+<?php $featured = App\Models\Cars::featured(6); ?>
+<?php if ($featured !== []): ?>
+<section class="bg-surface py-14" aria-labelledby="cars-h">
+  <div class="container-x">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="eyebrow">Cars for sale</p>
+        <h2 id="cars-h" class="mt-1 text-3xl font-bold">Featured cars for sale</h2>
+        <div class="rule"></div>
+      </div>
+      <a href="/cars" class="btn-secondary btn-sm">See all cars <?= icon('arrow-right', 'icon h-4 w-4') ?></a>
+    </div>
+    <ul class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <?php foreach ($featured as $car): ?><li><?= App\Core\View::fetch('partials/car-card', ['car' => $car]) ?></li><?php endforeach; ?>
+    </ul>
+  </div>
+</section>
+<?php endif; ?>
+
 <!-- 4. How it works -->
 <section class="bg-surface py-14" aria-labelledby="how-h">
   <div class="container-x">

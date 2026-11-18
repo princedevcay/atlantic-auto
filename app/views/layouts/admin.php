@@ -5,7 +5,7 @@ use App\Core\Session;
 $section = $section ?? '';
 $toast = Session::takeFlash('toast');
 $u = Auth::user();
-$nav = [['inbox', '/admin/inbox', 'Inbox', 'inbox'], ['shipments', '/admin/shipments', 'Shipments', 'package']];
+$nav = [['inbox', '/admin/inbox', 'Inbox', 'inbox'], ['cars', '/admin/cars', 'Cars for sale', 'car'], ['shipments', '/admin/shipments', 'Shipments', 'package']];
 if (Auth::isAdmin()) {
     $nav[] = ['staff', '/admin/staff', 'Staff', 'users'];
     $nav[] = ['audit', '/admin/audit', 'Audit log', 'shield-check'];
