@@ -59,9 +59,10 @@ First deploy on 18 Nov 2026 (run 44313791210, commit b1573f1). Checked the same 
 | Cron jobs | Pass | mail, carrier, backup, retention, health installed in cPanel |
 | Backup on the host | Pass | Created, owner-only, gzip verified, 12 tables; full restore rehearsed locally |
 | Test enquiry email over SMTP | Pass | A test quote reached the shared inbox with the [Import Quote] subject |
-| Contact details, privacy notice and terms confirmed | **Open (client)** | DEC-004 retention and DEC-008 Act 843 with the client; contact details to add in `config.php` |
+| Privacy Policy and Terms of Use published | Pass (owner) | Full pages with "Last updated 18 November 2026", published on the owner's instruction (18 Nov 2026, PR #12) with the retention periods proposed in DEC-004. The client should still confirm DEC-004 and DEC-008 (Act 843 registration) |
+| Contact details on the site | **Open (client)** | Phone, WhatsApp, email, office and hours to add in `config.php` |
 
-EVD-006 stays PENDING until the last row is done; everything technical has passed.
+EVD-006 stays PENDING until the client's contact details are on the site; everything technical has passed.
 
 ## Client items (not blocking the deploy)
 

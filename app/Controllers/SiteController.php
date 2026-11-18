@@ -9,7 +9,7 @@ final class SiteController
 {
     public static function home(): void
     {
-        View::render('pages/home', ['title' => 'Import Your Vehicle from the USA', 'nav' => 'home', 'description' => 'Atlantic Auto And Shipping Services sells quality used cars from the USA and ships, clears and delivers vehicles to customers in Ghana. Request an import quote today.']);
+        View::render('pages/home', ['title' => 'Import Your Vehicle from the USA', 'nav' => 'home', 'description' => 'Buy quality cars from the USA, or import your own: we source, ship, clear at Tema and deliver to you in Ghana.']);
     }
 
     public static function services(): void
@@ -34,11 +34,11 @@ final class SiteController
 
     public static function terms(): void
     {
-        View::render('pages/terms', ['title' => 'Terms of Use', 'nav' => '']);
+        View::render('pages/terms', ['title' => 'Terms of Use', 'nav' => '', 'description' => 'The terms that apply when you use the Atlantic Auto And Shipping Services website, including cars for sale, quotes and payments.']);
     }
 
     public static function privacy(): void
     {
-        View::render('pages/privacy', ['title' => 'Privacy', 'nav' => '']);
+        View::render('pages/privacy', ['title' => 'Privacy Policy', 'nav' => '', 'description' => 'How Atlantic Auto And Shipping Services collects, uses and protects your personal information under Ghana\'s Data Protection Act, 2012 (Act 843).']);
     }
 }
