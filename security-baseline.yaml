@@ -1,6 +1,6 @@
 schema_version: "2.3"
-baseline_version: "0.2.0"
-record_digest: "fa7e68331dc9e5d1548958e6fe18f7fc4f3bf5b32a2fd70c07b57b67a8867ae4"
+baseline_version: "0.3.0"
+record_digest: "0fdc28433c05edd0f656b338b74a33cbd41d51dc71ddf38dd08514ab2b43f383"
 project:
   id: "PRJ-ATLANTIC-AUTO-001"
   name: "Atlantic Auto and Shipping Services website"
@@ -642,16 +642,24 @@ gates:
     name: "Production deploy gate (protected main, owner approval, baseline digest check)"
     stage: "PRE_DEPLOY"
     blocking: true
-    control_ids: ["CTL-DEP-001", "CTL-GOV-001", "CTL-SEC-002"]
-    required_evidence: ["EVD-003", "EVD-005"]
+    control_ids: ["CTL-DEP-001", "CTL-GOV-001"]
+    required_evidence: ["EVD-003"]
     status: "NOT_YET_BUILT"
     evidence_ids: []
   - id: "GATE-004"
-    name: "Pre-launch security review"
+    name: "Pre-launch security review (local build)"
     stage: "PRE_DEPLOY"
     blocking: true
-    control_ids: ["CTL-CFG-001", "CTL-CRY-001", "CTL-FE-001", "CTL-SES-001", "CTL-AUTH-001", "CTL-AUTH-002", "CTL-FILE-001", "CTL-API-001", "CTL-API-002", "CTL-DATA-001", "CTL-DATA-002", "CTL-ERR-001", "CTL-LOG-001", "CTL-REC-001"]
+    control_ids: ["CTL-CFG-001", "CTL-FE-001", "CTL-SES-001", "CTL-AUTH-001", "CTL-AUTH-002", "CTL-FILE-001", "CTL-API-001", "CTL-API-002", "CTL-DATA-002", "CTL-ERR-001", "CTL-LOG-001"]
     required_evidence: ["EVD-004"]
+    status: "VERIFIED"
+    evidence_ids: ["EVD-004"]
+  - id: "GATE-005"
+    name: "Live launch checks (within 48 hours of the first public deploy)"
+    stage: "RUNTIME"
+    blocking: true
+    control_ids: ["CTL-CRY-001", "CTL-CFG-001", "CTL-SES-001", "CTL-SEC-002", "CTL-REC-001", "CTL-DATA-001", "CTL-LOG-001"]
+    required_evidence: ["EVD-005", "EVD-006"]
     status: "NOT_YET_BUILT"
     evidence_ids: []
 decisions:
@@ -704,18 +712,19 @@ decisions:
     blocks_approval: false
     status: "OPEN"
 evidence:
-  - {id: "EVD-001", type: "OWNER_APPROVAL", status: "PASSED", observed_at: "2026-11-18T12:47:33Z", observer: "Claude Code session (owner typed: Approve both, for Project Gate changes and baseline 0.2.0; 0.1.0 approved 2026-11-17)", location: "Claude Code chat, 18 Nov 2026"}
+  - {id: "EVD-001", type: "OWNER_APPROVAL", status: "PASSED", observed_at: "2026-11-18T13:23:53Z", observer: "Claude Code session (owner typed: Approve 0.3.0; 0.2.0 approved 2026-11-18, 0.1.0 approved 2026-11-17)", location: "Claude Code chat, 18 Nov 2026"}
   - {id: "EVD-002", type: "CI_RUN", status: "PASSED", observed_at: "2026-11-18T13:09:54Z", observer: "Claude Code session, 18 Nov 2026", location: "CI pass on 09671aa https://github.com/princedevcay/atlantic-auto/actions/runs/44308783954 ; blocked run (dependency-audit) https://github.com/princedevcay/atlantic-auto/actions/runs/44304563632 ; branch protection rejected a direct push to main (GH006) with 3 required checks"}
   - {id: "EVD-003", type: "CI_RUN", status: "PASSED", observed_at: "2026-11-18T13:09:54Z", observer: "Claude Code session, 18 Nov 2026", location: "Deploy from a non-main branch refused (deploy job skipped) https://github.com/princedevcay/atlantic-auto/actions/runs/44309190966 ; production environment allows main only with owner approval ; validate_baseline --stage PRE_DEPLOY fails while EVD-004 and EVD-005 are not PASSED"}
-  - {id: "EVD-004", type: "MANUAL_REVIEW", status: "PENDING", observed_at: null, observer: null, location: ".opskeep/elliot/prelaunch-review.md (local review done 18 Nov 2026; live checks and client decisions outstanding)"}
+  - {id: "EVD-004", type: "MANUAL_REVIEW", status: "PASSED", observed_at: "2026-11-18T13:21:42Z", observer: "Claude Code session, local pre-launch review 18 Nov 2026", location: ".opskeep/elliot/prelaunch-review.md (local review: all GATE-004 controls pass; two findings fixed in PR #7, merged as 3b44e8c)"}
+  - {id: "EVD-006", type: "MANUAL_REVIEW", status: "NOT_YET_BUILT", observed_at: null, observer: null, location: ".opskeep/elliot/prelaunch-review.md (live checks section)"}
   - {id: "EVD-005", type: "CONFIG_INSPECTION", status: "PENDING", observed_at: null, observer: null, location: "GitHub side inspected 18 Nov 2026 (main protected, 3 required checks, admins included, no force push; production env: owner approval, main only, BASELINE_DIGEST set). Still to inspect on the server: FTP account limited to ~/atlanticautoservices.com, DB user limited to its database"}
 monitoring:
   handoff:
     provider: "NONE"
     owner: "developer (PrinceCaleb.dev)"
     configuration_status: "NOT_CONFIGURED"
-    baseline_version: "0.2.0"
-    record_digest: "fa7e68331dc9e5d1548958e6fe18f7fc4f3bf5b32a2fd70c07b57b67a8867ae4"
+    baseline_version: "0.3.0"
+    record_digest: "0fdc28433c05edd0f656b338b74a33cbd41d51dc71ddf38dd08514ab2b43f383"
     environments: ["production"]
     handed_off_at: null
     acknowledged_at: null
@@ -775,9 +784,9 @@ engineering:
 approval:
   decision: "APPROVED"
   approver: "Prince Caleb (owner, PrinceCaleb.dev)"
-  approved_at: "2026-11-18T12:47:33Z"
-  baseline_version: "0.2.0"
-  record_digest: "fa7e68331dc9e5d1548958e6fe18f7fc4f3bf5b32a2fd70c07b57b67a8867ae4"
+  approved_at: "2026-11-18T13:23:53Z"
+  baseline_version: "0.3.0"
+  record_digest: "0fdc28433c05edd0f656b338b74a33cbd41d51dc71ddf38dd08514ab2b43f383"
   scope: ["development", "production:namecheap-cpanel"]
   expires_at: null
 changes:
@@ -805,5 +814,18 @@ changes:
     new_rule: "Published car listings and their photos are public; hidden ones are not; staff manage listings, Admins delete them"
     reason: "Owner and client, 18 Nov 2026: selling cars is one of the three main things the business does; listings need amounts, available or sold status, and a hide option in the admin"
     compensating_controls: "CTL-AUTHZ-003 (published-only access, random references, staff-only changes, audit log), CTL-FILE-001 (upload checks, access-checked handler), the existing form abuse limits (CTL-API-001) for car enquiries"
+    requested_by: "owner (chat, 18 Nov 2026)"
+    proposed_at: "2026-11-18"
+  - id: "CHG-003"
+    type: "MODIFIED"
+    status: "PROPOSED"
+    material: true
+    security_impact: "LOW"
+    targets: ["GATE-003", "GATE-004", "GATE-005", "EVD-005", "EVD-006"]
+    summary: "Launch openly: run the live-server checks in a new post-deploy gate instead of before the first deploy"
+    old_rule: "All of the pre-launch review, including checks that need the live server, passes before the first production deploy"
+    new_rule: "The local pre-launch review (GATE-004) passes before deploy; the live checks (HTTPS, headers and cookies, FTP and database scoping, cron and backup restore on the host, mail over TLS, privacy notice and contact details) run in GATE-005 within 48 hours of the first public deploy"
+    reason: "Owner, 18 Nov 2026: no password-protected or private first deploy for a business site like this; the live checks can only run once the site is on the server"
+    compensating_controls: "HSTS stays off until GATE-005 confirms HTTPS; sample cars carry a Sample badge and take no enquiries; the admin keeps password plus TOTP and lockout; code-level controls were verified locally (EVD-004); a GATE-005 failure is fixed or the site is taken offline by the developer"
     requested_by: "owner (chat, 18 Nov 2026)"
     proposed_at: "2026-11-18"

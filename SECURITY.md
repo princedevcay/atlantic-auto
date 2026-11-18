@@ -1,8 +1,8 @@
 # Security
 
-Status: APPROVED 0.2.0 on 18 Nov 2026 (CHG-001 audit exception, CHG-002 cars for sale; 0.1.0 approved 17 Nov 2026). Scope: development, production:namecheap-cpanel
-Design digest: fa7e68331dc9e5d1548958e6fe18f7fc4f3bf5b32a2fd70c07b57b67a8867ae4
-Baseline version: 0.2.0
+Status: APPROVED 0.3.0 on 18 Nov 2026 (CHG-003 open launch; 0.2.0 and 0.1.0 approved earlier). Scope: development, production:namecheap-cpanel
+Design digest: 0fdc28433c05edd0f656b338b74a33cbd41d51dc71ddf38dd08514ab2b43f383
+Baseline version: 0.3.0
 Canonical record: `security-baseline.yaml`
 Owner: developer (PrinceCaleb.dev)
 Last reviewed: 2026-11-17
@@ -17,7 +17,7 @@ Please use GitHub's private vulnerability reporting on this repository (Security
 
 - Risk: **MEDIUM / STANDARD**. Staff login and admin, customer personal data, private tracking pages, a carrier API and staff photo uploads. No payments and no AI.
 - Environments: development (synthetic data) and production on Namecheap cPanel. Proposed approval scope: `development`, `production:namecheap-cpanel`.
-- Locks: development and deployment `UNLOCKED` by the owner's approval of 0.2.0. Deploys still need the gates below to pass.
+- Locks: development and deployment `UNLOCKED` by the owner's approval of 0.3.0. GATE-005 live checks follow within 48 hours of the first public deploy.
 - Excluded from v1: payments, customer accounts, live GPS, staging environment.
 
 ## Assurance targets and standards
@@ -79,9 +79,10 @@ This is not legal advice.
 | Gate | Stage | Blocks | Status |
 |---|---|---|---|
 | GATE-001 Baseline approval | PRE_IMPLEMENTATION | yes | NOT_YET_BUILT (owner approval recorded as EVD-001; CI check not built) |
-| GATE-002 PR checks: secrets, audits, lint, access-control tests | PULL_REQUEST | yes | NOT_YET_BUILT |
-| GATE-003 Production deploy: protected main, owner approval, digest check | PRE_DEPLOY | yes | NOT_YET_BUILT |
-| GATE-004 Pre-launch security review | PRE_DEPLOY | yes | NOT_YET_BUILT |
+| GATE-002 PR checks: secrets, audits, lint, access-control tests | PULL_REQUEST | yes | VERIFIED (EVD-002) |
+| GATE-003 Production deploy: protected main, owner approval, digest check | PRE_DEPLOY | yes | Evidence passed (EVD-003) |
+| GATE-004 Pre-launch security review (local build) | PRE_DEPLOY | yes | VERIFIED (EVD-004) |
+| GATE-005 Live launch checks, within 48 hours of the first public deploy | RUNTIME | yes | NOT_YET_BUILT (EVD-005, EVD-006) |
 
 ## Dependency audit exceptions
 

@@ -71,4 +71,4 @@ Deploys run on every push to `main`, wait for owner approval in the `production`
 
 ## Status
 
-Project Gate approved (reopened on 17 Nov 2026 for the new landing page mockup and car brand logos, PG-028 and PG-029, awaiting re-approval). Security baseline 0.2.0 approved (18 Nov 2026). Customer tracking is switched off (`features.customer_tracking`). The site and admin are built and tested locally; production deploys stay blocked until the pre-launch gates have passing evidence.
+Project Gate approved and sealed (last re-approved 18 Nov 2026: customer tracking hidden, cars for sale). Security baseline 0.3.0 approved (18 Nov 2026): open launch, with live checks (GATE-005) within 48 hours of the first deploy. Customer tracking is switched off (`features.customer_tracking`). The site and admin are built and tested; the first deploy can run once the cPanel and GitHub setup above is done.
